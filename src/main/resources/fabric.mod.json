@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "flutterandflounder",
+	"version": "${version}",
+	"name": "Flutter & Flounder",
+	"description": "Defeat a wave of fluttering and floundering fish! Made for Modfest 1.20!",
+	"authors": [
+		"Superkat32"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/flutterandflounder/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.superkat.flutterandflounder.FlutterFlounder"
+		]
+	},
+	"mixins": [
+		"flutterandflounder.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.2",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*",
+		"geckolib": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
