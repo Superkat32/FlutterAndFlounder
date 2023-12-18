@@ -64,13 +64,13 @@ public class FlyingGoals {
                         entity.bodyYaw = entity.getYaw();
                     }
 
-                    float i = (float)(this.speed * 5f);
-                    double j = Math.sqrt(x * x + z * z);
-                    if(Math.abs(y) > 1.0E-5F || Math.abs(j) > 1.0E-5F) {
-                        float k = (float)(-(MathHelper.atan2(y, j) * 180.0F / (float)Math.PI));
-                        this.entity.setPitch(this.wrapDegrees(this.entity.getPitch(), k, (float)this.maxPitchChange));
-                        this.entity.setUpwardSpeed(y > 0.0 ? i : -i);
-                    }
+//                    float i = (float)(this.speed * 5f);
+//                    double j = Math.sqrt(x * x + z * z);
+//                    if(Math.abs(y) > 1.0E-5F || Math.abs(j) > 1.0E-5F) {
+//                        float k = (float)(-(MathHelper.atan2(y, j) * 180.0F / (float)Math.PI));
+//                        this.entity.setPitch(this.wrapDegrees(this.entity.getPitch(), k, (float)this.maxPitchChange));
+//                        this.entity.setUpwardSpeed(y > 0.0 ? i : -i);
+//                    }
                 }
             }
         }
@@ -102,13 +102,15 @@ public class FlyingGoals {
 
         @Override
         public boolean shouldContinue() {
-            return entity.getTarget() != null && entity.getTarget().isAlive() && entity.getTarget().isAttackable();
-//            if(entity.getTarget() != null) {
-//                return super.shouldContinue();
-//            } else {
-//                entity.setTarget(null);
-//                return false;
-//            }
+            if(entity.getTarget() != null && entity.getTarget().isAttackable()) {
+                if(entity.getTarget() instanceof PlayerEntity player) {
+                    if(player.isCreative()) return false;
+                }
+                return super.shouldContinue();
+            } else {
+                entity.setTarget(null);
+                return false;
+            }
         }
 
         @Override
@@ -165,6 +167,7 @@ public class FlyingGoals {
                     }
                 }
 
+                entity.setTarget(null);
                 return false;
             }
         }
