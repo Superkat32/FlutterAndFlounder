@@ -16,7 +16,10 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.superkat.flutterandflounder.FlutterFlounder"
+			"net.superkat.flutterandflounder.FlutterAndFlounderMain"
+		],
+		"client": [
+			"net.superkat.flutterandflounder.FlutterAndFlounderClient"
 		]
 	},
 	"mixins": [
