@@ -15,7 +15,7 @@ public class ModEntities {
             Registries.ENTITY_TYPE,
             new Identifier(FlutterAndFlounderMain.MOD_ID, "flyingcod"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, FlyingCodEntity::new)
-                    .dimensions(EntityDimensions.fixed(1.2f, 0.5f)).build()
+                    .dimensions(EntityDimensions.fixed(0.6f, 0.5f)).build()
     );
 
 }

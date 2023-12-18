@@ -19,7 +19,7 @@ public class FlutterAndFlounderMain implements ModInitializer {
 
 		GeckoLib.initialize();
 
-		FabricDefaultAttributeRegistry.register(ModEntities.FLYING_COD, FlyingCodEntity.createMobAttributes());
+		FabricDefaultAttributeRegistry.register(ModEntities.FLYING_COD, FlyingCodEntity.createAttributes());
 
 		LOGGER.info("Hello Fabric world!");
 	}

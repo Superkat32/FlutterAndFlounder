@@ -25,6 +25,7 @@
 	"mixins": [
 		"flutterandflounder.mixins.json"
 	],
+	"accessWidener": "flutterandflounder.accesswidener",
 	"depends": {
 		"fabricloader": ">=0.15.2",
 		"minecraft": "~1.20.4",
