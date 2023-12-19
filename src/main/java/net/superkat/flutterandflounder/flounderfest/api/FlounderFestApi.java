@@ -53,6 +53,7 @@ public class FlounderFestApi {
                 fish.setOnGround(true);
                 fish.setTarget(flounderFest.getRandomPlayerTarget());
                 world.spawnEntity(fish);
+                flounderFest.addEntityToEnemyList(fish);
                 return true;
             }
         }

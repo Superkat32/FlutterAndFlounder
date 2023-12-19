@@ -1,6 +1,8 @@
 package net.superkat.flutterandflounder.flounderfest;
 
 import com.google.common.collect.Sets;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -27,12 +29,15 @@ public class FlounderFest {
     public int ticksSinceStart;
     public int ticksSinceEnd;
     public int maxTimeInTicks = 2000;
+    private final Set<LivingEntity> enemies = Sets.newHashSet();
     public int enemiesToBeSpawned;
+    public int totalEnemyCount;
     public int maxEnemiesAtOnce = 30;
     public int defeatedEnemies = 0;
+    public int spawnedEnemies = 0;
     public int currentEnemies = 0;
-    //10 seconds of grace period
-    public int ticksUntilNextEnemySpawn = 200;
+    public int ticksUntilNextEnemySpawn = 0;
+    public int gracePeriod = getGracePeriod();
 
 
     public FlounderFest(int id, ServerWorld world, BlockPos startingPos, int quota, int totalEntityCount) {
@@ -42,6 +47,7 @@ public class FlounderFest {
         this.startingPos = startingPos;
         this.quota = quota;
         this.enemiesToBeSpawned = totalEntityCount;
+        this.totalEnemyCount = totalEntityCount;
     }
 
     public ServerPlayerEntity getRandomPlayerTarget() {
@@ -61,20 +67,28 @@ public class FlounderFest {
 
         for (ServerPlayerEntity player : players) {
             involvedPlayers.add(player.getUuid());
-            player.sendMessage(Text.literal("FlounderFest Time Remaining - " + ((maxTimeInTicks - ticksSinceStart) / 20)), true);
+            if(isGracePeriod()) {
+                player.sendMessage(Text.literal("FlounderFest Starting In " + ((gracePeriod) / 20)), true);
+            } else {
+                player.sendMessage(Text.literal("FlounderFest Time Remaining - " + ((maxTimeInTicks - ticksSinceStart) / 20)), true);
+            }
         }
     }
 
     public void tick() {
-        ticksSinceStart++;
-        ticksUntilNextEnemySpawn--;
+        if(isGracePeriod()) {
+            gracePeriod--;
+        } else {
+            ticksSinceStart++;
+            ticksUntilNextEnemySpawn--;
+        }
 
         updateInvolvedPlayers();
 
-        if(!this.hasStopped()) {
+        if(!this.hasStopped() && !isGracePeriod()) {
             if(this.status == Status.ONGOING) {
                 //spawns in enemies every few seconds
-                if(enemiesToBeSpawned < maxEnemiesAtOnce) {
+                if(currentEnemies < maxEnemiesAtOnce && spawnedEnemies <= totalEnemyCount) {
                     if(ticksUntilNextEnemySpawn <= 0) {
                         addEnemy();
                     }
@@ -99,7 +113,6 @@ public class FlounderFest {
                     return;
                 }
 
-
             }
         }
     }
@@ -108,12 +121,42 @@ public class FlounderFest {
         if(FlounderFestApi.spawnLesserFish(this, this.world, startingPos)) {
             enemiesToBeSpawned--;
             currentEnemies++;
+            spawnedEnemies++;
             ticksUntilNextEnemySpawn = world.random.nextBetween(20, 200);
         }
     }
 
+    public void addEntityToEnemyList(LivingEntity entity) {
+        List<LivingEntity> set = enemies.stream().toList();
+        LivingEntity livingEntity = null;
+
+        for (LivingEntity entityFromSet : set) {
+            if(entityFromSet.getUuid().equals(entity.getUuid())) {
+                livingEntity = entityFromSet;
+                break;
+            }
+        }
+
+        if(livingEntity != null) {
+            enemies.remove(livingEntity);
+            enemies.add(entity);
+        }
+
+        enemies.add(entity);
+    }
+
     public void updateEnemyCount(boolean didYouDie) {
 
+    }
+
+    public int getGracePeriod() {
+        //seconds in ticks
+        //grace period is 10 seconds by default
+        return 200;
+    }
+
+    public boolean isGracePeriod() {
+        return gracePeriod > 0;
     }
 
     public boolean shouldStop() {
@@ -138,6 +181,8 @@ public class FlounderFest {
 
     public void invalidate() {
         this.status = Status.STOPPED;
+
+        enemies.forEach(entityFromSet -> (entityFromSet).remove(Entity.RemovalReason.DISCARDED));
     }
 
     public BlockPos getStartingPos() {
