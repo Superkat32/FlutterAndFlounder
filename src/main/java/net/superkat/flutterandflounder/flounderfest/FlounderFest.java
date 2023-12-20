@@ -1,8 +1,11 @@
 package net.superkat.flutterandflounder.flounderfest;
 
 import com.google.common.collect.Sets;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -15,6 +18,8 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
+
+import static net.superkat.flutterandflounder.network.FlutterAndFlounderPackets.FLOUNDERFEST_TIMER_UPDATE_ID;
 
 public class FlounderFest {
     private final Set<UUID> involvedPlayers = Sets.newHashSet();
@@ -29,6 +34,7 @@ public class FlounderFest {
     public int ticksSinceStart;
     public int ticksSinceEnd;
     public int maxTimeInTicks = 2000;
+    public int secondsRemaining = 100;
     private final Set<LivingEntity> enemies = Sets.newHashSet();
     public int enemiesToBeSpawned;
     public int totalEnemyCount;
@@ -70,7 +76,14 @@ public class FlounderFest {
             if(isGracePeriod()) {
                 player.sendMessage(Text.literal("FlounderFest Starting In " + ((gracePeriod) / 20)), true);
             } else {
-                player.sendMessage(Text.literal("FlounderFest Time Remaining - " + ((maxTimeInTicks - ticksSinceStart) / 20)), true);
+                //sends a packet every second
+                if((maxTimeInTicks - ticksSinceStart) % 20 == 0) {
+                    secondsRemaining = (maxTimeInTicks - ticksSinceStart) / 20;
+                    PacketByteBuf buf = PacketByteBufs.create();
+
+                    buf.writeInt(secondsRemaining);
+                    ServerPlayNetworking.send(player, FLOUNDERFEST_TIMER_UPDATE_ID, buf);
+                }
             }
         }
     }
