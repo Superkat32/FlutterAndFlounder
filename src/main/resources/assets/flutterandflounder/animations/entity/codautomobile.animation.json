@@ -1,0 +1,40 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.codautomobile.idle": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"main": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, 2.5],
+							"easing": "easeInOutBounce"
+						},
+						"1.0": {
+							"vector": [0, 0, -2.5],
+							"easing": "easeInOutBounce"
+						},
+						"1.5": {
+							"vector": [0, 0, 2.5],
+							"easing": "easeInOutBounce",
+							"easingArgs": [0.5]
+						},
+						"2.0": {
+							"vector": [0, 0, -2.5],
+							"easing": "easeInOutBounce",
+							"easingArgs": [0.5]
+						}
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

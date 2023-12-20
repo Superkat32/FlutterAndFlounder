@@ -1,0 +1,145 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.codautomobile",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "main",
+					"pivot": [0, 2, 0]
+				},
+				{
+					"name": "cod",
+					"parent": "main",
+					"pivot": [0, 2, 0]
+				},
+				{
+					"name": "body",
+					"parent": "cod",
+					"pivot": [0, 4, 0],
+					"cubes": [
+						{"origin": [-1, 2, 0], "size": [2, 4, 7], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "right_fin",
+					"parent": "body",
+					"pivot": [-1, 3, 0],
+					"rotation": [0, 0, -45],
+					"cubes": [
+						{"origin": [-3, 3, -1], "size": [2, 0, 2], "uv": [24, 1]}
+					]
+				},
+				{
+					"name": "left_fin",
+					"parent": "body",
+					"pivot": [1, 3, 0],
+					"rotation": [0, 0, 45],
+					"cubes": [
+						{"origin": [1, 3, -1], "size": [2, 0, 2], "uv": [24, 4]}
+					]
+				},
+				{
+					"name": "head",
+					"parent": "cod",
+					"pivot": [0, 4, 0],
+					"cubes": [
+						{"origin": [-1, 2, -3], "size": [2, 4, 3], "uv": [11, 0]}
+					]
+				},
+				{
+					"name": "nose",
+					"parent": "cod",
+					"pivot": [0, 4, -3],
+					"cubes": [
+						{"origin": [-1, 3, -4], "size": [2, 3, 1], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "fin_left",
+					"parent": "cod",
+					"pivot": [0, 2, 0]
+				},
+				{
+					"name": "fin_right",
+					"parent": "cod",
+					"pivot": [0, 2, 0]
+				},
+				{
+					"name": "fin_back",
+					"parent": "cod",
+					"pivot": [0, 6, 0],
+					"cubes": [
+						{"origin": [0, 6, -1], "size": [0, 1, 6], "uv": [20, -6]}
+					]
+				},
+				{
+					"name": "tail",
+					"parent": "cod",
+					"pivot": [0, 4, 7],
+					"cubes": [
+						{"origin": [0, 2, 7], "size": [0, 4, 4], "uv": [22, 3]}
+					]
+				},
+				{
+					"name": "automobile",
+					"parent": "main",
+					"pivot": [0, 0, -2]
+				},
+				{
+					"name": "front",
+					"parent": "automobile",
+					"pivot": [0, 2, 4],
+					"rotation": [90, 0, 0],
+					"cubes": [
+						{"origin": [-8, 4, 12], "size": [16, 8, 2], "uv": [0, 17]},
+						{"origin": [-6, 12, 3.5], "size": [12, 2, 9], "pivot": [0, 2, 4], "rotation": [-2.5, 0, 0], "uv": [0, 45]}
+					]
+				},
+				{
+					"name": "back",
+					"parent": "automobile",
+					"pivot": [0, 2, 0],
+					"rotation": [90, 180, 0],
+					"cubes": [
+						{"origin": [-8, 4, 8], "size": [16, 8, 2], "uv": [0, 17]}
+					]
+				},
+				{
+					"name": "right",
+					"parent": "automobile",
+					"pivot": [0, 0, 1],
+					"rotation": [0, -90, 0],
+					"cubes": [
+						{"origin": [-8, 2, 7], "size": [16, 8, 2], "uv": [0, 17]}
+					]
+				},
+				{
+					"name": "left",
+					"parent": "automobile",
+					"pivot": [0, 0, -2],
+					"rotation": [0, 90, 0],
+					"cubes": [
+						{"origin": [-11, 2, 4], "size": [16, 8, 2], "uv": [0, 17]}
+					]
+				},
+				{
+					"name": "base",
+					"parent": "automobile",
+					"pivot": [0, 0, -2],
+					"rotation": [0, -90, 90],
+					"cubes": [
+						{"origin": [-8, -8, -2], "size": [20, 16, 2], "uv": [0, 27]}
+					]
+				}
+			]
+		}
+	]
+}
