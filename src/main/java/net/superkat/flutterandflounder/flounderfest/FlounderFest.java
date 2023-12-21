@@ -52,8 +52,12 @@ public class FlounderFest {
         this.world = world;
         this.startingPos = startingPos;
         this.quota = quota;
-        this.enemiesToBeSpawned = totalEntityCount;
+        this.enemiesToBeSpawned = totalEntityCount; //setting to -1 = infinite
         this.totalEnemyCount = totalEntityCount;
+    }
+
+    public boolean hasPlayers() {
+        return !involvedPlayers.isEmpty();
     }
 
     public ServerPlayerEntity getRandomPlayerTarget() {
@@ -101,7 +105,7 @@ public class FlounderFest {
         if(!this.hasStopped() && !isGracePeriod()) {
             if(this.status == Status.ONGOING) {
                 //spawns in enemies every few seconds
-                if(currentEnemies < maxEnemiesAtOnce && spawnedEnemies <= totalEnemyCount) {
+                if(currentEnemies < maxEnemiesAtOnce && (spawnedEnemies < totalEnemyCount || totalEnemyCount == -1)) {
                     if(ticksUntilNextEnemySpawn <= 0) {
                         addEnemy();
                     }
