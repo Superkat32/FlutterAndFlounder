@@ -30,7 +30,8 @@ public class FlounderFest {
 
 
     private final BlockPos startingPos;
-    private final int quota;
+    public int quota;
+    public int quotaProgress = 0;
     public int ticksSinceStart;
     public int ticksSinceEnd;
     public int maxTimeInTicks = 2000;
@@ -85,7 +86,13 @@ public class FlounderFest {
                     secondsRemaining = (maxTimeInTicks - ticksSinceStart) / 20;
                     PacketByteBuf buf = PacketByteBufs.create();
 
+//                    buf.writeInt(secondsRemaining);
+                    //wave - seconds remaining - quota progress - quota
+//                    int[] flounderFestInfo = new int[]{1, secondsRemaining, quotaProgress};
+//                    buf.writeIntArray(flounderFestInfo);
+                    buf.writeInt(1);
                     buf.writeInt(secondsRemaining);
+                    buf.writeInt(quotaProgress);
                     ServerPlayNetworking.send(player, FLOUNDERFEST_TIMER_UPDATE_ID, buf);
                 }
             }

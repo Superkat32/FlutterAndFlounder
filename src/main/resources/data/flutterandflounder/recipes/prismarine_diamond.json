@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CSC",
+    "CDC",
+    "   "
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:prismarine_crystals"
+    },
+    "S": {
+      "item": "minecraft:prismarine_shard"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "flutterandflounder:prismarine_diamond",
+    "count": 1
+  }
+}

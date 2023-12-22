@@ -6,6 +6,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.PersistentState;
 import net.superkat.flutterandflounder.flounderfest.api.FlounderFestServerWorld;
 import org.jetbrains.annotations.Nullable;
@@ -93,5 +94,9 @@ public class FlounderFestManager extends PersistentState {
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         return null;
+    }
+
+    public static Vec3d getFlounderFestSkyColor(Vec3d initialColor) {
+        return initialColor.add(1, 0.2, 0.05);
     }
 }

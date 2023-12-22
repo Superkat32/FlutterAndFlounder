@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Random;
 
 public class FlounderFestApi {
+    public static void startFlounderFest(ServerPlayerEntity player) {
+        startFlounderFest(player, 10, -1);
+    }
     public static void startFlounderFest(ServerPlayerEntity player, int quota, int enemiesToBeSpawned) {
         FlutterAndFlounderMain.LOGGER.info("Starting a FlounderFest!");
         FlutterAndFlounderMain.LOGGER.info("Player responsible: " + player);
