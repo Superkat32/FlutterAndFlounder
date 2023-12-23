@@ -16,6 +16,8 @@ public class FlutterAndFlounderPackets {
     public static final Identifier FLOUNDERFEST_QUOTA_PROGRESS_UPDATE_ID = new Identifier(MOD_ID, "flounderfest_quota_progress_update");
     public static final Identifier FLOUNDERFEST_REMOVE_HUD_ID = new Identifier(MOD_ID, "flounderfest_remove_hud");
 
+    public static final Identifier FLOUNDERFEST_BOSS_ALERT_ID = new Identifier(MOD_ID, "flounderfest_boss_alert");
+
     public static void registerPackets() {
 
 
@@ -49,6 +51,17 @@ public class FlutterAndFlounderPackets {
                 }
             });
         }));
+
+        ClientPlayNetworking.registerGlobalReceiver(FLOUNDERFEST_QUOTA_PROGRESS_UPDATE_ID, (((client, handler, buf, responseSender) -> {
+            client.execute(() -> {
+                int quotaProgress = buf.readInt();
+                int maxQuota = buf.readInt();
+                FlounderFestHud hud = FlutterAndFlounderRendering.flounderFestHud;
+                if(hud != null) {
+                    hud.updateQuota(quotaProgress, maxQuota);
+                }
+            });
+        })));
 
         ClientPlayNetworking.registerGlobalReceiver(FLOUNDERFEST_REMOVE_HUD_ID, (((client, handler, buf, responseSender) -> {
             client.execute(() -> {

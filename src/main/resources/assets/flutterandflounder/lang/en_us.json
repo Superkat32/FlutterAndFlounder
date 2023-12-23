@@ -1,4 +1,9 @@
 {
+  "flutterandflounder.flounderfest.title": "FlounderFest",
+
+  "flutterandflounder.flounderfest.wave": "Wave",
+  "flutterandflounder.flounderfest.quota": "Quota",
+
   "item.flutterandflounder.prismarine_diamond": "Prismarine Diamond",
   "item.flutterandflounder.prismarine_diamond.tooltip": "You might want to be careful when holding this...",
   "item.flutterandflounder.prismarine_diamond.expand": "[Shift for Expand]",

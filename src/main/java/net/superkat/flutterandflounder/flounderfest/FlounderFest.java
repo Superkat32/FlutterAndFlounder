@@ -27,7 +27,6 @@ public class FlounderFest {
     //The status is always in the player's favor. E.g. "Status.VICTORY" means the player won, not the flounder fest enemies
     private FlounderFest.Status status;
 
-
     private final BlockPos startingPos;
     public int wave = 0;
     public int maxWaves = 3;
@@ -35,7 +34,7 @@ public class FlounderFest {
     public int ticksSinceEnd;
     public int maxTimeInTicks = 2000;
     public int secondsRemaining = 100;
-    public int quota;
+    public int maxQuota;
     public int quotaProgress = 0;
     private final Set<LivingEntity> enemies = Sets.newHashSet();
     public int enemiesToBeSpawned;
@@ -45,15 +44,17 @@ public class FlounderFest {
     public int spawnedEnemies = 0;
     public int currentEnemies = 0;
     public int ticksUntilNextEnemySpawn = 0;
+    public int spawnedBosses = 0;
+    public int currentBosses = 0;
+    public int ticksUntilNextBossSpawn = 60;
     public int gracePeriod = getGracePeriod();
-
 
     public FlounderFest(int id, ServerWorld world, BlockPos startingPos, int quota, int totalEntityCount) {
         this.id = id;
         this.status = FlounderFest.Status.ONGOING;
         this.world = world;
         this.startingPos = startingPos;
-        this.quota = quota;
+        this.maxQuota = quota;
         this.enemiesToBeSpawned = totalEntityCount; //setting to -1 = infinite
         this.totalEnemyCount = totalEntityCount;
     }
@@ -88,7 +89,9 @@ public class FlounderFest {
                 }
             } else {
                 if((maxTimeInTicks - ticksSinceStart) % 20 == 0) {
-                    secondsRemaining = (maxTimeInTicks - ticksSinceStart) / 20;
+                    if(!isFinished()) {
+                        secondsRemaining = (maxTimeInTicks - ticksSinceStart) / 20;
+                    }
                     sendTimerPacket(player);
                 }
                 if(secondsRemaining == 100) { //needs one extra second to send the last grace period second update
@@ -111,7 +114,7 @@ public class FlounderFest {
         buf.writeInt(maxWaves);
         buf.writeInt(secondsRemaining);
         buf.writeInt(quotaProgress);
-        buf.writeInt(quota);
+        buf.writeInt(maxQuota);
         ServerPlayNetworking.send(player, FLOUNDERFEST_CREATE_HUD_ID, buf);
     }
 
@@ -127,6 +130,13 @@ public class FlounderFest {
         ServerPlayNetworking.send(player, FLOUNDERFEST_TIMER_UPDATE_ID, buf);
     }
 
+    public void sendQuotaPacket(ServerPlayerEntity player) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(quotaProgress);
+        buf.writeInt(maxQuota);
+        ServerPlayNetworking.send(player, FLOUNDERFEST_QUOTA_PROGRESS_UPDATE_ID, buf);
+    }
+
     public void sendDeleteHudPacket(ServerPlayerEntity player) {
         PacketByteBuf buf = PacketByteBufs.create();
 
@@ -139,6 +149,7 @@ public class FlounderFest {
         } else {
             ticksSinceStart++;
             ticksUntilNextEnemySpawn--;
+            ticksUntilNextBossSpawn--;
         }
 
         updateInvolvedPlayers();
@@ -150,12 +161,15 @@ public class FlounderFest {
                     if(ticksUntilNextEnemySpawn <= 0) {
                         addEnemy();
                     }
+                    if(ticksUntilNextBossSpawn <= 0) {
+                        addBoss();
+                    }
                 }
 
                 //time up
                 if(ticksSinceStart >= maxTimeInTicks) {
                     //check for victory
-                    if(defeatedEnemies >= quota) {
+                    if(quotaProgress >= maxQuota) {
                         this.status = Status.VICTORY;
 
                     //counts as loss
@@ -165,7 +179,7 @@ public class FlounderFest {
                 }
             } else if (isFinished()) {
                 ticksSinceEnd++;
-                if(ticksSinceStart >= 600) {
+                if(ticksSinceEnd >= 300) {
                     FlutterAndFlounderMain.LOGGER.info("Flounder Fest " + id + " has finished!");
                     this.invalidate();
                     return;
@@ -181,6 +195,16 @@ public class FlounderFest {
             currentEnemies++;
             spawnedEnemies++;
             ticksUntilNextEnemySpawn = world.random.nextBetween(20, 200);
+        }
+    }
+
+    public void addBoss() {
+        if(FlounderFestApi.spawnBossFish(this, this.world, startingPos)) {
+            enemiesToBeSpawned--;
+            currentBosses++;
+            spawnedBosses++;
+            ticksUntilNextBossSpawn = world.random.nextBetween(10, 100);
+            //FIXME - boss alert packet here
         }
     }
 
@@ -203,8 +227,13 @@ public class FlounderFest {
         enemies.add(entity);
     }
 
-    public void updateEnemyCount(boolean didYouDie) {
-
+    public void updateQuota(int amount) {
+        if(!isFinished()) {
+            quotaProgress += amount;
+            for (UUID playerUuid : involvedPlayers) {
+                sendQuotaPacket((ServerPlayerEntity) this.world.getEntity(playerUuid));
+            }
+        }
     }
 
     public int getGracePeriod() {

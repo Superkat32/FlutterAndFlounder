@@ -1,11 +1,13 @@
 package net.superkat.flutterandflounder.flounderfest;
 
 import com.google.common.collect.Maps;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.datafixer.DataFixTypes;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.PersistentState;
 import net.superkat.flutterandflounder.flounderfest.api.FlounderFestServerWorld;
@@ -26,7 +28,7 @@ public class FlounderFestManager extends PersistentState {
 
     public FlounderFestManager(ServerWorld world) {
         this.world = world;
-        nextAvailableId = 1;
+        nextAvailableId = 0;
     }
 
     public void createFlounderFest(FlounderFest flounderFest, ServerPlayerEntity player) {
@@ -48,8 +50,12 @@ public class FlounderFestManager extends PersistentState {
         }
     }
 
-    public void updateEnemyCount(FlounderFest flounderFest, boolean didYouDie) {
-        flounderFest.updateEnemyCount(didYouDie);
+    public void updateQuota(FlounderFest flounderFest) {
+        updateQuota(flounderFest, 1);
+    }
+
+    public void updateQuota(FlounderFest flounderFest, int amount) {
+        flounderFest.updateQuota(amount);
     }
 
     public FlounderFest getOrCreateFlounderFest(ServerWorld world, BlockPos pos, int quota, int enemiesToBeSpawned) {
@@ -99,6 +105,11 @@ public class FlounderFestManager extends PersistentState {
 
     public static Vec3d getFlounderFestSkyColor(Vec3d initialColor) {
         double multiplier = FlutterAndFlounderRendering.skyChangeMultiplier;
+        long time = MinecraftClient.getInstance().world.getTimeOfDay() % 24000;
+        if(time >= 12000) {
+            //reduces the effect a lot during nighttime to not hurt people's eyes
+            multiplier = MathHelper.clamp(multiplier - (time * 0.00002) * 2, 0, 1);
+        }
         return initialColor.add(1 * multiplier, 0.2 * multiplier, 0.05 * multiplier);
     }
 }

@@ -58,9 +58,15 @@ public class FlounderFestCommand {
         ServerWorld world = player.getServerWorld();
         if(world != null) {
             if(world.getRegistryKey() == World.OVERWORLD && world.getDimensionEntry().matchesKey(DimensionTypes.OVERWORLD)) {
-                FlounderFestApi.startFlounderFest(player, quota, enemycount);
-                source.sendFeedback(() -> Text.literal("Flounderfest created! Enjoy the chaos!"), false);
-                return 1;
+                BlockPos playerPos = player.getBlockPos();
+                if(FlounderFestApi.getFlounderFestAt(world, playerPos, 100) != null) {
+                    source.sendError(Text.literal("Failed to create FlounderFest. There is already one nearby!"));
+                    return -1;
+                } else {
+                    FlounderFestApi.startFlounderFest(player, quota, enemycount);
+                    source.sendFeedback(() -> Text.literal("Flounderfest created! Enjoy the chaos!"), false);
+                    return 1;
+                }
             } else {
                 source.sendError(Text.literal("Failed to create FlounderFest. Are you in the overworld?"));
             }

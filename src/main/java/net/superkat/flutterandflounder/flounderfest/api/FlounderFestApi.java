@@ -12,9 +12,11 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.SpawnHelper;
 import net.superkat.flutterandflounder.FlutterAndFlounderMain;
 import net.superkat.flutterandflounder.entity.FlutterAndFlounderEntities;
+import net.superkat.flutterandflounder.entity.custom.CommonBossFish;
 import net.superkat.flutterandflounder.entity.custom.CommonFlyingFish;
 import net.superkat.flutterandflounder.flounderfest.FlounderFest;
 import net.superkat.flutterandflounder.flounderfest.FlounderFestManager;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Random;
@@ -40,17 +42,43 @@ public class FlounderFestApi {
     }
 
 
-    public void stopFlounderFest(FlounderFest flounderFest) {
+    public static void stopFlounderFest(FlounderFest flounderFest) {
         flounderFest.invalidate();
     }
 
-    public FlounderFest getFlounderFestAt(BlockPos pos) {
-        return null;
+    @Nullable
+    public static FlounderFest getFlounderFestAt(ServerWorld world, BlockPos pos) {
+        return getFlounderFestAt(world, pos, 9216);
+    }
+
+    @Nullable
+    public static FlounderFest getFlounderFestAt(ServerWorld world, BlockPos pos, int searchDistance) {
+        return getFlounderFestManager(world).getFlounderFestAt(pos, searchDistance);
     }
 
     public static boolean spawnLesserFish(FlounderFest flounderFest, ServerWorld world, BlockPos festCenterPos) {
         LesserFish spawnedFish = LesserFish.chooseLesserFish();
         CommonFlyingFish fish = spawnedFish.type.create(world);
+        if(fish != null) {
+            BlockPos pos = fishSpawningPos(world, festCenterPos, 3, 20);
+            if(pos != null) {
+                fish.setPos(pos.getX(), pos.getY(), pos.getZ());
+                fish.initialize(world, world.getLocalDifficulty(pos), SpawnReason.EVENT, null, null);
+                fish.setOnGround(true);
+                if(flounderFest.hasPlayers()) { //game otherwise crashes when in single player and the player dies
+                    fish.setTarget(flounderFest.getRandomPlayerTarget());
+                }
+                world.spawnEntity(fish);
+                flounderFest.addEntityToEnemyList(fish);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean spawnBossFish(FlounderFest flounderFest, ServerWorld world, BlockPos festCenterPos) {
+        BossFish spawnedFish = BossFish.chooseBossFish();
+        CommonBossFish fish = spawnedFish.type.create(world);
         if(fish != null) {
             BlockPos pos = fishSpawningPos(world, festCenterPos, 3, 20);
             if(pos != null) {
@@ -115,6 +143,22 @@ public class FlounderFestApi {
                 returnFish = FLYINGCOD;
             }
             return returnFish;
+        }
+    }
+
+    static enum BossFish {
+        CODAUTOMOBILE(FlutterAndFlounderEntities.COD_AUTOMOBILE),
+        SALMONSHIP(FlutterAndFlounderEntities.SALMON_SHIP);
+        final EntityType<? extends CommonBossFish> type;
+        private static final List<BossFish> VALUES = List.of(values());
+        private static final Random RANDOM = new Random();
+
+        BossFish(EntityType<? extends CommonBossFish> type) {
+            this.type = type;
+        }
+
+        public static BossFish chooseBossFish() {
+            return VALUES.get(RANDOM.nextInt(VALUES.size()));
         }
     }
 

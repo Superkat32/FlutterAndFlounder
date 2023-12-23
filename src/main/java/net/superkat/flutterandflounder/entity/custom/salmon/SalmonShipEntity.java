@@ -5,9 +5,11 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.superkat.flutterandflounder.entity.custom.CommonBossFish;
@@ -20,7 +22,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class SalmonShipEntity extends HostileEntity implements CommonBossFish {
+public class SalmonShipEntity extends CommonBossFish {
     protected static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("animation.salmonship.idle");
     protected static final RawAnimation WARNING_ANIM = RawAnimation.begin().thenPlay("animation.salmonship.warning");
     protected static final RawAnimation ATTACK_ANIM = RawAnimation.begin().thenPlayAndHold("animation.salmonship.attack");
@@ -86,7 +88,6 @@ public class SalmonShipEntity extends HostileEntity implements CommonBossFish {
     protected void fall(double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition) {
     }
 
-
     @Override
     public void tick() {
         super.tick();
@@ -99,6 +100,14 @@ public class SalmonShipEntity extends HostileEntity implements CommonBossFish {
                 warningTicks = 40;
             }
         }
+    }
+
+    @Override
+    public void onDeath(DamageSource damageSource) {
+        if(!this.getWorld().isClient) {
+            updateFlounderFestQuota((ServerWorld) this.getWorld(), this.getBlockPos());
+        }
+        super.onDeath(damageSource);
     }
 
     public void setWarningTicks(int warningTicks) {

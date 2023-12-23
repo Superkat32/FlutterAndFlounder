@@ -7,9 +7,11 @@ import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import net.superkat.flutterandflounder.entity.custom.CommonBossFish;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -20,8 +22,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class CodAutomobileEntity extends HostileEntity implements CommonBossFish {
-
+public class CodAutomobileEntity extends CommonBossFish {
     protected static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("animation.codautomobile.idle");
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
 
@@ -64,5 +65,13 @@ public class CodAutomobileEntity extends HostileEntity implements CommonBossFish
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 15f, 1f));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1));
         this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
+    }
+
+    @Override
+    public void onDeath(DamageSource damageSource) {
+        if(!this.getWorld().isClient) {
+            updateFlounderFestQuota((ServerWorld) this.getWorld(), this.getBlockPos());
+        }
+        super.onDeath(damageSource);
     }
 }
