@@ -8,7 +8,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.superkat.flutterandflounder.FlutterAndFlounderMain;
 import net.superkat.flutterandflounder.flounderfest.api.FlounderFestApi;
@@ -19,7 +18,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-import static net.superkat.flutterandflounder.network.FlutterAndFlounderPackets.FLOUNDERFEST_TIMER_UPDATE_ID;
+import static net.superkat.flutterandflounder.network.FlutterAndFlounderPackets.*;
 
 public class FlounderFest {
     private final Set<UUID> involvedPlayers = Sets.newHashSet();
@@ -30,12 +29,14 @@ public class FlounderFest {
 
 
     private final BlockPos startingPos;
-    public int quota;
-    public int quotaProgress = 0;
+    public int wave = 0;
+    public int maxWaves = 3;
     public int ticksSinceStart;
     public int ticksSinceEnd;
     public int maxTimeInTicks = 2000;
     public int secondsRemaining = 100;
+    public int quota;
+    public int quotaProgress = 0;
     private final Set<LivingEntity> enemies = Sets.newHashSet();
     public int enemiesToBeSpawned;
     public int totalEnemyCount;
@@ -77,26 +78,59 @@ public class FlounderFest {
         List<ServerPlayerEntity> players = this.world.getPlayers(this.isInFlounderFestDistance());
 
         for (ServerPlayerEntity player : players) {
-            involvedPlayers.add(player.getUuid());
+            if(!involvedPlayers.contains(player.getUuid())) {
+                addPlayerToFlounderFest(player);
+            }
             if(isGracePeriod()) {
-                player.sendMessage(Text.literal("FlounderFest Starting In " + ((gracePeriod) / 20)), true);
+//                player.sendMessage(Text.literal("FlounderFest Starting In " + ((gracePeriod) / 20)), true);
+                if(gracePeriod % 20 == 0) {
+                    sendGracePeriodPacket(player);
+                }
             } else {
-                //sends a packet every second
                 if((maxTimeInTicks - ticksSinceStart) % 20 == 0) {
                     secondsRemaining = (maxTimeInTicks - ticksSinceStart) / 20;
-                    PacketByteBuf buf = PacketByteBufs.create();
-
-//                    buf.writeInt(secondsRemaining);
-                    //wave - seconds remaining - quota progress - quota
-//                    int[] flounderFestInfo = new int[]{1, secondsRemaining, quotaProgress};
-//                    buf.writeIntArray(flounderFestInfo);
-                    buf.writeInt(1);
-                    buf.writeInt(secondsRemaining);
-                    buf.writeInt(quotaProgress);
-                    ServerPlayNetworking.send(player, FLOUNDERFEST_TIMER_UPDATE_ID, buf);
+                    sendTimerPacket(player);
+                }
+                if(secondsRemaining == 100) { //needs one extra second to send the last grace period second update
+                    sendGracePeriodPacket(player);
                 }
             }
         }
+    }
+
+    public void addPlayerToFlounderFest(ServerPlayerEntity player) {
+        involvedPlayers.add(player.getUuid());
+
+        PacketByteBuf buf = PacketByteBufs.create();
+        /*
+        currentWave/waves
+        secondsRemaining
+        quotaProgress/quota
+         */
+        buf.writeInt(wave);
+        buf.writeInt(maxWaves);
+        buf.writeInt(secondsRemaining);
+        buf.writeInt(quotaProgress);
+        buf.writeInt(quota);
+        ServerPlayNetworking.send(player, FLOUNDERFEST_CREATE_HUD_ID, buf);
+    }
+
+    public void sendGracePeriodPacket(ServerPlayerEntity player) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(gracePeriod / 20);
+        ServerPlayNetworking.send(player, FLOUNDERFEST_GRACE_PERIOD_ID, buf);
+    }
+
+    public void sendTimerPacket(ServerPlayerEntity player) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(secondsRemaining);
+        ServerPlayNetworking.send(player, FLOUNDERFEST_TIMER_UPDATE_ID, buf);
+    }
+
+    public void sendDeleteHudPacket(ServerPlayerEntity player) {
+        PacketByteBuf buf = PacketByteBufs.create();
+
+        ServerPlayNetworking.send(player, FLOUNDERFEST_REMOVE_HUD_ID, buf);
     }
 
     public void tick() {
@@ -207,6 +241,8 @@ public class FlounderFest {
         this.status = Status.STOPPED;
 
         enemies.forEach(entityFromSet -> (entityFromSet).remove(Entity.RemovalReason.DISCARDED));
+
+        involvedPlayers.forEach(playerUuid -> sendDeleteHudPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
     }
 
     public BlockPos getStartingPos() {

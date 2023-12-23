@@ -3,8 +3,7 @@
   "package": "net.superkat.flutterandflounder.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ExampleMixin",
-    ,
+    "flounderfest.GameRendererMixin",
     "flounderfest.ServerWorldMixin"
   ],
   "injectors": {

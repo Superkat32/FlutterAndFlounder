@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.PersistentState;
 import net.superkat.flutterandflounder.flounderfest.api.FlounderFestServerWorld;
+import net.superkat.flutterandflounder.rendering.FlutterAndFlounderRendering;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
@@ -97,6 +98,7 @@ public class FlounderFestManager extends PersistentState {
     }
 
     public static Vec3d getFlounderFestSkyColor(Vec3d initialColor) {
-        return initialColor.add(1, 0.2, 0.05);
+        double multiplier = FlutterAndFlounderRendering.skyChangeMultiplier;
+        return initialColor.add(1 * multiplier, 0.2 * multiplier, 0.05 * multiplier);
     }
 }
