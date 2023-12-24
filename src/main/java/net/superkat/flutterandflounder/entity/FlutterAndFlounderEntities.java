@@ -9,8 +9,10 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.superkat.flutterandflounder.entity.custom.cod.CodAutomobileEntity;
 import net.superkat.flutterandflounder.entity.custom.cod.FlyingCodEntity;
+import net.superkat.flutterandflounder.entity.custom.cod.HammerCodEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.FlyingSalmonEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.SalmonShipEntity;
+import net.superkat.flutterandflounder.entity.custom.salmon.WhackerSalmonEntity;
 
 import static net.superkat.flutterandflounder.FlutterAndFlounderMain.MOD_ID;
 
@@ -43,6 +45,20 @@ public class FlutterAndFlounderEntities {
             new Identifier(MOD_ID, "salmonship"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, SalmonShipEntity::new)
                     .dimensions(EntityDimensions.fixed(1.5f, 1f)).build()
+    );
+
+    public static final EntityType<HammerCodEntity> HAMMER_COD = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(MOD_ID, "hammercod"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, HammerCodEntity::new)
+                    .dimensions(EntityDimensions.fixed(2f, 3.2f)).build()
+    );
+
+    public static final EntityType<WhackerSalmonEntity> WHACKER_SALMON = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(MOD_ID, "whacker"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, WhackerSalmonEntity::new)
+                    .dimensions(EntityDimensions.fixed(1.5f, 0.7f)).build()
     );
 
 }

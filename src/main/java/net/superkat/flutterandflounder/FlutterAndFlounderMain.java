@@ -6,8 +6,10 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.superkat.flutterandflounder.entity.FlutterAndFlounderEntities;
 import net.superkat.flutterandflounder.entity.custom.cod.CodAutomobileEntity;
 import net.superkat.flutterandflounder.entity.custom.cod.FlyingCodEntity;
+import net.superkat.flutterandflounder.entity.custom.cod.HammerCodEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.FlyingSalmonEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.SalmonShipEntity;
+import net.superkat.flutterandflounder.entity.custom.salmon.WhackerSalmonEntity;
 import net.superkat.flutterandflounder.flounderfest.command.FlounderFestCommand;
 import net.superkat.flutterandflounder.item.FlutterAndFlounderItems;
 import org.slf4j.Logger;
@@ -31,6 +33,8 @@ public class FlutterAndFlounderMain implements ModInitializer {
 		//bosses
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.COD_AUTOMOBILE, CodAutomobileEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.SALMON_SHIP, SalmonShipEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.HAMMER_COD, HammerCodEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.WHACKER_SALMON, WhackerSalmonEntity.createAttributes());
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> FlounderFestCommand.register(dispatcher)));
 

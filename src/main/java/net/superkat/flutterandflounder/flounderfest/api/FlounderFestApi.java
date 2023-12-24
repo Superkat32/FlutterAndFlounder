@@ -148,7 +148,10 @@ public class FlounderFestApi {
 
     static enum BossFish {
         CODAUTOMOBILE(FlutterAndFlounderEntities.COD_AUTOMOBILE),
-        SALMONSHIP(FlutterAndFlounderEntities.SALMON_SHIP);
+        SALMONSHIP(FlutterAndFlounderEntities.SALMON_SHIP),
+        HAMMERCOD(FlutterAndFlounderEntities.HAMMER_COD),
+        WHACKERSALMON(FlutterAndFlounderEntities.WHACKER_SALMON);
+
         final EntityType<? extends CommonBossFish> type;
         private static final List<BossFish> VALUES = List.of(values());
         private static final Random RANDOM = new Random();

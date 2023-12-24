@@ -1,0 +1,94 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.hammercod",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 4.5,
+				"visible_bounds_offset": [0, 1.75, 0]
+			},
+			"bones": [
+				{
+					"name": "main",
+					"pivot": [0, 7, 0],
+					"rotation": [-72.5, 0, 0]
+				},
+				{
+					"name": "body",
+					"parent": "main",
+					"pivot": [0, 9, 0],
+					"rotation": [-15, 0, 0],
+					"cubes": [
+						{"origin": [-1, 7, 0], "size": [2, 4, 7], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "right_fin",
+					"parent": "body",
+					"pivot": [-1, 7.25, 0],
+					"rotation": [0, 0, -82.5],
+					"cubes": [
+						{"origin": [-3.06169, 7.43831, 0.9981], "size": [2, 0, 2], "pivot": [0, 6.25, 0], "rotation": [0, 0, -5], "uv": [24, 1]}
+					]
+				},
+				{
+					"name": "left_fin",
+					"parent": "body",
+					"pivot": [1, 8, 0],
+					"rotation": [0, 0, 45],
+					"cubes": [
+						{"origin": [1.06169, 8.43831, 0.9981], "size": [2, 0, 2], "pivot": [0, 7, 0], "rotation": [0, 0, 42.5], "uv": [24, 4]}
+					]
+				},
+				{
+					"name": "fin_back",
+					"parent": "body",
+					"pivot": [0, 11, 1],
+					"cubes": [
+						{"origin": [0, 11, 0], "size": [0, 1, 6], "uv": [20, -6]}
+					]
+				},
+				{
+					"name": "head",
+					"parent": "main",
+					"pivot": [0, 9, 0],
+					"rotation": [47.5, 0, 0],
+					"cubes": [
+						{"origin": [-1, 7, -3], "size": [2, 4, 3], "uv": [11, 0]}
+					]
+				},
+				{
+					"name": "nose",
+					"parent": "head",
+					"pivot": [0, 9, -3],
+					"cubes": [
+						{"origin": [-1, 8, -4], "size": [2, 3, 1], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "tail",
+					"parent": "main",
+					"pivot": [0, 6, 6],
+					"rotation": [-95, 0, 0],
+					"cubes": [
+						{"origin": [0, 4, 6], "size": [0, 4, 4], "uv": [22, 3]}
+					]
+				},
+				{
+					"name": "hammer",
+					"parent": "main",
+					"pivot": [0, 2, 0],
+					"cubes": [
+						{"origin": [-1, 3, -31], "size": [2, 2, 34], "uv": [56, 92]},
+						{"origin": [-8, 1, -44], "size": [16, 8, 14], "uv": [0, 104]},
+						{"origin": [-10, 6, -48], "size": [20, 8, 22], "uv": [44, 0]},
+						{"origin": [-14, -7, -51], "size": [30, 8, 30], "uv": [8, 53]}
+					]
+				}
+			]
+		}
+	]
+}

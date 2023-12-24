@@ -5,11 +5,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.superkat.flutterandflounder.entity.custom.CommonBossFish;
@@ -100,14 +98,6 @@ public class SalmonShipEntity extends CommonBossFish {
                 warningTicks = 40;
             }
         }
-    }
-
-    @Override
-    public void onDeath(DamageSource damageSource) {
-        if(!this.getWorld().isClient) {
-            updateFlounderFestQuota((ServerWorld) this.getWorld(), this.getBlockPos());
-        }
-        super.onDeath(damageSource);
     }
 
     public void setWarningTicks(int warningTicks) {

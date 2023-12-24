@@ -44,6 +44,7 @@ public class FlounderFest {
     public int spawnedEnemies = 0;
     public int currentEnemies = 0;
     public int ticksUntilNextEnemySpawn = 0;
+    public int maxBossesAtOnce = 15; //can't have too little for gameplay, can't have too much for lag
     public int spawnedBosses = 0;
     public int currentBosses = 0;
     public int ticksUntilNextBossSpawn = 60;
@@ -161,9 +162,9 @@ public class FlounderFest {
                     if(ticksUntilNextEnemySpawn <= 0) {
                         addEnemy();
                     }
-                    if(ticksUntilNextBossSpawn <= 0) {
-                        addBoss();
-                    }
+                }
+                if(currentBosses < maxBossesAtOnce && ticksUntilNextBossSpawn <= 0) {
+                    addBoss();
                 }
 
                 //time up
@@ -194,7 +195,7 @@ public class FlounderFest {
             enemiesToBeSpawned--;
             currentEnemies++;
             spawnedEnemies++;
-            ticksUntilNextEnemySpawn = world.random.nextBetween(20, 200);
+            ticksUntilNextEnemySpawn = world.random.nextBetween(20, 80);
         }
     }
 
@@ -203,7 +204,7 @@ public class FlounderFest {
             enemiesToBeSpawned--;
             currentBosses++;
             spawnedBosses++;
-            ticksUntilNextBossSpawn = world.random.nextBetween(10, 100);
+            ticksUntilNextBossSpawn = world.random.nextBetween(currentBosses * 5, 160); //scales with the current bosses
             //FIXME - boss alert packet here
         }
     }
