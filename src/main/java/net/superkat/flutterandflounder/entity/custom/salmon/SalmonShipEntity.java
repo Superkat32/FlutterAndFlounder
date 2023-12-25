@@ -1,6 +1,7 @@
 package net.superkat.flutterandflounder.entity.custom.salmon;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -125,5 +126,10 @@ public class SalmonShipEntity extends CommonBossFish {
 
     public void setShouldAttack(boolean shouldAttack) {
         this.shouldAttack = shouldAttack;
+    }
+
+    @Override
+    public boolean tryAttack(Entity target) {
+        return super.tryAttack(target);
     }
 }

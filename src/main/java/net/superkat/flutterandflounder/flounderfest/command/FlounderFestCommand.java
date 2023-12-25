@@ -3,6 +3,9 @@ package net.superkat.flutterandflounder.flounderfest.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -16,6 +19,8 @@ import net.superkat.flutterandflounder.flounderfest.FlounderFestManager;
 import net.superkat.flutterandflounder.flounderfest.api.FlounderFestApi;
 import net.superkat.flutterandflounder.flounderfest.api.FlounderFestServerWorld;
 
+import static net.superkat.flutterandflounder.network.FlutterAndFlounderPackets.*;
+
 public class FlounderFestCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(
@@ -27,6 +32,19 @@ public class FlounderFestCommand {
                                         .then(CommandManager.argument("enemycount", IntegerArgumentType.integer())
                                                 .executes(context -> executeStart(context.getSource(), IntegerArgumentType.getInteger(context, "quota"), IntegerArgumentType.getInteger(context, "enemycount"))))))
                         .then(CommandManager.literal("stop").executes(context -> executeStop(context.getSource())))
+                        .then(CommandManager.literal("fakeHud")
+                                .then(CommandManager.literal("create")
+                                        .executes(context -> executeFakeHud(context.getSource()))
+                                        .then(CommandManager.literal("fakeVictory")
+                                                .executes(context -> executeFakeVictory(context.getSource())))
+                                        .then(CommandManager.literal("fakeDefeat")
+                                                .executes(context -> executeFakeDefeat(context.getSource())))
+                                )
+                                .then(CommandManager.literal("delete").executes(context -> executeDeleteFakeHud(context.getSource())))
+                        )
+//                        .then(CommandManager.literal("createFakeHud").executes(context -> executeFakeHud(context.getSource())))
+//                        .then(CommandManager.literal("deleteFakeHud").executes(context -> executeDeleteFakeHud(context.getSource())))
+//                        .then(CommandManager.literal("fakeVictory").executes(context -> executeFakeVictory(context.getSource())))
 //                        .then(CommandManager.literal("start")
 //                                .then(CommandManager.argument("quota", IntegerArgumentType.integer(1))
 //                                    .executes(context -> executeStart(context.getSource(), IntegerArgumentType.getInteger(context, "quota"), IntegerArgumentType.getInteger(context, "quota")))
@@ -54,6 +72,7 @@ public class FlounderFestCommand {
         );
     }
     private static int executeStart(ServerCommandSource source, int quota, int enemycount) throws CommandSyntaxException {
+
         ServerPlayerEntity player = source.getPlayerOrThrow();
         ServerWorld world = player.getServerWorld();
         if(world != null) {
@@ -89,6 +108,47 @@ public class FlounderFestCommand {
             source.sendError(Text.literal("No Flounderfest here..."));
             return -1;
         }
+    }
+
+    private static int executeFakeHud(ServerCommandSource source) throws CommandSyntaxException {
+        ServerPlayerEntity player = source.getPlayerOrThrow();
+        PacketByteBuf buf1 = PacketByteBufs.create();
+        ServerPlayNetworking.send(player, FLOUNDERFEST_REMOVE_HUD_ID, buf1);
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(1);
+        buf.writeInt(3);
+        buf.writeInt(57);
+        buf.writeInt(3);
+        buf.writeInt(7);
+        ServerPlayNetworking.send(player, FLOUNDERFEST_CREATE_HUD_ID, buf);
+        source.sendFeedback(() -> Text.literal("Created fake hud!"), false);
+        return 1;
+    }
+
+    private static int executeDeleteFakeHud(ServerCommandSource source) throws CommandSyntaxException {
+        ServerPlayerEntity player = source.getPlayerOrThrow();
+        PacketByteBuf buf = PacketByteBufs.create();
+        ServerPlayNetworking.send(player, FLOUNDERFEST_REMOVE_HUD_ID, buf);
+        source.sendFeedback(() -> Text.literal("Removed fake hud!"), false);
+        return 1;
+    }
+
+    private static int executeFakeVictory(ServerCommandSource source) throws CommandSyntaxException {
+        executeFakeHud(source);
+        ServerPlayerEntity player = source.getPlayerOrThrow();
+        PacketByteBuf buf = PacketByteBufs.create();
+        ServerPlayNetworking.send(player, FLOUNDERFEST_VICTORY_ID, buf);
+        source.sendFeedback(() -> Text.literal("Fake victory shown!"), false);
+        return 1;
+    }
+
+    private static int executeFakeDefeat(ServerCommandSource source) throws CommandSyntaxException {
+        executeFakeHud(source);
+        ServerPlayerEntity player = source.getPlayerOrThrow();
+        PacketByteBuf buf = PacketByteBufs.create();
+        ServerPlayNetworking.send(player, FLOUNDERFEST_DEFEAT_ID, buf);
+        source.sendFeedback(() -> Text.literal("Fake defeat shown!"), false);
+        return 1;
     }
 
 

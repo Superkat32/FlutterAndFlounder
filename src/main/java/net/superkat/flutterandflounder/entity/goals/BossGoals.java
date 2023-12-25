@@ -155,10 +155,6 @@ public class BossGoals {
                 if(target != null) {
                     double xDistance = Math.abs(Math.abs(entity.getX()) - Math.abs(target.getX()));
                     double zDistance = Math.abs(Math.abs(entity.getZ()) - Math.abs(target.getZ()));
-//                    if(d < entity.getBoundingBox().getAverageSideLength()) {
-//                        this.state = State.WAIT;
-//                        entity.setVelocity(entity.getVelocity().multiply(0.5));
-//                    } else {
                     Vec3d vec3d1 = vec3d.multiply(speed * 0.05 / 3);
                     entity.setVelocity(entity.getVelocity().add(vec3d1.getX(), vec3d.multiply(speed * 0.05 / 5).getY(), vec3d1.getZ()));
                     if(xDistance < 10 && zDistance < 10) {
@@ -193,7 +189,7 @@ public class BossGoals {
                             salmonShipEntity.setShouldAttack(false);
                             cooldown = maxCooldown;
                         } else {
-                            boolean beneath = xDistance <= 2.5 && zDistance <= 2.5;
+                            boolean beneath = xDistance <= 3.5 && zDistance <= 3.5;
                             if(beneath) {
                                 Vec3d vec3d = new Vec3d(x, y, z);
                                 Vec3d vec3d1 = vec3d.multiply(speed * 0.05 / 3);
@@ -201,12 +197,8 @@ public class BossGoals {
                                 if (salmonShipEntity != null) {
                                     salmonShipEntity.setIsWarning(true);
                                     entity.setAttacking(true);
-//                                    entity.setVelocity(entity.getVelocity().multiply(0, 1.05, 0));
                                 }
                             }
-                        }
-
-                        if(entity.isAttacking()) {
                         }
 
                         cooldown--;
@@ -214,8 +206,6 @@ public class BossGoals {
                             canReturnUp = true;
                         }
                     }
-//                } else {
-//                    entity.setVelocity(0, -0.1, 0);
                 }
             }
         }

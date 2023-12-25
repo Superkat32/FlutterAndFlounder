@@ -27,6 +27,7 @@ public class FlutterAndFlounderClient implements ClientModInitializer {
         FlutterAndFlounderPackets.registerPackets();
 
         FlutterAndFlounderRendering.registerHudEvents();
+        FlutterAndFlounderRendering.registerWorldEvents();
 
 //        ClientPlayNetworking.registerGlobalReceiver(FlutterAndFlounderPackets.FLOUNDERFEST_TIMER_UPDATE_ID, ((client, handler, buf, responseSender) -> {
 //            client.execute(() -> {

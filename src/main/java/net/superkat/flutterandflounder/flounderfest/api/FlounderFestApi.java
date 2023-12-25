@@ -65,8 +65,9 @@ public class FlounderFestApi {
                 fish.setPos(pos.getX(), pos.getY(), pos.getZ());
                 fish.initialize(world, world.getLocalDifficulty(pos), SpawnReason.EVENT, null, null);
                 fish.setOnGround(true);
-                if(flounderFest.hasPlayers()) { //game otherwise crashes when in single player and the player dies
-                    fish.setTarget(flounderFest.getRandomPlayerTarget());
+                ServerPlayerEntity targetPlayer = flounderFest.getRandomPlayerTarget();
+                if(targetPlayer != null) {
+                    fish.setTarget(targetPlayer);
                 }
                 world.spawnEntity(fish);
                 flounderFest.addEntityToEnemyList(fish);
@@ -85,9 +86,12 @@ public class FlounderFestApi {
                 fish.setPos(pos.getX(), pos.getY(), pos.getZ());
                 fish.initialize(world, world.getLocalDifficulty(pos), SpawnReason.EVENT, null, null);
                 fish.setOnGround(true);
-                if(flounderFest.hasPlayers()) { //game otherwise crashes when in single player and the player dies
-                    fish.setTarget(flounderFest.getRandomPlayerTarget());
+                ServerPlayerEntity targetPlayer = flounderFest.getRandomPlayerTarget();
+                if(targetPlayer != null) {
+                    fish.setTarget(targetPlayer);
                 }
+//                if(flounderFest.hasPlayers()) { //game otherwise crashes when in single player and the player dies
+//                }
                 world.spawnEntity(fish);
                 flounderFest.addEntityToEnemyList(fish);
                 return true;

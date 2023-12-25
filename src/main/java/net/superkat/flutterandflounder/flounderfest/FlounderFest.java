@@ -11,6 +11,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.superkat.flutterandflounder.FlutterAndFlounderMain;
 import net.superkat.flutterandflounder.flounderfest.api.FlounderFestApi;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
@@ -64,9 +65,13 @@ public class FlounderFest {
         return !involvedPlayers.isEmpty();
     }
 
+    @Nullable
     public ServerPlayerEntity getRandomPlayerTarget() {
         List<ServerPlayerEntity> players = this.world.getPlayers(this.isInFlounderFestDistance());
-        return players.get(world.random.nextInt(players.size()));
+        if(!players.isEmpty()) {
+            return players.get(world.random.nextInt(players.size()));
+        }
+        return null;
     }
 
     private Predicate<ServerPlayerEntity> isInFlounderFestDistance() {
@@ -116,6 +121,7 @@ public class FlounderFest {
         buf.writeInt(secondsRemaining);
         buf.writeInt(quotaProgress);
         buf.writeInt(maxQuota);
+        buf.writeBlockPos(startingPos);
         ServerPlayNetworking.send(player, FLOUNDERFEST_CREATE_HUD_ID, buf);
     }
 
@@ -140,9 +146,19 @@ public class FlounderFest {
 
     public void sendDeleteHudPacket(ServerPlayerEntity player) {
         PacketByteBuf buf = PacketByteBufs.create();
-
         ServerPlayNetworking.send(player, FLOUNDERFEST_REMOVE_HUD_ID, buf);
     }
+
+    public void sendVictoryPacket(ServerPlayerEntity player) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        ServerPlayNetworking.send(player, FLOUNDERFEST_VICTORY_ID, buf);
+    }
+
+    public void sendDefeatPacket(ServerPlayerEntity player) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        ServerPlayNetworking.send(player, FLOUNDERFEST_DEFEAT_ID, buf);
+    }
+
 
     public void tick() {
         if(isGracePeriod()) {
@@ -169,13 +185,18 @@ public class FlounderFest {
 
                 //time up
                 if(ticksSinceStart >= maxTimeInTicks) {
-                    //check for victory
-                    if(quotaProgress >= maxQuota) {
-                        this.status = Status.VICTORY;
+                    //FIXME - wave detection stuff
+                    if(this.status == Status.ONGOING) {
+                        //check for victory
+                        if(quotaProgress >= maxQuota) {
+                            this.status = Status.VICTORY;
+                            involvedPlayers.forEach(playerUuid -> sendVictoryPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
 
-                    //counts as loss
-                    } else {
-                        this.status = Status.LOSS;
+                        //counts as loss
+                        } else {
+                            this.status = Status.LOSS;
+                            involvedPlayers.forEach(playerUuid -> sendDefeatPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
+                        }
                     }
                 }
             } else if (isFinished()) {
@@ -195,7 +216,7 @@ public class FlounderFest {
             enemiesToBeSpawned--;
             currentEnemies++;
             spawnedEnemies++;
-            ticksUntilNextEnemySpawn = world.random.nextBetween(20, 80);
+            ticksUntilNextEnemySpawn = world.random.nextBetween(10, 80);
         }
     }
 
@@ -231,16 +252,22 @@ public class FlounderFest {
     public void updateQuota(int amount) {
         if(!isFinished()) {
             quotaProgress += amount;
+            currentBosses -= amount;
             for (UUID playerUuid : involvedPlayers) {
                 sendQuotaPacket((ServerPlayerEntity) this.world.getEntity(playerUuid));
             }
         }
     }
 
+    public void updateEnemyCount(int amount) {
+        currentEnemies -= amount;
+    }
+
+
     public int getGracePeriod() {
         //seconds in ticks
-        //grace period is 10 seconds by default
-        return 200;
+        //grace period is 10 + 5 ticks seconds by default
+        return 205;
     }
 
     public boolean isGracePeriod() {
@@ -284,6 +311,7 @@ public class FlounderFest {
 
     static enum Status {
         ONGOING,
+        PAUSED,
         VICTORY,
         LOSS,
         STOPPED;

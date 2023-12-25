@@ -1,24 +1,57 @@
 package net.superkat.flutterandflounder.rendering;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
+import static net.superkat.flutterandflounder.FlutterAndFlounderMain.MOD_ID;
+
 public class FlutterAndFlounderRendering {
+    public static final Identifier transparent1 = new Identifier(MOD_ID, "textures/numbers/1.png");
+    public static final Identifier transparent2 = new Identifier(MOD_ID, "textures/numbers/2.png");
+    public static final Identifier transparent3 = new Identifier(MOD_ID, "textures/numbers/3.png");
+    public static final Identifier transparent4 = new Identifier(MOD_ID, "textures/numbers/4.png");
+    public static final Identifier transparent5 = new Identifier(MOD_ID, "textures/numbers/5.png");
+    public static final Identifier transparent6 = new Identifier(MOD_ID, "textures/numbers/6.png");
+    public static final Identifier transparent7 = new Identifier(MOD_ID, "textures/numbers/7.png");
+    public static final Identifier transparent8 = new Identifier(MOD_ID, "textures/numbers/8.png");
+    public static final Identifier transparent9 = new Identifier(MOD_ID, "textures/numbers/9.png");
+    public static final Identifier transparent10 = new Identifier(MOD_ID, "textures/numbers/10.png");
     public static boolean shouldChangeSky = false;
     public static double skyChangeMultiplier = 0;
+    public static boolean shouldPlayQuotaUpdateAnimation = false;
+    public static float quotaUpdateAnimOpacity = 0;
+    public static int ticksSinceQuotaUpdateAnim = 0;
     @Nullable
     public static FlounderFestHud flounderFestHud = null;
+    public static TextTypeWriter textTypeWriter = null;
+    public static boolean renewTextTypeWriter = true;
 
-    public FlutterAndFlounderRendering() {
-    }
+    @Nullable
+    public static FlounderFestCenterRenderer flounderFestCenterRenderer = null;
 
     public static void registerHudEvents() {
         HudRenderCallback.EVENT.register(FlutterAndFlounderRendering::renderFlounderFestHuds);
+    }
+
+    public static void registerWorldEvents() {
+        WorldRenderEvents.END.register(FlutterAndFlounderRendering::renderFlounderFestCenter);
+    }
+
+    public static void renderFlounderFestCenter(WorldRenderContext worldRenderContext) {
+        if(flounderFestCenterRenderer != null) {
+            flounderFestCenterRenderer.renderFlounderFestCenter(worldRenderContext);
+        }
     }
 
     public static void renderFlounderFestHuds(DrawContext context, float tickDelta) {
@@ -41,6 +74,7 @@ public class FlutterAndFlounderRendering {
         MinecraftClient client = MinecraftClient.getInstance();
 
         int windowWidth = context.getScaledWindowWidth();
+        int windowHeight = context.getScaledWindowHeight();
 
         //"FlounderFest" title at the top of the screen
         Text title = Text.translatable("flutterandflounder.flounderfest.title");
@@ -89,9 +123,157 @@ public class FlutterAndFlounderRendering {
         int quotaX = windowWidth / 2 + titleTextWidth / 4 + quotaTextWidth / 8;
         if(quotaChar == 3) { //done because double-digit max quotas(4 characters) is more likely
             quotaX = windowWidth / 2 + titleTextWidth / 4 + quotaTextWidth / 3;
+        } else if (quotaChar == 5) {
+            quotaX = windowWidth / 2 + titleTextWidth / 4;
+        }
+        context.drawTextWithShadow(client.textRenderer, quota, quotaX, timeY, quotaColor.getRGB());
+
+        if(shouldPlayQuotaUpdateAnimation) {
+            ticksSinceQuotaUpdateAnim++;
+            quotaUpdateAnimOpacity = MathHelper.clamp(quotaUpdateAnimOpacity += 0.2f, 0f, 1f);
+            if(ticksSinceQuotaUpdateAnim >= 60) {
+                quotaUpdateAnimOpacity = MathHelper.clamp(quotaUpdateAnimOpacity -= 0.3f, 0f, 1f);
+                if(quotaUpdateAnimOpacity <= 0f) {
+                    shouldPlayQuotaUpdateAnimation = false;
+                }
+            } if (ticksSinceQuotaUpdateAnim >= 100) { //backup in case of bug
+                quotaUpdateAnimOpacity = 0f;
+                shouldPlayQuotaUpdateAnimation = false;
+            }
+            Text update = Text.literal("+1");
+            int updateWidth = client.textRenderer.getWidth(update);
+            int updateHeight = client.textRenderer.getWrappedLinesHeight(update, 114);
+            int updateY = timeY + updateHeight;
+            RenderSystem.enableBlend();
+            context.setShaderColor(1f, 1f, 1f, quotaUpdateAnimOpacity);
+            context.drawTextWithShadow(client.textRenderer, update, quotaX, updateY, 16777215);
+            context.setShaderColor(1f, 1f, 1f, 1f);
+            RenderSystem.disableBlend();
         }
 
-        context.drawTextWithShadow(client.textRenderer, quota, quotaX, timeY, quotaColor.getRGB());
+        renderNumbers(context, hud);
+        if(!(hud.status == FlounderFestHud.Status.ONGOING)) {
+            renderVictoryDefeatOrWaveClear(client, context, hud);
+        }
+    }
+
+    public static void renderNumbers(DrawContext context, FlounderFestHud hud) {
+        int windowWidth = context.getScaledWindowWidth();
+        int windowHeight = context.getScaledWindowHeight();
+        if(hud.gracePeriod > 0) {
+            Identifier numberTexture = determineNumberTexture(hud.gracePeriod);
+            if(numberTexture != null) {
+                int numberWidth = 55 * 4;
+                int numberHeight = 35 * 4;
+                int numberX = windowWidth / 2 - numberWidth / 2;
+                int numberY = windowHeight / 2 - numberHeight / 2;
+                RenderSystem.disableDepthTest();
+                RenderSystem.depthMask(false);
+                RenderSystem.enableBlend();
+                context.setShaderColor(.68f, .9f, 1f, .6f);
+                context.drawTexture(numberTexture, numberX, numberY, 0, 0, numberWidth, numberHeight, numberWidth, numberHeight);
+                RenderSystem.depthMask(true);
+                RenderSystem.enableDepthTest();
+                RenderSystem.disableBlend();
+                context.setShaderColor(1f, 1f, 1f, 1f);
+            }
+        } else if (hud.secondsLeft <= 10) {
+            Identifier numberTexture = determineNumberTexture(hud.secondsLeft);
+            if(numberTexture != null) {
+                int numberWidth = 55 * 4;
+                int numberHeight = 35 * 4;
+                int numberX = windowWidth / 2 - numberWidth / 2;
+                int numberY = windowHeight / 2 - numberHeight / 2;
+                RenderSystem.disableDepthTest();
+                RenderSystem.depthMask(false);
+                RenderSystem.enableBlend();
+                if (hud.quotaProgress >= hud.maxQuota) {
+                    context.setShaderColor(.68f, .9f, 1f, .6f);
+                } else {
+                    context.setShaderColor(.9f, .25f, .23f, .5f);
+                }
+                context.drawTexture(numberTexture, numberX, numberY, 0, 0, numberWidth, numberHeight, numberWidth, numberHeight);
+                RenderSystem.depthMask(true);
+                RenderSystem.enableDepthTest();
+                RenderSystem.disableBlend();
+                context.setShaderColor(1f, 1f, 1f, 1f);
+            }
+        }
+    }
+
+    public static Identifier determineNumberTexture(int time) {
+        Identifier numberTexture = null;
+        switch (time) {
+            case 1 -> numberTexture = transparent1;
+            case 2 -> numberTexture = transparent2;
+            case 3 -> numberTexture = transparent3;
+            case 4 -> numberTexture = transparent4;
+            case 5 -> numberTexture = transparent5;
+            case 6 -> numberTexture = transparent6;
+            case 7 -> numberTexture = transparent7;
+            case 8 -> numberTexture = transparent8;
+            case 9 -> numberTexture = transparent9;
+            case 10 -> numberTexture = transparent10;
+        }
+        return numberTexture;
+    }
+
+    public static void renderVictoryDefeatOrWaveClear(MinecraftClient client, DrawContext context, FlounderFestHud hud) {
+        int windowWidth = context.getScaledWindowWidth();
+        int windowHeight = context.getScaledWindowHeight();
+        switch(hud.status) {
+            case WAVE_CLEAR -> {
+
+            } case VICTORY -> {
+                Text victory = Text.translatable("flutterandflounder.flounderfest.victory");
+                int victoryWidth = client.textRenderer.getWidth(victory);
+                int victoryX = windowWidth / 2 - victoryWidth / 2;
+                int victoryY = windowHeight / 2 + 20;
+
+                MatrixStack matrixStack = context.getMatrices();
+                matrixStack.push();
+                matrixStack.translate(-victoryX / 4f, -victoryY + windowHeight / 4f, 0);
+                matrixStack.translate(-victoryX , -victoryY, 0);
+                matrixStack.scale(2, 2, 1);
+                matrixStack.translate(-victoryX, -victoryY, 0);
+                matrixStack.scale(2, 2, 1);
+                if(textTypeWriter == null || renewTextTypeWriter) {
+                    textTypeWriter = new TextTypeWriter(victory, victoryX, victoryY, 10, 580, new Color(175, 238, 255));
+                    textTypeWriter.setFadeIn(30);
+                    textTypeWriter.setFadeOut(20);
+                    renewTextTypeWriter = false;
+                }
+                textTypeWriter.writeText(context, matrixStack);
+                matrixStack.pop();
+            } case DEFEAT -> {
+                Text defeat = Text.translatable("flutterandflounder.flounderfest.defeat");
+                int defeatWidth = client.textRenderer.getWidth(defeat);
+                int defeatX = windowWidth / 2 - defeatWidth / 2;
+                int defeatY = windowHeight / 2 + 20;
+
+                MatrixStack matrixStack = context.getMatrices();
+                matrixStack.push();
+                matrixStack.translate(-defeatX / 2f, -defeatY + windowHeight / 4f, 0);
+                matrixStack.translate(-defeatX , -defeatY, 0);
+                matrixStack.scale(2, 2, 1);
+                matrixStack.translate(-defeatX, -defeatY, 0);
+                matrixStack.scale(2, 2, 1);
+                if(textTypeWriter == null || renewTextTypeWriter) {
+                    textTypeWriter = new TextTypeWriter(defeat, defeatX, defeatY, 7, 580, new Color(232, 65, 61));
+                    textTypeWriter.setFadeIn(30);
+                    textTypeWriter.setFadeOut(20);
+                    renewTextTypeWriter = false;
+                }
+                textTypeWriter.writeText(context, matrixStack);
+                matrixStack.pop();
+            }
+        }
+    }
+
+    public static void startQuotaUpdateAnimation() {
+        shouldPlayQuotaUpdateAnimation = true;
+        ticksSinceQuotaUpdateAnim = 0;
+        quotaUpdateAnimOpacity = 0f;
     }
 
     public void setFlounderFestHud(@Nullable FlounderFestHud flounderFestHud) {
