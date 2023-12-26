@@ -28,7 +28,7 @@ public class FlounderFestCommand {
                         .requires(source -> source.hasPermissionLevel(3))
                         .then(CommandManager.literal("start")
                                 .then(CommandManager.argument("quota", IntegerArgumentType.integer())
-                                        .executes(context -> executeStart(context.getSource(), IntegerArgumentType.getInteger(context, "quota"), 10))
+                                        .executes(context -> executeStart(context.getSource(), IntegerArgumentType.getInteger(context, "quota"), 4))
                                         .then(CommandManager.argument("enemycount", IntegerArgumentType.integer())
                                                 .executes(context -> executeStart(context.getSource(), IntegerArgumentType.getInteger(context, "quota"), IntegerArgumentType.getInteger(context, "enemycount"))))))
                         .then(CommandManager.literal("stop").executes(context -> executeStop(context.getSource())))
@@ -39,6 +39,9 @@ public class FlounderFestCommand {
                                                 .executes(context -> executeFakeVictory(context.getSource())))
                                         .then(CommandManager.literal("fakeDefeat")
                                                 .executes(context -> executeFakeDefeat(context.getSource())))
+                                        .then(CommandManager.literal("fakeWaveClear")
+                                                .executes(context -> executeFakeWaveClear(context.getSource()))
+                                        )
                                 )
                                 .then(CommandManager.literal("delete").executes(context -> executeDeleteFakeHud(context.getSource())))
                         )
@@ -72,7 +75,6 @@ public class FlounderFestCommand {
         );
     }
     private static int executeStart(ServerCommandSource source, int quota, int enemycount) throws CommandSyntaxException {
-
         ServerPlayerEntity player = source.getPlayerOrThrow();
         ServerWorld world = player.getServerWorld();
         if(world != null) {
@@ -120,6 +122,7 @@ public class FlounderFestCommand {
         buf.writeInt(57);
         buf.writeInt(3);
         buf.writeInt(7);
+        buf.writeBlockPos(player.getBlockPos());
         ServerPlayNetworking.send(player, FLOUNDERFEST_CREATE_HUD_ID, buf);
         source.sendFeedback(() -> Text.literal("Created fake hud!"), false);
         return 1;
@@ -148,6 +151,15 @@ public class FlounderFestCommand {
         PacketByteBuf buf = PacketByteBufs.create();
         ServerPlayNetworking.send(player, FLOUNDERFEST_DEFEAT_ID, buf);
         source.sendFeedback(() -> Text.literal("Fake defeat shown!"), false);
+        return 1;
+    }
+
+    private static int executeFakeWaveClear(ServerCommandSource source) throws CommandSyntaxException {
+        executeFakeHud(source);
+        ServerPlayerEntity player = source.getPlayerOrThrow();
+        PacketByteBuf buf = PacketByteBufs.create();
+        ServerPlayNetworking.send(player, FLOUNDERFEST_WAVE_CLEAR_ID, buf);
+        source.sendFeedback(() -> Text.literal("Fake wave clear shown!"), false);
         return 1;
     }
 

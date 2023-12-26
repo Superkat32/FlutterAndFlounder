@@ -249,7 +249,7 @@ public class FlounderFest {
         currentBosses = 0;
         quotaProgress = 0;
         if(wave > 1) {
-            maxQuota += (int) (maxQuota * 0.2) + 1;
+            maxQuota += wave - 1;
         }
         enemies.forEach(entityFromSet -> (entityFromSet).remove(Entity.RemovalReason.DISCARDED));
 

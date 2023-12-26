@@ -155,7 +155,7 @@ public class FlutterAndFlounderRendering {
 
         renderNumbers(context, hud);
         if(!(hud.status == FlounderFestHud.Status.ONGOING)) {
-            renderVictoryDefeatOrWaveClear(client, context, hud);
+            renderVictoryDefeatOrWaveClear(context, hud);
         }
     }
 
@@ -220,56 +220,43 @@ public class FlutterAndFlounderRendering {
         return numberTexture;
     }
 
-    public static void renderVictoryDefeatOrWaveClear(MinecraftClient client, DrawContext context, FlounderFestHud hud) {
-        int windowWidth = context.getScaledWindowWidth();
-        int windowHeight = context.getScaledWindowHeight();
+    public static void renderVictoryDefeatOrWaveClear(DrawContext context, FlounderFestHud hud) {
         switch(hud.status) {
             case WAVE_CLEAR -> {
-                System.out.println("wave clear!");
+                Text waveClear = Text.translatable("flutterandflounder.flounderfest.waveclear");
+                renderCenteredText(context, waveClear, -20, 7, 280, new Color(175, 238, 255));
             } case VICTORY -> {
                 Text victory = Text.translatable("flutterandflounder.flounderfest.victory");
-                int victoryWidth = client.textRenderer.getWidth(victory);
-                int victoryX = windowWidth / 2 - victoryWidth / 2;
-                int victoryY = windowHeight / 2 + 20;
-
-                MatrixStack matrixStack = context.getMatrices();
-                matrixStack.push();
-                matrixStack.translate(-victoryX / 4f, -victoryY + windowHeight / 4f, 0);
-                matrixStack.translate(-victoryX , -victoryY, 0);
-                matrixStack.scale(2, 2, 1);
-                matrixStack.translate(-victoryX, -victoryY, 0);
-                matrixStack.scale(2, 2, 1);
-                if(textTypeWriter == null || renewTextTypeWriter) {
-                    textTypeWriter = new TextTypeWriter(victory, victoryX, victoryY, 10, 580, new Color(175, 238, 255));
-                    textTypeWriter.setFadeIn(30);
-                    textTypeWriter.setFadeOut(20);
-                    renewTextTypeWriter = false;
-                }
-                textTypeWriter.writeText(context, matrixStack);
-                matrixStack.pop();
+                renderCenteredText(context, victory, -20, 10, 580, new Color(175, 238, 255));
             } case DEFEAT -> {
                 Text defeat = Text.translatable("flutterandflounder.flounderfest.defeat");
-                int defeatWidth = client.textRenderer.getWidth(defeat);
-                int defeatX = windowWidth / 2 - defeatWidth / 2;
-                int defeatY = windowHeight / 2 + 20;
-
-                MatrixStack matrixStack = context.getMatrices();
-                matrixStack.push();
-                matrixStack.translate(-defeatX / 2f, -defeatY + windowHeight / 4f, 0);
-                matrixStack.translate(-defeatX , -defeatY, 0);
-                matrixStack.scale(2, 2, 1);
-                matrixStack.translate(-defeatX, -defeatY, 0);
-                matrixStack.scale(2, 2, 1);
-                if(textTypeWriter == null || renewTextTypeWriter) {
-                    textTypeWriter = new TextTypeWriter(defeat, defeatX, defeatY, 7, 580, new Color(232, 65, 61));
-                    textTypeWriter.setFadeIn(30);
-                    textTypeWriter.setFadeOut(20);
-                    renewTextTypeWriter = false;
-                }
-                textTypeWriter.writeText(context, matrixStack);
-                matrixStack.pop();
+                renderCenteredText(context, defeat, -20, 7, 580, new Color(232, 65, 61));
             }
         }
+    }
+
+    public static void renderCenteredText(DrawContext context, Text text, int y, int typeDelay, int renderTime, Color textColor) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        int windowWidth = context.getScaledWindowWidth();
+        int windowHeight = context.getScaledWindowHeight();
+
+        int textWidth = client.textRenderer.getWidth(text);
+        int textX = -textWidth / 2;
+
+        MatrixStack matrixStack = context.getMatrices();
+        matrixStack.push();
+        matrixStack.translate(windowWidth / 2f, windowHeight / 2f, 0);
+        matrixStack.push();
+        matrixStack.scale(4f, 4f, 4f);
+        if(textTypeWriter == null || renewTextTypeWriter) {
+            textTypeWriter = new TextTypeWriter(text, textX, y, typeDelay, renderTime, textColor);
+            textTypeWriter.setFadeIn(30);
+            textTypeWriter.setFadeOut(20);
+            renewTextTypeWriter = false;
+        }
+        textTypeWriter.writeText(context, matrixStack);
+        matrixStack.pop();
+        matrixStack.pop();
     }
 
     public static void startQuotaUpdateAnimation() {
