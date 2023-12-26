@@ -33,7 +33,7 @@ public class FlounderFestHud {
         this.secondsLeft = secondsLeft;
     }
 
-    public void updateQuota(int quotaProgress, int maxWaves) {
+    public void updateQuota(int quotaProgress, int maxQuota) {
         this.quotaProgress = quotaProgress;
         this.maxQuota = maxQuota;
         FlutterAndFlounderRendering.startQuotaUpdateAnimation();

@@ -20,6 +20,7 @@ public class FlutterAndFlounderPackets {
     public static final Identifier FLOUNDERFEST_BOSS_ALERT_ID = new Identifier(MOD_ID, "flounderfest_boss_alert");
     public static final Identifier FLOUNDERFEST_VICTORY_ID = new Identifier(MOD_ID, "flounderfest_victory");
     public static final Identifier FLOUNDERFEST_DEFEAT_ID = new Identifier(MOD_ID, "flounderfest_defeat");
+    public static final Identifier FLOUNDERFEST_WAVE_CLEAR_ID = new Identifier(MOD_ID, "flounderfest_wave_clear");
 
     public static void registerPackets() {
 
@@ -68,10 +69,31 @@ public class FlutterAndFlounderPackets {
             });
         })));
 
+        ClientPlayNetworking.registerGlobalReceiver(FLOUNDERFEST_WAVE_UPDATE_ID, (((client, handler, buf, responseSender) -> {
+            client.execute(() -> {
+                int wave = buf.readInt();
+                int maxWaves = buf.readInt();
+                FlounderFestHud hud = FlutterAndFlounderRendering.flounderFestHud;
+                if(hud != null) {
+                    hud.updateWave(wave, maxWaves);
+                    hud.status = FlounderFestHud.Status.ONGOING;
+                }
+            });
+        })));
+
         ClientPlayNetworking.registerGlobalReceiver(FLOUNDERFEST_REMOVE_HUD_ID, (((client, handler, buf, responseSender) -> {
             client.execute(() -> {
                 FlutterAndFlounderRendering.flounderFestHud = null;
                 LOGGER.info("Removing FlounderFest hud!");
+            });
+        })));
+
+        ClientPlayNetworking.registerGlobalReceiver(FLOUNDERFEST_WAVE_CLEAR_ID, (((client, handler, buf, responseSender) -> {
+            client.execute(() -> {
+                FlounderFestHud hud = FlutterAndFlounderRendering.flounderFestHud;
+                if(hud != null) {
+                    hud.updateStatus(FlounderFestHud.Status.WAVE_CLEAR);
+                }
             });
         })));
 

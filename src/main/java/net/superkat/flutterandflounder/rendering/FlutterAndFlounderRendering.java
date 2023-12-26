@@ -98,14 +98,16 @@ public class FlutterAndFlounderRendering {
         //color used to indicate danger if quota isn't met yet
         Color timeColor = new Color(175, 238, 255);
         Color quotaColor = new Color(175, 238, 255);
-        if(hud.secondsLeft <= 10) {
-            if(hud.quotaProgress < hud.maxQuota) {
-                quotaColor = new Color(232, 65, 61);
-                timeColor = new Color(232, 65, 61);
-            }
-        } else if (hud.secondsLeft <= 30) {
-            if(hud.quotaProgress < hud.maxQuota) {
-                timeColor = new Color(232, 65, 61);
+        if(hud.status != FlounderFestHud.Status.WAVE_CLEAR) {
+            if(hud.secondsLeft <= 10) {
+                if(hud.quotaProgress < hud.maxQuota) {
+                    quotaColor = new Color(232, 65, 61);
+                    timeColor = new Color(232, 65, 61);
+                }
+            } else if (hud.secondsLeft <= 30) {
+                if(hud.quotaProgress < hud.maxQuota) {
+                    timeColor = new Color(232, 65, 61);
+                }
             }
         }
 
@@ -116,7 +118,7 @@ public class FlutterAndFlounderRendering {
         int timeY = 10 + titleY * 4;
         context.drawTextWithShadow(client.textRenderer, time, timeX, timeY, timeColor.getRGB());
 
-        //"<quota progress>" text at the middle right of the screen(beneath quota title)
+        //"<quota progress>/<max quota>" text at the middle right of the screen(beneath quota title)
         Text quota = Text.literal(hud.quotaProgress + "/" + hud.maxQuota);
         int quotaTextWidth = client.textRenderer.getWidth(quota);
         int quotaChar = quotaTextWidth / 6;
@@ -223,7 +225,7 @@ public class FlutterAndFlounderRendering {
         int windowHeight = context.getScaledWindowHeight();
         switch(hud.status) {
             case WAVE_CLEAR -> {
-
+                System.out.println("wave clear!");
             } case VICTORY -> {
                 Text victory = Text.translatable("flutterandflounder.flounderfest.victory");
                 int victoryWidth = client.textRenderer.getWidth(victory);

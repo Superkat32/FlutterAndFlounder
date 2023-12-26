@@ -33,6 +33,7 @@ public class FlounderFest {
     public int maxWaves = 3;
     public int ticksSinceStart;
     public int ticksSinceEnd;
+    public int ticksSinceWaveClear;
     public int maxTimeInTicks = 2000;
     public int secondsRemaining = 100;
     public int maxQuota;
@@ -95,7 +96,7 @@ public class FlounderFest {
                 }
             } else {
                 if((maxTimeInTicks - ticksSinceStart) % 20 == 0) {
-                    if(!isFinished()) {
+                    if(!isFinished() && this.status != Status.WAVE_CLEAR) {
                         secondsRemaining = (maxTimeInTicks - ticksSinceStart) / 20;
                     }
                     sendTimerPacket(player);
@@ -144,6 +145,13 @@ public class FlounderFest {
         ServerPlayNetworking.send(player, FLOUNDERFEST_QUOTA_PROGRESS_UPDATE_ID, buf);
     }
 
+    public void sendWavePacket(ServerPlayerEntity player) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(wave);
+        buf.writeInt(maxWaves);
+        ServerPlayNetworking.send(player, FLOUNDERFEST_WAVE_UPDATE_ID, buf);
+    }
+
     public void sendDeleteHudPacket(ServerPlayerEntity player) {
         PacketByteBuf buf = PacketByteBufs.create();
         ServerPlayNetworking.send(player, FLOUNDERFEST_REMOVE_HUD_ID, buf);
@@ -159,8 +167,16 @@ public class FlounderFest {
         ServerPlayNetworking.send(player, FLOUNDERFEST_DEFEAT_ID, buf);
     }
 
+    public void sendWaveClearPacket(ServerPlayerEntity player) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        ServerPlayNetworking.send(player, FLOUNDERFEST_WAVE_CLEAR_ID, buf);
+    }
+
 
     public void tick() {
+        if (wave == 0) {
+            startNextWave();
+        }
         if(isGracePeriod()) {
             gracePeriod--;
         } else {
@@ -185,12 +201,17 @@ public class FlounderFest {
 
                 //time up
                 if(ticksSinceStart >= maxTimeInTicks) {
-                    //FIXME - wave detection stuff
                     if(this.status == Status.ONGOING) {
                         //check for victory
                         if(quotaProgress >= maxQuota) {
-                            this.status = Status.VICTORY;
-                            involvedPlayers.forEach(playerUuid -> sendVictoryPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
+                            if(wave < maxWaves) {
+                                this.status = Status.WAVE_CLEAR;
+                                ticksSinceWaveClear = 0;
+                                involvedPlayers.forEach(playerUuid -> sendWaveClearPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
+                            } else {
+                                this.status = Status.VICTORY;
+                                involvedPlayers.forEach(playerUuid -> sendVictoryPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
+                            }
 
                         //counts as loss
                         } else {
@@ -198,6 +219,12 @@ public class FlounderFest {
                             involvedPlayers.forEach(playerUuid -> sendDefeatPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
                         }
                     }
+                }
+            } else if (this.status == Status.WAVE_CLEAR) {
+                //next wave timer
+                ticksSinceWaveClear++;
+                if(ticksSinceWaveClear >= 100) { //5 second cooldown before grace period reset
+                    startNextWave();
                 }
             } else if (isFinished()) {
                 ticksSinceEnd++;
@@ -209,6 +236,25 @@ public class FlounderFest {
 
             }
         }
+    }
+
+    public void startNextWave() {
+        wave++;
+        this.status = Status.ONGOING;
+        gracePeriod = getGracePeriod();
+        ticksSinceStart = 0;
+        ticksUntilNextEnemySpawn = 0;
+        ticksUntilNextBossSpawn = 45;
+        currentEnemies = 0;
+        currentBosses = 0;
+        quotaProgress = 0;
+        if(wave > 1) {
+            maxQuota += (int) (maxQuota * 0.2) + 1;
+        }
+        enemies.forEach(entityFromSet -> (entityFromSet).remove(Entity.RemovalReason.DISCARDED));
+
+        involvedPlayers.forEach(playerUuid -> sendQuotaPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
+        involvedPlayers.forEach(playerUuid -> sendWavePacket((ServerPlayerEntity) world.getEntity(playerUuid)));
     }
 
     public void addEnemy() {
@@ -311,7 +357,7 @@ public class FlounderFest {
 
     static enum Status {
         ONGOING,
-        PAUSED,
+        WAVE_CLEAR,
         VICTORY,
         LOSS,
         STOPPED;
