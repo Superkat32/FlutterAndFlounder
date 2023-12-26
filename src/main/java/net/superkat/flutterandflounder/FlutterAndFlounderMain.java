@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.superkat.flutterandflounder.entity.FlutterAndFlounderEntities;
+import net.superkat.flutterandflounder.entity.custom.cod.ChillCodEntity;
 import net.superkat.flutterandflounder.entity.custom.cod.CodAutomobileEntity;
 import net.superkat.flutterandflounder.entity.custom.cod.FlyingCodEntity;
 import net.superkat.flutterandflounder.entity.custom.cod.HammerCodEntity;
@@ -35,6 +36,7 @@ public class FlutterAndFlounderMain implements ModInitializer {
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.SALMON_SHIP, SalmonShipEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.HAMMER_COD, HammerCodEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.WHACKER_SALMON, WhackerSalmonEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.CHILL_COD, ChillCodEntity.createAttributes());
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> FlounderFestCommand.register(dispatcher)));
 

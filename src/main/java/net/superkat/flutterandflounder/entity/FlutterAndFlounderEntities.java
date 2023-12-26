@@ -7,6 +7,7 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.superkat.flutterandflounder.entity.custom.cod.ChillCodEntity;
 import net.superkat.flutterandflounder.entity.custom.cod.CodAutomobileEntity;
 import net.superkat.flutterandflounder.entity.custom.cod.FlyingCodEntity;
 import net.superkat.flutterandflounder.entity.custom.cod.HammerCodEntity;
@@ -59,6 +60,13 @@ public class FlutterAndFlounderEntities {
             new Identifier(MOD_ID, "whacker"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, WhackerSalmonEntity::new)
                     .dimensions(EntityDimensions.fixed(1.5f, 0.7f)).build()
+    );
+
+    public static final EntityType<ChillCodEntity> CHILL_COD = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(MOD_ID, "chilldcod"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, ChillCodEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.9f, 0.6f)).build()
     );
 
 }

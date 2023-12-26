@@ -154,7 +154,8 @@ public class FlounderFestApi {
         CODAUTOMOBILE(FlutterAndFlounderEntities.COD_AUTOMOBILE),
         SALMONSHIP(FlutterAndFlounderEntities.SALMON_SHIP),
         HAMMERCOD(FlutterAndFlounderEntities.HAMMER_COD),
-        WHACKERSALMON(FlutterAndFlounderEntities.WHACKER_SALMON);
+        WHACKERSALMON(FlutterAndFlounderEntities.WHACKER_SALMON),
+        CHILLCOD(FlutterAndFlounderEntities.CHILL_COD);
 
         final EntityType<? extends CommonBossFish> type;
         private static final List<BossFish> VALUES = List.of(values());

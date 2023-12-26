@@ -3,6 +3,7 @@ package net.superkat.flutterandflounder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.superkat.flutterandflounder.entity.FlutterAndFlounderEntities;
+import net.superkat.flutterandflounder.entity.client.cod.ChillCodRenderer;
 import net.superkat.flutterandflounder.entity.client.cod.CodAutomobileRenderer;
 import net.superkat.flutterandflounder.entity.client.cod.FlyingCodRenderer;
 import net.superkat.flutterandflounder.entity.client.cod.HammerCodRenderer;
@@ -23,18 +24,11 @@ public class FlutterAndFlounderClient implements ClientModInitializer {
         EntityRendererRegistry.register(FlutterAndFlounderEntities.SALMON_SHIP, SalmonShipRenderer::new);
         EntityRendererRegistry.register(FlutterAndFlounderEntities.HAMMER_COD, HammerCodRenderer::new);
         EntityRendererRegistry.register(FlutterAndFlounderEntities.WHACKER_SALMON, WhackerSalmonRenderer::new);
+        EntityRendererRegistry.register(FlutterAndFlounderEntities.CHILL_COD, ChillCodRenderer::new);
 
         FlutterAndFlounderPackets.registerPackets();
 
         FlutterAndFlounderRendering.registerHudEvents();
         FlutterAndFlounderRendering.registerWorldEvents();
-
-//        ClientPlayNetworking.registerGlobalReceiver(FlutterAndFlounderPackets.FLOUNDERFEST_TIMER_UPDATE_ID, ((client, handler, buf, responseSender) -> {
-//            client.execute(() -> {
-//                int timeR = buf.readInt();
-//                System.out.println("packet received!");
-//                System.out.println("Time remaining: " + timeR);
-//            });
-//        }));
     }
 }
