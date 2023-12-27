@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -255,6 +257,14 @@ public class FlounderFest {
 
         involvedPlayers.forEach(playerUuid -> sendQuotaPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
         involvedPlayers.forEach(playerUuid -> sendWavePacket((ServerPlayerEntity) world.getEntity(playerUuid)));
+        involvedPlayers.forEach(playerUuid -> applyNextWaveRegen((LivingEntity) world.getEntity(playerUuid)));
+    }
+
+    public void applyNextWaveRegen(LivingEntity player) {
+        if(player != null) {
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 200, 3));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 200, 2));
+        }
     }
 
     public void addEnemy() {

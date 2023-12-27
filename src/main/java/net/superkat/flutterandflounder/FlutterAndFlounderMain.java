@@ -4,12 +4,10 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.superkat.flutterandflounder.entity.FlutterAndFlounderEntities;
-import net.superkat.flutterandflounder.entity.custom.cod.ChillCodEntity;
-import net.superkat.flutterandflounder.entity.custom.cod.CodAutomobileEntity;
-import net.superkat.flutterandflounder.entity.custom.cod.FlyingCodEntity;
-import net.superkat.flutterandflounder.entity.custom.cod.HammerCodEntity;
+import net.superkat.flutterandflounder.entity.custom.cod.*;
 import net.superkat.flutterandflounder.entity.custom.salmon.FlyingSalmonEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.SalmonShipEntity;
+import net.superkat.flutterandflounder.entity.custom.salmon.SalmonSniperEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.WhackerSalmonEntity;
 import net.superkat.flutterandflounder.flounderfest.command.FlounderFestCommand;
 import net.superkat.flutterandflounder.item.FlutterAndFlounderItems;
@@ -37,6 +35,9 @@ public class FlutterAndFlounderMain implements ModInitializer {
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.HAMMER_COD, HammerCodEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.WHACKER_SALMON, WhackerSalmonEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.CHILL_COD, ChillCodEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.SALMON_SNIPER, SalmonSniperEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.CLOWN_COD, ClownCodEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.GOON, GoonCodEntity.createAttributes());
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> FlounderFestCommand.register(dispatcher)));
 

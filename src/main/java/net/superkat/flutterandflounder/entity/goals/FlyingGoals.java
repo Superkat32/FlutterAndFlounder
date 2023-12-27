@@ -9,9 +9,11 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.superkat.flutterandflounder.entity.custom.CommonFlyingFish;
+import net.superkat.flutterandflounder.entity.custom.cod.GoonCodEntity;
 
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -176,6 +178,157 @@ public class FlyingGoals {
         public boolean shouldContinue() {
             LivingEntity livingEntity = entity.getTarget();
             return livingEntity != null ? entity.isTarget(livingEntity, TargetPredicate.DEFAULT) : false;
+        }
+    }
+
+    public static class GoonMoveControls extends MoveControl {
+        private final GoonCodEntity goon;
+        public boolean hasAttemptedAttack = false;
+        private int stoppingDistanceFromPlayer;
+        private int cooldown;
+        private int maxCooldown = 100;
+        private int attackIntervalTicks;
+        private int ticksSinceLastAttack;
+        private boolean stationary = false;
+        private boolean canReturnUp = false;
+        public GoonMoveControls(MobEntity entity, int stoppingDistanceFromPlayer) {
+            super(entity);
+            if(entity instanceof GoonCodEntity) {
+                this.goon = (GoonCodEntity) entity;
+            } else {
+                this.goon = null;
+            }
+            this.stoppingDistanceFromPlayer = stoppingDistanceFromPlayer;
+        }
+
+        @Override
+        public void tick() {
+            double x = targetX - entity.getX();
+            double y = targetY - entity.getY() + 4;
+            double z = targetZ - entity.getZ();
+            if(this.state == State.MOVE_TO && !stationary) {
+                entity.setAttacking(false);
+                Vec3d vec3d = new Vec3d(x, y, z);
+                double d = vec3d.length();
+                entity.setNoGravity(true);
+                ServerPlayerEntity target = (ServerPlayerEntity) entity.getTarget();
+                if(cooldown <= 0) {
+                    cooldown = maxCooldown;
+                } else {
+                    cooldown--;
+                }
+                if(target != null) {
+                    double xDistance = Math.abs(Math.abs(entity.getX()) - Math.abs(target.getX()));
+                    double zDistance = Math.abs(Math.abs(entity.getZ()) - Math.abs(target.getZ()));
+                    Vec3d vec3d1 = vec3d.multiply(speed * 0.05 / 3);
+                    entity.setVelocity(entity.getVelocity().add(vec3d1.getX(), vec3d.multiply(speed * 0.05 / 5).getY(), vec3d1.getZ()));
+                    if(xDistance < 10 && zDistance < 10 && cooldown <= 0) {
+                        entity.setAttacking(true);
+                        stationary = true;
+                    }
+
+                    if (entity.getTarget() == null) {
+                        Vec3d vec3d2 = entity.getVelocity();
+                        entity.setYaw(-((float) MathHelper.atan2(vec3d2.x, vec3d2.z)) * (180.0F / (float)Math.PI));
+                        entity.bodyYaw = entity.getYaw();
+                    } else {
+                        double e = entity.getTarget().getX() - entity.getX();
+                        double f = entity.getTarget().getZ() - entity.getZ();
+                        entity.setYaw(-((float)MathHelper.atan2(e, f)) * (180.0F / (float)Math.PI));
+                        entity.bodyYaw = entity.getYaw();
+                    }
+    //                    }
+                }
+            } else {
+                ServerPlayerEntity target = (ServerPlayerEntity) entity.getTarget();
+                if(target != null) {
+                    double xDistance = Math.abs(Math.abs(entity.getX()) - Math.abs(target.getX()));
+                    double zDistance = Math.abs(Math.abs(entity.getZ()) - Math.abs(target.getZ()));
+                    if(stationary) {
+                        if (xDistance >= 7 || zDistance >= 7 || canReturnUp) {
+//                            stationary = false;
+                            canReturnUp = false;
+                        }
+    //                        if(goon != null && goon.shouldAttack) {
+                            //doesn't matter if a player is beneath the salmon ship or not
+                        if(cooldown <= 0) {
+                            entity.setNoGravity(false);
+                            if (entity.getBoundingBox().intersects(target.getBoundingBox())) {
+                                entity.tryAttack(target);
+                            }
+                        }
+    //                            goon.setShouldAttack(false);
+                        } else {
+                            boolean beneath = xDistance <= 5.5 && zDistance <= 5.5;
+                            if(beneath) {
+                                Vec3d vec3d = new Vec3d(x, y, z);
+                                Vec3d vec3d1 = vec3d.multiply(speed * 0.05 / 3);
+                                entity.setVelocity(entity.getVelocity().add(vec3d1.getX(), vec3d.multiply(speed * 0.05 / 5).getY(), vec3d1.getZ()));
+                                if (goon != null) {
+    //                                    goon.setIsWarning(true);
+                                    cooldown = maxCooldown;
+                                    entity.setAttacking(true);
+                                }
+                            }
+                        }
+
+                        cooldown--;
+                        if(cooldown <= 0) {
+                            canReturnUp = true;
+                        }
+                    }
+                }
+            }
+        }
+
+    public static class GoonGoal extends Goal {
+        public final GoonCodEntity goon;
+        public boolean hasAttemptedAttack = false;
+        public int ticksAfterAttack = 100;
+
+        public GoonGoal(GoonCodEntity goonCodEntity) {
+            this.goon = goonCodEntity;
+        }
+
+        @Override
+        public boolean canStart() {
+            return goon.getTarget() != null;
+        }
+
+        @Override
+        public boolean shouldContinue() {
+            return super.shouldContinue() && !hasAttemptedAttack;
+        }
+
+        @Override
+        public void tick() {
+            LivingEntity target = goon.getTarget();
+            if(target != null) {
+                if(goon.squaredDistanceTo(target) <= 3) {
+//                    hasAttemptedAttack = true;
+//                    goon.setAttacking(true);
+                }
+                if(goon.isAttacking()) {
+                    hasAttemptedAttack = true;
+                }
+
+                if(!hasAttemptedAttack) {
+                    Vec3d vec3d = target.getEyePos();
+                    goon.getMoveControl().moveTo(vec3d.x, vec3d.y + 3, vec3d.z, goon.getAttributeValue(EntityAttributes.GENERIC_FLYING_SPEED));
+                    if (goon.getBoundingBox().intersects(target.getBoundingBox())) {
+//                        goon.tryAttack(target);
+
+                        hasAttemptedAttack = true;
+                    }
+                } else {
+                    ticksAfterAttack--;
+                    if(ticksAfterAttack <= 80 && goon.isOnGround()) {
+                        goon.kill();
+                        goon.setAttacking(false);
+                    }
+                    goon.setVelocity(goon.getVelocity().multiply(0.75));
+                }
+            }
         }
     }
 
