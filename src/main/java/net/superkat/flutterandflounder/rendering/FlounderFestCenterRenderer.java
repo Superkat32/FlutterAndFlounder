@@ -33,6 +33,8 @@ public class FlounderFestCenterRenderer {
         BufferBuilder buffer = tessellator.getBuffer();
 
         buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
+        matrix4f.translate(.25f + .125f, -15f, .25f + .125f);
+        matrix4f.scale(0.25f, 50f, 0.25f);
         buffer.vertex(matrix4f, 0, 3, 0).color(1f, 1f, 1f, 1f).texture(0f, 0f).next();
         buffer.vertex(matrix4f, 0, 0, 0).color(1f, 1f, 1f, 1f).texture(0f, 1f).next();
         buffer.vertex(matrix4f, 1, 0, 0).color(1f, 1f, 1f, 1f).texture(1f, 1f).next();
@@ -78,13 +80,14 @@ public class FlounderFestCenterRenderer {
 
         RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
         RenderSystem.setShaderTexture(0, new Identifier("textures/entity/beacon_beam.png"));
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        RenderSystem.setShaderColor(0.3f, 0.66f, 1f, 0.5f);
         RenderSystem.disableCull();
         RenderSystem.depthFunc(GL11.GL_LEQUAL);
         RenderSystem.enableBlend();
 
         tessellator.draw();
 
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.depthFunc(GL11.GL_LEQUAL);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();

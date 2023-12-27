@@ -12,6 +12,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.superkat.flutterandflounder.entity.goals.FleeFlounderFestGoal;
 import net.superkat.flutterandflounder.entity.goals.FlyingGoals;
 import net.superkat.flutterandflounder.flounderfest.FlounderFest;
 import net.superkat.flutterandflounder.flounderfest.api.FlounderFestApi;
@@ -27,6 +28,7 @@ public abstract class CommonFlyingFish extends FlyingEntity implements GeoEntity
 
     @Override
     protected void initGoals() {
+        this.goalSelector.add(1, new FleeFlounderFestGoal(this));
         this.goalSelector.add(1, new FlyingGoals.FlyingAttackGoal(this));
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 15f, 1f));
         this.targetSelector.add(1, new FlyingGoals.FlyingFindTargetGoal(this));

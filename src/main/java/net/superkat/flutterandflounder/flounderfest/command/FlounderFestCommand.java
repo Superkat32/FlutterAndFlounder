@@ -27,8 +27,9 @@ public class FlounderFestCommand {
                 CommandManager.literal("flounderfest")
                         .requires(source -> source.hasPermissionLevel(3))
                         .then(CommandManager.literal("start")
+                                .executes(context -> executeStart(context.getSource()))
                                 .then(CommandManager.argument("quota", IntegerArgumentType.integer())
-                                        .executes(context -> executeStart(context.getSource(), IntegerArgumentType.getInteger(context, "quota"), 4))
+                                        .executes(context -> executeStart(context.getSource(), IntegerArgumentType.getInteger(context, "quota"), -1))
                                         .then(CommandManager.argument("enemycount", IntegerArgumentType.integer())
                                                 .executes(context -> executeStart(context.getSource(), IntegerArgumentType.getInteger(context, "quota"), IntegerArgumentType.getInteger(context, "enemycount"))))))
                         .then(CommandManager.literal("stop").executes(context -> executeStop(context.getSource())))
@@ -73,6 +74,9 @@ public class FlounderFestCommand {
 //                        )
 //                        .then(CommandManager.literal("glow").executes(context -> executeGlow(context.getSource())))
         );
+    }
+    private static int executeStart(ServerCommandSource source) throws CommandSyntaxException {
+        return executeStart(source, FlounderFestApi.determineQuota(source.getWorld(), source.getPlayerOrThrow().getBlockPos()), -1);
     }
     private static int executeStart(ServerCommandSource source, int quota, int enemycount) throws CommandSyntaxException {
         ServerPlayerEntity player = source.getPlayerOrThrow();

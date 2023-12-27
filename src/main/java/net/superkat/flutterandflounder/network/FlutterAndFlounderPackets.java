@@ -84,6 +84,7 @@ public class FlutterAndFlounderPackets {
         ClientPlayNetworking.registerGlobalReceiver(FLOUNDERFEST_REMOVE_HUD_ID, (((client, handler, buf, responseSender) -> {
             client.execute(() -> {
                 FlutterAndFlounderRendering.flounderFestHud = null;
+                FlutterAndFlounderRendering.flounderFestCenterRenderer = null;
                 LOGGER.info("Removing FlounderFest hud!");
             });
         })));

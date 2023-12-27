@@ -46,9 +46,9 @@ public class FlyingSalmonEntity extends CommonFlyingFish {
 
     public static DefaultAttributeContainer.Builder createAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 8)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 5)
                 .add(EntityAttributes.GENERIC_FLYING_SPEED, 0.25f)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 5)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48);
     }
 

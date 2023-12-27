@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.superkat.flutterandflounder.entity.FlutterAndFlounderEntities;
 import net.superkat.flutterandflounder.entity.custom.CommonBossFish;
+import net.superkat.flutterandflounder.entity.goals.FleeFlounderFestGoal;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -59,6 +60,7 @@ public class ClownCodEntity extends CommonBossFish {
     @Override
     protected void initGoals() {
 //        this.goalSelector.add(1, new MeleeAttackGoal(this, 1, true));
+        this.goalSelector.add(1, new FleeFlounderFestGoal(this));
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 8f));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1));
         this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));

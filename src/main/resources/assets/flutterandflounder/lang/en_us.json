@@ -8,6 +8,8 @@
   "flutterandflounder.flounderfest.victory": "Victory!",
   "flutterandflounder.flounderfest.defeat": "That's a wrap!",
 
+  "gamerule.endFlounderFestWhenAllPlayersAreDead": "End FlounderFest when all players are dead",
+
   "item.flutterandflounder.prismarine_diamond": "Prismarine Diamond",
   "item.flutterandflounder.prismarine_diamond.tooltip": "You might want to be careful when holding this...",
   "item.flutterandflounder.prismarine_diamond.expand": "[Shift for Expand]",

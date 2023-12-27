@@ -3,6 +3,7 @@ package net.superkat.flutterandflounder.entity.custom;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -24,7 +25,7 @@ public abstract class CommonBossFish extends HostileEntity implements GeoEntity 
 
     @Override
     public void onDeath(DamageSource damageSource) {
-        if(!this.getWorld().isClient) {
+        if(!this.getWorld().isClient && damageSource.getAttacker() instanceof PlayerEntity) {
             updateFlounderFestQuota((ServerWorld) this.getWorld(), this.getBlockPos());
         }
         super.onDeath(damageSource);

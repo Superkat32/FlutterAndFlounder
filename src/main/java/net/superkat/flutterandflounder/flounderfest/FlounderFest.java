@@ -79,8 +79,7 @@ public class FlounderFest {
 
     private Predicate<ServerPlayerEntity> isInFlounderFestDistance() {
         return player -> {
-            BlockPos pos = player.getBlockPos();
-            return player.isAlive() && FlounderFestApi.getFlounderFestManager(world).getFlounderFestAt(startingPos, 75) == this;
+            return FlounderFestApi.getFlounderFestManager(world).getFlounderFestAt(startingPos, 75) == this;
         };
     }
 
@@ -92,7 +91,6 @@ public class FlounderFest {
                 addPlayerToFlounderFest(player);
             }
             if(isGracePeriod()) {
-//                player.sendMessage(Text.literal("FlounderFest Starting In " + ((gracePeriod) / 20)), true);
                 if(gracePeriod % 20 == 0) {
                     sendGracePeriodPacket(player);
                 }
@@ -189,6 +187,20 @@ public class FlounderFest {
 
         updateInvolvedPlayers();
 
+        if(this.world.getGameRules().getBoolean(FlutterAndFlounderMain.END_FLOUNDERFEST_UPON_ALL_PLAYERS_DEAD)) {
+            List<ServerPlayerEntity> players = this.world.getPlayers(this.isInFlounderFestDistance());
+            boolean anyPlayersAlive = false;
+            for (ServerPlayerEntity player : players) {
+                anyPlayersAlive = player.isAlive();
+                if(anyPlayersAlive) {
+                    break;
+                }
+            }
+            if(!anyPlayersAlive) {
+                lossFlounderFest();
+            }
+        }
+
         if(!this.hasStopped() && !isGracePeriod()) {
             if(this.status == Status.ONGOING) {
                 //spawns in enemies every few seconds
@@ -217,8 +229,9 @@ public class FlounderFest {
 
                         //counts as loss
                         } else {
-                            this.status = Status.LOSS;
-                            involvedPlayers.forEach(playerUuid -> sendDefeatPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
+//                            this.status = Status.LOSS;
+//                            involvedPlayers.forEach(playerUuid -> sendDefeatPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
+                            lossFlounderFest();
                         }
                     }
                 }
@@ -238,6 +251,15 @@ public class FlounderFest {
 
             }
         }
+    }
+
+    public void lossFlounderFest() {
+        this.status = Status.LOSS;
+        involvedPlayers.forEach(playerUuid -> sendDefeatPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
+    }
+
+    public boolean shouldMobsFlee() {
+        return status != Status.ONGOING;
     }
 
     public void startNextWave() {

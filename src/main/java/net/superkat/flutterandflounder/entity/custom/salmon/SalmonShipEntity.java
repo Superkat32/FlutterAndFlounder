@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.superkat.flutterandflounder.entity.custom.CommonBossFish;
 import net.superkat.flutterandflounder.entity.goals.BossGoals;
+import net.superkat.flutterandflounder.entity.goals.FleeFlounderFestGoal;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -78,6 +79,7 @@ public class SalmonShipEntity extends CommonBossFish {
 
     @Override
     protected void initGoals() {
+        this.goalSelector.add(1, new FleeFlounderFestGoal(this));
         this.goalSelector.add(1, new BossGoals.SlamPlayerGoal(this));
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 15f, 1f));
         this.targetSelector.add(1, new BossGoals.BossFindTargetGoal(this));

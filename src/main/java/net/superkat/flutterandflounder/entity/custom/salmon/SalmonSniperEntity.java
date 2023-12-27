@@ -20,6 +20,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
 import net.superkat.flutterandflounder.entity.custom.CommonBossFish;
 import net.superkat.flutterandflounder.entity.goals.BossGoals;
+import net.superkat.flutterandflounder.entity.goals.FleeFlounderFestGoal;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -65,6 +66,7 @@ public class SalmonSniperEntity extends CommonBossFish implements RangedAttackMo
 
     @Override
     protected void initGoals() {
+        this.goalSelector.add(1, new FleeFlounderFestGoal(this));
         this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 8f));
         this.goalSelector.add(2, new WanderAroundFarGoal(this, 1));
         this.targetSelector.add(1, new BossGoals.CrazyProjectileAttackGoal(this, 1, 200, 15f));

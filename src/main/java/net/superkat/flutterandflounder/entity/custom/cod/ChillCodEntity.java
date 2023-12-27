@@ -26,6 +26,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.superkat.flutterandflounder.entity.custom.CommonBossFish;
+import net.superkat.flutterandflounder.entity.goals.FleeFlounderFestGoal;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -75,6 +76,7 @@ public class ChillCodEntity extends CommonBossFish implements RangedAttackMob {
 
     @Override
     protected void initGoals() {
+        this.goalSelector.add(1, new FleeFlounderFestGoal(this));
         this.goalSelector.add(1, new ProjectileAttackGoal(this, 1.0, 200, 10.0F));
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 15f, 1f));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1));

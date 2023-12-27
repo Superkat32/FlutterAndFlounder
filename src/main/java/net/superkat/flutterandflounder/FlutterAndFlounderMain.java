@@ -2,7 +2,10 @@ package net.superkat.flutterandflounder;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.world.GameRules;
 import net.superkat.flutterandflounder.entity.FlutterAndFlounderEntities;
 import net.superkat.flutterandflounder.entity.custom.cod.*;
 import net.superkat.flutterandflounder.entity.custom.salmon.FlyingSalmonEntity;
@@ -18,6 +21,8 @@ import software.bernie.geckolib.GeckoLib;
 public class FlutterAndFlounderMain implements ModInitializer {
 	public static final String MOD_ID = "flutterandflounder";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static final GameRules.Key<GameRules.BooleanRule> END_FLOUNDERFEST_UPON_ALL_PLAYERS_DEAD =
+			GameRuleRegistry.register("endFlounderFestWhenAllPlayersAreDead", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
 
 	@Override
 	public void onInitialize() {

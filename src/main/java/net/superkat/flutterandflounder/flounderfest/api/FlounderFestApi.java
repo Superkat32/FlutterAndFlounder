@@ -23,7 +23,7 @@ import java.util.Random;
 
 public class FlounderFestApi {
     public static void startFlounderFest(ServerPlayerEntity player) {
-        startFlounderFest(player, 4, -1);
+        startFlounderFest(player, determineQuota(player.getServerWorld(), player.getBlockPos()), -1);
     }
     public static void startFlounderFest(ServerPlayerEntity player, int quota, int enemiesToBeSpawned) {
         FlutterAndFlounderMain.LOGGER.info("Starting a FlounderFest!");
@@ -41,7 +41,6 @@ public class FlounderFestApi {
         return flounderFestManager.createNewFlounderFest(player.getServerWorld(), player.getBlockPos(), quota, enemiesToBeSpawned);
     }
 
-
     public static void stopFlounderFest(FlounderFest flounderFest) {
         flounderFest.invalidate();
     }
@@ -54,6 +53,15 @@ public class FlounderFestApi {
     @Nullable
     public static FlounderFest getFlounderFestAt(ServerWorld world, BlockPos pos, int searchDistance) {
         return getFlounderFestManager(world).getFlounderFestAt(pos, searchDistance);
+    }
+
+    public static int determineQuota(ServerWorld world, BlockPos festCenterPos) {
+        int quota = world.getRandom().nextBetween(3, 7);
+        for (ServerPlayerEntity player : world.getPlayers(player -> player.squaredDistanceTo(festCenterPos.getX(), festCenterPos.getY(), festCenterPos.getZ()) <= 70)) {
+            quota += (quota / 2); //changes quota based on the amount of players present at the beginning
+        }
+
+        return quota;
     }
 
     public static boolean spawnLesserFish(FlounderFest flounderFest, ServerWorld world, BlockPos festCenterPos) {
