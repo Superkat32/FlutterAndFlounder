@@ -53,13 +53,6 @@ public class HammerCodEntity extends CommonBossFish {
         );
     }
 
-//    private TargetPredicate isInHammerHearingRange() {
-//        return player -> {
-//            double distance = squaredDistanceTo(player);
-//            return distance <= 15;
-//        };
-//    }
-
     protected<E extends HammerCodEntity> PlayState animController(final AnimationState<E> event) {
         if(this.isAttacking()) {
             return event.setAndContinue(ATTACK_ANIM);
@@ -75,11 +68,6 @@ public class HammerCodEntity extends CommonBossFish {
         return geoCache;
     }
 
-    private boolean shouldHearHammerSound(PlayerEntity player) {
-        double distance = squaredDistanceTo(player);
-        return distance <= 15;
-    }
-
     public static DefaultAttributeContainer.Builder createAttributes() {
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 25)
@@ -93,8 +81,8 @@ public class HammerCodEntity extends CommonBossFish {
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new FleeFlounderFestGoal(this));
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 1, false));
-        this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 15f, 0.5f));
+        this.goalSelector.add(2, new MeleeAttackGoal(this, 1, false));
+        this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 15f, 0.5f));
         this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
     }
 }

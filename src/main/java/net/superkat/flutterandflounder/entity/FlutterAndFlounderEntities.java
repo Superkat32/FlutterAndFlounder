@@ -20,14 +20,14 @@ public class FlutterAndFlounderEntities {
             Registries.ENTITY_TYPE,
             new Identifier(MOD_ID, "flyingcod"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, FlyingCodEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.6f, 0.7f)).build()
+                    .dimensions(EntityDimensions.fixed(0.6f, 0.8f)).build()
     );
 
     public static final EntityType<FlyingSalmonEntity> FLYING_SALMON = Registry.register(
             Registries.ENTITY_TYPE,
             new Identifier(MOD_ID, "flyingsalmon"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, FlyingSalmonEntity::new)
-                    .dimensions(EntityDimensions.fixed(1.3f, 0.8f)).build()
+                    .dimensions(EntityDimensions.fixed(1.3f, 0.9f)).build()
     );
 
     //bosses
@@ -36,7 +36,7 @@ public class FlutterAndFlounderEntities {
             Registries.ENTITY_TYPE,
             new Identifier(MOD_ID, "codautomobile"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, CodAutomobileEntity::new)
-                    .dimensions(EntityDimensions.fixed(1.2f, 0.8f)).build()
+                    .dimensions(EntityDimensions.fixed(1.2f, 0.9f)).build()
     );
 
     public static final EntityType<SalmonShipEntity> SALMON_SHIP = Registry.register(
@@ -57,35 +57,35 @@ public class FlutterAndFlounderEntities {
             Registries.ENTITY_TYPE,
             new Identifier(MOD_ID, "whacker"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, WhackerSalmonEntity::new)
-                    .dimensions(EntityDimensions.fixed(1.5f, 0.7f)).build()
+                    .dimensions(EntityDimensions.fixed(1.5f, 0.9f)).build()
     );
 
     public static final EntityType<ChillCodEntity> CHILL_COD = Registry.register(
             Registries.ENTITY_TYPE,
             new Identifier(MOD_ID, "chilldcod"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, ChillCodEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.9f, 0.6f)).build()
+                    .dimensions(EntityDimensions.fixed(0.9f, 0.8f)).build()
     );
 
     public static final EntityType<SalmonSniperEntity> SALMON_SNIPER = Registry.register(
             Registries.ENTITY_TYPE,
             new Identifier(MOD_ID, "salmonsniper"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, SalmonSniperEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.8f, 1.3f)).build()
+                    .dimensions(EntityDimensions.fixed(0.9f, 1.3f)).build()
     );
 
     public static final EntityType<ClownCodEntity> CLOWN_COD = Registry.register(
             Registries.ENTITY_TYPE,
             new Identifier(MOD_ID, "clowncod"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, ClownCodEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.9f, 0.6f)).build()
+                    .dimensions(EntityDimensions.fixed(0.9f, 0.8f)).build()
     );
 
     public static final EntityType<GoonCodEntity> GOON = Registry.register(
             Registries.ENTITY_TYPE,
             new Identifier(MOD_ID, "goon"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, GoonCodEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.9f, 0.8f)).build()
+                    .dimensions(EntityDimensions.fixed(1f, 1f)).build()
     );
 
 }

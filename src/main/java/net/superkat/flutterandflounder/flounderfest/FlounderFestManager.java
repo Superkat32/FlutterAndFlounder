@@ -37,11 +37,20 @@ public class FlounderFestManager extends PersistentState {
         nextAvailableId = 0;
     }
 
+    /**
+     * Finalize a FlounderFest.
+     *
+     * @param flounderFest The FlounderFest to be created.
+     * @param player The player responsible for creating the FlounderFest
+     */
     public void createFlounderFest(FlounderFest flounderFest, ServerPlayerEntity player) {
         System.out.println("Creating new FlounderFest...");
         flounderFests.put(flounderFest.getId(), flounderFest);
     }
 
+    /**
+     * Called every tick by the ServerWorldMixin.
+     */
     public void tick() {
 
         Iterator<FlounderFest> allFlounderFests = this.flounderFests.values().iterator();
@@ -60,6 +69,12 @@ public class FlounderFestManager extends PersistentState {
         updateQuota(flounderFest, 1);
     }
 
+    /**
+     * Update a FlounderFest's quota by a specific amount.
+     *
+     * @param flounderFest The FlounderFest the quota should be updated in
+     * @param amount The amount of the quota update
+     */
     public void updateQuota(FlounderFest flounderFest, int amount) {
         flounderFest.updateQuota(amount);
     }
@@ -70,15 +85,35 @@ public class FlounderFestManager extends PersistentState {
         return flounderFest != null ? flounderFest : createNewFlounderFest(world, pos, quota, enemiesToBeSpawned);
     }
 
+    /**
+     * Create a new FlounderFest with its unique ID and specific parameters.
+     *
+     * @param world The world the FlounderFest should be in.
+     * @param startingPos The starting blockpos of the FlounderFest.
+     * @param quota The quota amount the FlounderFest should have.
+     * @param enemiesToBeSpawned The enemies to be spawned in the FlounderFest. Use "-1" for infinite enemies.
+     * @return Returns a new FlounderFest using the parameters.
+     */
     public FlounderFest createNewFlounderFest(ServerWorld world, BlockPos startingPos, int quota, int enemiesToBeSpawned) {
         return new FlounderFest(nextId(), world, startingPos, quota, enemiesToBeSpawned);
     }
 
+    /**
+     * Find the closest FlounderFest in a 96 block range.
+     *
+     * @param pos The center BlockPos of the searching.
+     * @return Returns the closest FlounderFest in a 96 block range, or null if none were found.
+     */
     @Nullable
     public FlounderFest getFlounderFestAt(BlockPos pos) {
         return getFlounderFestAt(pos, 9216);
     }
 
+    /**
+     * @param pos The center BlockPos of the searching.
+     * @param searchDistance The distance of the searching. 9216 = 96 blocks.
+     * @return Returns the closest FlounderFest within the search distance, or null if none were found.
+     */
     @Nullable
     public FlounderFest getFlounderFestAt(BlockPos pos, int searchDistance) {
         FlounderFest flounderFest = null;
@@ -98,6 +133,9 @@ public class FlounderFestManager extends PersistentState {
         return ++nextAvailableId;
     }
 
+    /**
+     * Removes ALL FlounderFests in the server world.
+     */
     public void removeAllFlounderFests() {
         for (FlounderFest flounderFest : flounderFests.values()) {
             flounderFest.invalidate();
@@ -115,6 +153,12 @@ public class FlounderFestManager extends PersistentState {
         return null;
     }
 
+    /**
+     * Updates the sky color to have a hint of red. Only called when a player is in a FlounderFest.
+     *
+     * @param initialColor The initial sky color.
+     * @return Returns the updated sky color from the FlounderFest(hint of red). Changes based on time of day.
+     */
     public static Vec3d getFlounderFestSkyColor(Vec3d initialColor) {
         double multiplier = FlutterAndFlounderRendering.skyChangeMultiplier;
         long time = MinecraftClient.getInstance().world.getTimeOfDay() % 24000;

@@ -98,6 +98,15 @@ public class FlutterAndFlounderPackets {
             });
         })));
 
+        ClientPlayNetworking.registerGlobalReceiver(FLOUNDERFEST_BOSS_ALERT_ID, (((client, handler, buf, responseSender) -> {
+            client.execute(() -> {
+                FlounderFestHud hud = FlutterAndFlounderRendering.flounderFestHud;
+                if(hud != null) { //confirms a FlounderFestHud is active
+                    FlutterAndFlounderRendering.playBossAlertAnim();
+                }
+            });
+        })));
+
         ClientPlayNetworking.registerGlobalReceiver(FLOUNDERFEST_VICTORY_ID, (((client, handler, buf, responseSender) -> {
             client.execute(() -> {
                 FlounderFestHud hud = FlutterAndFlounderRendering.flounderFestHud;

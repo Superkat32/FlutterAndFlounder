@@ -74,7 +74,7 @@ public class ClownCodEntity extends CommonBossFish {
         ticksUntilGoons--;
         if(ticksUntilGoons <= 0) {
             ticksUntilGoons = 275;
-            int goons = 7;
+            int goons = 14;
             for(int i = 0; i < goons; i++) {
                 summonGoon();
             }

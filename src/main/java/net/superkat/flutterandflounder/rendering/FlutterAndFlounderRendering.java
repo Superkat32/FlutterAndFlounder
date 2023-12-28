@@ -33,6 +33,9 @@ public class FlutterAndFlounderRendering {
     public static boolean shouldPlayQuotaUpdateAnimation = false;
     public static float quotaUpdateAnimOpacity = 0;
     public static int ticksSinceQuotaUpdateAnim = 0;
+    public static boolean shouldPlayBossAnim = false;
+    public static int bossAnimX = 0;
+    public static int ticksSinceBossAnim = 0;
     @Nullable
     public static FlounderFestHud flounderFestHud = null;
     public static TextTypeWriter textTypeWriter = null;
@@ -159,6 +162,19 @@ public class FlutterAndFlounderRendering {
             RenderSystem.disableBlend();
         }
 
+        if(shouldPlayBossAnim) {
+            ticksSinceBossAnim++;
+            Text boss = Text.translatable("flutterandflounder.flounderfest.bossalert");
+            int bossWidth = client.textRenderer.getWidth(boss);
+            int bossHeight = client.textRenderer.getWrappedLinesHeight(boss, 114);
+            if(ticksSinceBossAnim >= 100) {
+                bossAnimX = MathHelper.clamp(bossAnimX - 7, -bossWidth, bossWidth - 35);
+            } else {
+                bossAnimX = MathHelper.clamp(2 * ticksSinceBossAnim * ticksSinceBossAnim, -bossWidth, bossWidth - 35);
+            }
+            context.drawTextWithShadow(client.textRenderer, boss, bossAnimX, timeY, new Color(232, 65, 61).getRGB());
+        }
+
         renderNumbers(context, hud);
         if(!(hud.status == FlounderFestHud.Status.ONGOING)) {
             renderVictoryDefeatOrWaveClear(context, hud);
@@ -269,6 +285,14 @@ public class FlutterAndFlounderRendering {
         shouldPlayQuotaUpdateAnimation = true;
         ticksSinceQuotaUpdateAnim = 0;
         quotaUpdateAnimOpacity = 0f;
+    }
+
+    public static void playBossAlertAnim() {
+        shouldPlayBossAnim = true;
+        Text boss = Text.translatable("flutterandflounder.flounderfest.bossalert");
+        int bossWidth = MinecraftClient.getInstance().textRenderer.getWidth(boss);
+        bossAnimX = -bossWidth;
+        ticksSinceBossAnim = 0;
     }
 
     public void setFlounderFestHud(@Nullable FlounderFestHud flounderFestHud) {

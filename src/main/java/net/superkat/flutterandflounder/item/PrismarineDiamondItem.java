@@ -1,6 +1,7 @@
 package net.superkat.flutterandflounder.item;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -49,15 +50,22 @@ public class PrismarineDiamondItem extends Item {
                 status = ActivationStatus.NONE;
             }
             if(ticksSinceWarning % 2 == 0) { //every 2 ticks
-                double d = world.getRandom().nextGaussian() * 0.02;
-                double e = world.getRandom().nextGaussian() * 0.02;
-                double f = world.getRandom().nextGaussian() * 0.02;
-                world.addParticle(ParticleTypes.SPLASH, entity.getParticleX(1.0), entity.getRandomBodyY() + 1.0, entity.getParticleZ(1.0), d, e, f);
+                if(world.isClient) {
+                    double d = world.getRandom().nextGaussian() * 0.02;
+                    double e = world.getRandom().nextGaussian() * 0.02;
+                    double f = world.getRandom().nextGaussian() * 0.02;
+                    world.addParticle(ParticleTypes.SPLASH, entity.getParticleX(1.0), entity.getRandomBodyY() + 1.0, entity.getParticleZ(1.0), d, e, f);
+                }
             }
         } else if (status == ActivationStatus.BEGIN) {
             ticksSinceBegin++;
             if(ticksSinceBegin % 5 == 0) {
-                entity.getWorld().addBlockBreakParticles(entity.getBlockPos(), Blocks.PRISMARINE.getDefaultState());
+                if (world.isClient) {
+                    entity.getWorld().addBlockBreakParticles(entity.getBlockPos(), Blocks.PRISMARINE.getDefaultState());
+                    if(!MinecraftClient.getInstance().isInSingleplayer()) { //could use packets but I'm lazy
+                        status = ActivationStatus.NONE;
+                    }
+                }
             }
             if(ticksSinceBegin >= 40) {
                 stack.decrement(1);
@@ -69,24 +77,34 @@ public class PrismarineDiamondItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if(world.isClient) {
-            return TypedActionResult.pass(user.getStackInHand(hand));
-        }
-
-        if(FlounderFestApi.getFlounderFestManager((ServerWorld) world).getFlounderFestAt(user.getBlockPos(), 100) != null) {
-            user.sendMessage(Text.translatable("item.flutterandflounder.prismarine_diamond.fail").formatted(Formatting.RED));
-            return TypedActionResult.pass(user.getStackInHand(hand));
+        if(!world.isClient) {
+            if(FlounderFestApi.getFlounderFestManager((ServerWorld) world).getFlounderFestAt(user.getBlockPos()) != null) {
+                user.sendMessage(Text.translatable("item.flutterandflounder.prismarine_diamond.fail").formatted(Formatting.RED));
+                return TypedActionResult.pass(user.getStackInHand(hand));
+            }
         }
 
         if(status == ActivationStatus.NONE) {
-            status = ActivationStatus.WARNING;
             ticksSinceWarning = 0;
-            user.playSound(SoundEvents.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, SoundCategory.PLAYERS, 1, 1);
+            if(world.isClient) {
+                user.playSound(SoundEvents.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, SoundCategory.PLAYERS, 1, 1);
+                if(!MinecraftClient.getInstance().isInSingleplayer()) { //could use packets but I'm lazy
+                    status = ActivationStatus.WARNING;
+                }
+            } else {
+                status = ActivationStatus.WARNING;
+            }
         } else if (status == ActivationStatus.WARNING) {
-            status = ActivationStatus.BEGIN;
             ticksSinceBegin = 0;
-            user.playSound(SoundEvents.ENTITY_WITHER_SPAWN, SoundCategory.PLAYERS, 1, 1);
-            startFlounderFest((ServerPlayerEntity) user);
+            if (world.isClient) {
+                if(!MinecraftClient.getInstance().isInSingleplayer()) { //could use packets but I'm still lazy
+                    status = ActivationStatus.BEGIN;
+                }
+                user.playSound(SoundEvents.ENTITY_WITHER_SPAWN, SoundCategory.PLAYERS, 1, 1);
+            } else {
+                status = ActivationStatus.BEGIN;
+                startFlounderFest((ServerPlayerEntity) user);
+            }
         }
 
         return super.use(world, user, hand);

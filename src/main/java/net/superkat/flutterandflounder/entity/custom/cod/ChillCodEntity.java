@@ -93,19 +93,8 @@ public class ChillCodEntity extends CommonBossFish implements RangedAttackMob {
         Box freezingBox = this.getBoundingBox().expand(7, 5, 7);
         for (PlayerEntity player : players) {
             boolean inRange = freezingBox.contains(player.getPos());
-            if(this.getWorld().isClient) {
-                for (int i = 0; i < rangeTimesALotOfDigits; i++) {
-                    float h = this.random.nextFloat() * (float) (Math.PI * 2);
-                    float k = MathHelper.sqrt(this.random.nextFloat()) * range;
-                    double x = this.getX() + (double)(MathHelper.cos(h) * range);
-                    double y = this.getY();
-                    double z = this.getZ() + (double)(MathHelper.sin(h) * range);
-                    this.getWorld().addImportantParticle(ParticleTypes.SNOWFLAKE, x, y, z, 0.001, 0.001, 0.001);
-                }
-            } else {
-                if(inRange) {
-                    player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 2), this);
-                }
+            if(inRange) {
+                player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 2), this);
             }
             if(inRange) {
                 player.setFrozenTicks(player.getFrozenTicks() + 3);
@@ -114,6 +103,24 @@ public class ChillCodEntity extends CommonBossFish implements RangedAttackMob {
             }
         }
         super.tickMovement();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(this.getWorld().isClient) {
+            float range = 8.5f;
+            //divided by 50 to reduce particle count from roughly 5k to 150 particles
+            float rangeTimesALotOfDigits = MathHelper.ceil((float) Math.PI * range * range) / 50f;
+            for (int i = 0; i < rangeTimesALotOfDigits; i++) {
+                float h = this.random.nextFloat() * (float) (Math.PI * 2);
+                float k = MathHelper.sqrt(this.random.nextFloat()) * range;
+                double x = this.getX() + (double)(MathHelper.cos(h) * range);
+                double y = this.getY();
+                double z = this.getZ() + (double)(MathHelper.sin(h) * range);
+                this.getWorld().addImportantParticle(ParticleTypes.SNOWFLAKE, x, y, z, 0.001, 0.001, 0.001);
+            }
+        }
     }
 
     @Override

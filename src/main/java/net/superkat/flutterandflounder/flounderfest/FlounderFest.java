@@ -79,12 +79,20 @@ public class FlounderFest {
 
     private Predicate<ServerPlayerEntity> isInFlounderFestDistance() {
         return player -> {
-            return FlounderFestApi.getFlounderFestManager(world).getFlounderFestAt(startingPos, 75) == this;
+            return FlounderFestApi.getFlounderFestManager(world).getFlounderFestAt(player.getBlockPos()) == this;
         };
     }
 
     public void updateInvolvedPlayers() {
+
+        List<ServerPlayerEntity> allPlayers = this.world.getPlayers();
         List<ServerPlayerEntity> players = this.world.getPlayers(this.isInFlounderFestDistance());
+
+        for (ServerPlayerEntity player : allPlayers) {
+            if(!players.contains(player)) {
+                removePlayerFromFlounderFest(player);
+            }
+        }
 
         for (ServerPlayerEntity player : players) {
             if(!involvedPlayers.contains(player.getUuid())) {
@@ -109,6 +117,9 @@ public class FlounderFest {
     }
 
     public void addPlayerToFlounderFest(ServerPlayerEntity player) {
+        if(player == null) {
+            return;
+        }
         involvedPlayers.add(player.getUuid());
 
         PacketByteBuf buf = PacketByteBufs.create();
@@ -126,19 +137,37 @@ public class FlounderFest {
         ServerPlayNetworking.send(player, FLOUNDERFEST_CREATE_HUD_ID, buf);
     }
 
+    public void removePlayerFromFlounderFest(ServerPlayerEntity player) {
+        if(player == null) {
+            return;
+        }
+
+        involvedPlayers.remove(player.getUuid());
+        sendDeleteHudPacket(player);
+    }
+
     public void sendGracePeriodPacket(ServerPlayerEntity player) {
+        if(player == null) {
+            return;
+        }
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeInt(gracePeriod / 20);
         ServerPlayNetworking.send(player, FLOUNDERFEST_GRACE_PERIOD_ID, buf);
     }
 
     public void sendTimerPacket(ServerPlayerEntity player) {
+        if(player == null) {
+            return;
+        }
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeInt(secondsRemaining);
         ServerPlayNetworking.send(player, FLOUNDERFEST_TIMER_UPDATE_ID, buf);
     }
 
     public void sendQuotaPacket(ServerPlayerEntity player) {
+        if(player == null) {
+            return;
+        }
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeInt(quotaProgress);
         buf.writeInt(maxQuota);
@@ -146,6 +175,9 @@ public class FlounderFest {
     }
 
     public void sendWavePacket(ServerPlayerEntity player) {
+        if(player == null) {
+            return;
+        }
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeInt(wave);
         buf.writeInt(maxWaves);
@@ -153,8 +185,19 @@ public class FlounderFest {
     }
 
     public void sendDeleteHudPacket(ServerPlayerEntity player) {
+        if(player == null) {
+            return;
+        }
         PacketByteBuf buf = PacketByteBufs.create();
         ServerPlayNetworking.send(player, FLOUNDERFEST_REMOVE_HUD_ID, buf);
+    }
+
+    public void sendBossAlertPacket(ServerPlayerEntity player) {
+        if(player == null) {
+            return;
+        }
+        PacketByteBuf buf = PacketByteBufs.create();
+        ServerPlayNetworking.send(player, FLOUNDERFEST_BOSS_ALERT_ID, buf);
     }
 
     public void sendVictoryPacket(ServerPlayerEntity player) {
@@ -304,7 +347,9 @@ public class FlounderFest {
             currentBosses++;
             spawnedBosses++;
             ticksUntilNextBossSpawn = world.random.nextBetween(currentBosses * 5, 160); //scales with the current bosses
-            //FIXME - boss alert packet here
+            for (UUID playerUuid : involvedPlayers) {
+                sendBossAlertPacket((ServerPlayerEntity) this.world.getEntity(playerUuid));
+            }
         }
     }
 

@@ -22,9 +22,23 @@ import java.util.List;
 import java.util.Random;
 
 public class FlounderFestApi {
+
+    /**
+     * Start a FlounderFest with infinite enemies to be spawned
+     *
+     * @param player The player who starts the FlounderFest. Used to determine the blockpos.
+     */
     public static void startFlounderFest(ServerPlayerEntity player) {
         startFlounderFest(player, determineQuota(player.getServerWorld(), player.getBlockPos()), -1);
     }
+
+    /**
+     * Start a FlounderFest with a chosen quota and enemies to be spawned.
+     *
+     * @param player The player who starts the FlounderFest. Used to determine the starting block pos.
+     * @param quota The amount of boss fish needed to be killed before the time is over.
+     * @param enemiesToBeSpawned The amount of enemies to be spawned. Use "-1" for infinite enemies
+     */
     public static void startFlounderFest(ServerPlayerEntity player, int quota, int enemiesToBeSpawned) {
         FlutterAndFlounderMain.LOGGER.info("Starting a FlounderFest!");
         FlutterAndFlounderMain.LOGGER.info("Player responsible: " + player);
@@ -41,29 +55,65 @@ public class FlounderFestApi {
         return flounderFestManager.createNewFlounderFest(player.getServerWorld(), player.getBlockPos(), quota, enemiesToBeSpawned);
     }
 
+    /**
+     * Stop a specific FlounderFest.
+     *
+     * @param flounderFest The FlounderFest to be stopped
+     */
     public static void stopFlounderFest(FlounderFest flounderFest) {
         flounderFest.invalidate();
     }
 
+    /**
+     * Find a FlounderFest at a specific block pos with 96 blocks of search range.
+     *
+     * @param world The world of the searched FlounderFest. Often the Overworld
+     * @param pos The center pos of the search.
+     * @return Returns the closest FlounderFest if one is found, or null if none are found.
+     */
     @Nullable
     public static FlounderFest getFlounderFestAt(ServerWorld world, BlockPos pos) {
         return getFlounderFestAt(world, pos, 9216);
     }
 
+    /**
+     * Find a FlounderFest at a specific block pos with a specific search distance.
+     *
+     * @param world The world of the searched FlounderFest. Often the Overworld
+     * @param pos The center pos of the search.
+     * @param searchDistance The search distance. 9216 = 96 blocks.
+     * @return Returns the closest FlounderFest if one is found, or null if none are found.
+     */
     @Nullable
     public static FlounderFest getFlounderFestAt(ServerWorld world, BlockPos pos, int searchDistance) {
         return getFlounderFestManager(world).getFlounderFestAt(pos, searchDistance);
     }
 
+    /**
+     * Determine the quota based on nearby players and a random number.
+     *
+     * @param world The world the FlounderFest should be in. Used to get a random number.
+     * @param festCenterPos The center of the FlounderFest. Used to determine nearby player count.
+     * @return A random quota increased by the amount of nearby players.
+     */
     public static int determineQuota(ServerWorld world, BlockPos festCenterPos) {
         int quota = world.getRandom().nextBetween(3, 7);
         for (ServerPlayerEntity player : world.getPlayers(player -> player.squaredDistanceTo(festCenterPos.getX(), festCenterPos.getY(), festCenterPos.getZ()) <= 70)) {
-            quota += (quota / 2); //changes quota based on the amount of players present at the beginning
+            quota += (quota / 3); //changes quota based on the amount of players present at the beginning
         }
 
         return quota;
     }
 
+    /**
+     * Spawns in a lesser fish(e.g. Flying Cod or Flying Salmon) for a specific FlounderFest at a random location within the FlounderFest.
+     * 20 attempts to spawn in the fish in different locations before giving up and returning false.
+     *
+     * @param flounderFest The FlounderFest the fish should be spawned for.
+     * @param world The world of the spawned fish.
+     * @param festCenterPos The center of the FlounderFest.
+     * @return Returns true if the fish spawned successfully or false if the fish was unable to spawn.
+     */
     public static boolean spawnLesserFish(FlounderFest flounderFest, ServerWorld world, BlockPos festCenterPos) {
         LesserFish spawnedFish = LesserFish.chooseLesserFish();
         CommonFlyingFish fish = spawnedFish.type.create(world);
@@ -85,6 +135,15 @@ public class FlounderFestApi {
         return false;
     }
 
+    /**
+     * Spawns a boss fish(e.g. Salmon Ship, Hammer Cod, Whacker Salmon, Clown Cod, etc.) for a specific FlounderFest at a random location.
+     * 20 attempts to spawn in the fish in different locations before giving up and returning false.
+     *
+     * @param flounderFest The FlounderFest the fish should be spawned for.
+     * @param world The world of the spawned fish.
+     * @param festCenterPos The center of the FlounderFest.
+     * @return Returns true if the fish spawned successfully or false if the fish was unable to spawn.
+     */
     public static boolean spawnBossFish(FlounderFest flounderFest, ServerWorld world, BlockPos festCenterPos) {
         BossFish spawnedFish = BossFish.chooseBossFish();
         CommonBossFish fish = spawnedFish.type.create(world);
@@ -98,8 +157,6 @@ public class FlounderFestApi {
                 if(targetPlayer != null) {
                     fish.setTarget(targetPlayer);
                 }
-//                if(flounderFest.hasPlayers()) { //game otherwise crashes when in single player and the player dies
-//                }
                 world.spawnEntity(fish);
                 flounderFest.addEntityToEnemyList(fish);
                 return true;
@@ -108,6 +165,13 @@ public class FlounderFestApi {
         return false;
     }
 
+    /**
+     * @param world The world of the fish.
+     * @param festCenterPos The center of the FlounderFest. Used to determine spawn location.
+     * @param proximity The distance the fish can spawn in. Used to determine how far from the center it should spawn.
+     * @param tries The amount of attempts that should be made at spawning the fish before giving up.
+     * @return Returns the blockpos a fish can spawn at.
+     */
     private static BlockPos fishSpawningPos(ServerWorld world, BlockPos festCenterPos, int proximity, int tries) {
         int i = proximity == 0 ? 2 : 2 - proximity;
         BlockPos.Mutable mutable = new BlockPos.Mutable();
@@ -133,6 +197,12 @@ public class FlounderFestApi {
         return null;
     }
 
+    /**
+     * Get a world's FlounderFestManager. Used for all things related to FlounderFests.
+     *
+     * @param world The ServerWorld you want to get the FlounderFestManager for
+     * @return The world's FlounderFestManager.
+     */
     public static FlounderFestManager getFlounderFestManager(ServerWorld world) {
         FlounderFestServerWorld flounderWorld = (FlounderFestServerWorld) world;
         return flounderWorld.flutterAndFlounder$getFlounderFestManager();

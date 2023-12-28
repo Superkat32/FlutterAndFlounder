@@ -33,7 +33,7 @@ public class FlounderFestCommand {
                                         .then(CommandManager.argument("enemycount", IntegerArgumentType.integer())
                                                 .executes(context -> executeStart(context.getSource(), IntegerArgumentType.getInteger(context, "quota"), IntegerArgumentType.getInteger(context, "enemycount"))))))
                         .then(CommandManager.literal("stop").executes(context -> executeStop(context.getSource())))
-                        .then(CommandManager.literal("fakeHud")
+                        .then(CommandManager.literal("hud")
                                 .then(CommandManager.literal("create")
                                         .executes(context -> executeFakeHud(context.getSource()))
                                         .then(CommandManager.literal("fakeVictory")
@@ -41,8 +41,9 @@ public class FlounderFestCommand {
                                         .then(CommandManager.literal("fakeDefeat")
                                                 .executes(context -> executeFakeDefeat(context.getSource())))
                                         .then(CommandManager.literal("fakeWaveClear")
-                                                .executes(context -> executeFakeWaveClear(context.getSource()))
-                                        )
+                                                .executes(context -> executeFakeWaveClear(context.getSource())))
+                                        .then(CommandManager.literal("fakeBossAlert")
+                                                .executes(context -> executeFakeBossAlert(context.getSource())))
                                 )
                                 .then(CommandManager.literal("delete").executes(context -> executeDeleteFakeHud(context.getSource())))
                         )
@@ -164,6 +165,15 @@ public class FlounderFestCommand {
         PacketByteBuf buf = PacketByteBufs.create();
         ServerPlayNetworking.send(player, FLOUNDERFEST_WAVE_CLEAR_ID, buf);
         source.sendFeedback(() -> Text.literal("Fake wave clear shown!"), false);
+        return 1;
+    }
+
+    private static int executeFakeBossAlert(ServerCommandSource source) throws CommandSyntaxException {
+        executeFakeHud(source);
+        ServerPlayerEntity player = source.getPlayerOrThrow();
+        PacketByteBuf buf = PacketByteBufs.create();
+        ServerPlayNetworking.send(player, FLOUNDERFEST_BOSS_ALERT_ID, buf);
+        source.sendFeedback(() -> Text.literal("Fake boss alert shown!"), false);
         return 1;
     }
 
