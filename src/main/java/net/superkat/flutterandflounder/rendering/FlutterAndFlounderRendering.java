@@ -1,6 +1,7 @@
 package net.superkat.flutterandflounder.rendering;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -42,6 +43,11 @@ public class FlutterAndFlounderRendering {
 
     public static void registerHudEvents() {
         HudRenderCallback.EVENT.register(FlutterAndFlounderRendering::renderFlounderFestHuds);
+
+        ClientPlayConnectionEvents.DISCONNECT.register(((handler, client) -> { //prevents the hud from showing in other worlds
+            FlutterAndFlounderRendering.flounderFestHud = null;
+            FlutterAndFlounderRendering.flounderFestCenterRenderer = null;
+        }));
     }
 
     public static void registerWorldEvents() {

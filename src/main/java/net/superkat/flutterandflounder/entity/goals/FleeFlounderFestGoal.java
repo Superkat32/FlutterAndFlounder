@@ -24,8 +24,12 @@ public class FleeFlounderFestGoal extends Goal {
         boolean shouldFlee = false;
         FlounderFest flounderFest = FlounderFestApi.getFlounderFestAt((ServerWorld) flounderFestEntity.getWorld(), flounderFestEntity.getBlockPos(), 2000);
         this.flounderFest = flounderFest;
-        if(flounderFest == null || flounderFest.shouldMobsFlee()) {
-            shouldFlee = true;
+        if(flounderFest != null) {
+            if(flounderFest.shouldMobsFlee()) {
+                shouldFlee = true;
+            }
+        } else {
+//            flounderFestEntity.discard();
         }
         return shouldFlee;
     }

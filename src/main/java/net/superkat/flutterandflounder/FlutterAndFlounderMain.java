@@ -4,14 +4,18 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.World;
 import net.superkat.flutterandflounder.entity.FlutterAndFlounderEntities;
 import net.superkat.flutterandflounder.entity.custom.cod.*;
 import net.superkat.flutterandflounder.entity.custom.salmon.FlyingSalmonEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.SalmonShipEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.SalmonSniperEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.WhackerSalmonEntity;
+import net.superkat.flutterandflounder.flounderfest.FlounderFestManager;
+import net.superkat.flutterandflounder.flounderfest.api.FlounderFestServerWorld;
 import net.superkat.flutterandflounder.flounderfest.command.FlounderFestCommand;
 import net.superkat.flutterandflounder.item.FlutterAndFlounderItems;
 import org.slf4j.Logger;
@@ -43,6 +47,17 @@ public class FlutterAndFlounderMain implements ModInitializer {
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.SALMON_SNIPER, SalmonSniperEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.CLOWN_COD, ClownCodEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.GOON, GoonCodEntity.createAttributes());
+
+		//FIXME - This won't be needed once the FlounderFest PersistentState thing gets fixed
+		ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) -> {
+			FlounderFestServerWorld world = (FlounderFestServerWorld) server.getWorld(World.OVERWORLD);
+			if(world != null) {
+				FlounderFestManager manager = world.flutterAndFlounder$getFlounderFestManager();
+				if(manager != null) {
+					manager.removeAllFlounderFests();
+				}
+			}
+		}));
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> FlounderFestCommand.register(dispatcher)));
 

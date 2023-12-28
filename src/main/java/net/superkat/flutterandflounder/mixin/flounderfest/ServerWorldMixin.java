@@ -19,10 +19,6 @@ public abstract class ServerWorldMixin implements FlounderFestServerWorld {
 
     public FlounderFestManager flounderFestManager = null;
 
-//    public ServerWorldMixin() {
-////        this.flounderFestManager = new FlounderFestManager((ServerWorld) (Object) this);
-//    }
-
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/village/raid/RaidManager;tick()V"))
     public void tickFlounderFestManager(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
         if(flutterAndFlounder$getFlounderFestManager() != null) {
