@@ -184,21 +184,19 @@ public class FlyingGoals {
     public static class GoonMoveControls extends MoveControl {
         private final GoonCodEntity goon;
         public boolean hasAttemptedAttack = false;
-        private int stoppingDistanceFromPlayer;
         private int cooldown;
-        private int maxCooldown = 100;
-        private int attackIntervalTicks;
-        private int ticksSinceLastAttack;
-        private boolean stationary = false;
-        private boolean canReturnUp = false;
-        public GoonMoveControls(MobEntity entity, int stoppingDistanceFromPlayer) {
+        private int ticksUntilAttack;
+        private int ticksAlive = 0;
+        private boolean startCooldownTimer = false;
+        public GoonMoveControls(MobEntity entity) {
             super(entity);
             if(entity instanceof GoonCodEntity) {
                 this.goon = (GoonCodEntity) entity;
             } else {
                 this.goon = null;
             }
-            this.stoppingDistanceFromPlayer = stoppingDistanceFromPlayer;
+            cooldown = entity.getRandom().nextBetween(5, 15);
+            ticksUntilAttack = entity.getRandom().nextBetween(70, 120);
         }
 
         @Override
@@ -206,80 +204,51 @@ public class FlyingGoals {
             double x = targetX - entity.getX();
             double y = targetY - entity.getY() + 4;
             double z = targetZ - entity.getZ();
-            if(this.state == State.MOVE_TO && !stationary) {
+            ticksAlive++;
+            if(ticksAlive <= 20) {
+                double velX = entity.getRandom().nextDouble() / 2 * (entity.getRandom().nextBoolean() ? -1 : 1);
+                double velY = 0.1 + entity.getRandom().nextDouble() / 15;
+                double velZ = entity.getRandom().nextDouble() / 2* (entity.getRandom().nextBoolean() ? -1 : 1);
+                entity.setVelocity(velX, velY, velZ);
+            } else if (this.state == State.MOVE_TO && !hasAttemptedAttack) {
                 entity.setAttacking(false);
                 Vec3d vec3d = new Vec3d(x, y, z);
-                double d = vec3d.length();
-                entity.setNoGravity(true);
                 ServerPlayerEntity target = (ServerPlayerEntity) entity.getTarget();
-                if(cooldown <= 0) {
-                    cooldown = maxCooldown;
-                } else {
-                    cooldown--;
-                }
-                if(target != null) {
+                if (target != null) {
                     double xDistance = Math.abs(Math.abs(entity.getX()) - Math.abs(target.getX()));
                     double zDistance = Math.abs(Math.abs(entity.getZ()) - Math.abs(target.getZ()));
+                    if (xDistance <= 2 && zDistance <= 2 && ticksAlive >= 80) {
+                        startCooldownTimer = true;
+                    }
+                    if(startCooldownTimer) {
+                        cooldown--;
+                        entity.setVelocity(0, 0, 0);
+                        if (cooldown <= 0) {
+                            entity.setVelocity(0, -1.5, 0);
+                            entity.setAttacking(true);
+                            hasAttemptedAttack = true;
+                        }
+                    }
+                    entity.setNoGravity(true);
                     Vec3d vec3d1 = vec3d.multiply(speed * 0.05 / 3);
                     entity.setVelocity(entity.getVelocity().add(vec3d1.getX(), vec3d.multiply(speed * 0.05 / 5).getY(), vec3d1.getZ()));
-                    if(xDistance < 10 && zDistance < 10 && cooldown <= 0) {
-                        entity.setAttacking(true);
-                        stationary = true;
-                    }
 
-                    if (entity.getTarget() == null) {
-                        Vec3d vec3d2 = entity.getVelocity();
-                        entity.setYaw(-((float) MathHelper.atan2(vec3d2.x, vec3d2.z)) * (180.0F / (float)Math.PI));
-                        entity.bodyYaw = entity.getYaw();
-                    } else {
-                        double e = entity.getTarget().getX() - entity.getX();
-                        double f = entity.getTarget().getZ() - entity.getZ();
-                        entity.setYaw(-((float)MathHelper.atan2(e, f)) * (180.0F / (float)Math.PI));
-                        entity.bodyYaw = entity.getYaw();
-                    }
-    //                    }
+                    Vec3d vec3d2 = entity.getVelocity();
+                    entity.setYaw(-((float) MathHelper.atan2(vec3d2.x, vec3d2.z)) * (180.0F / (float) Math.PI));
+                    entity.bodyYaw = entity.getYaw();
                 }
             } else {
                 ServerPlayerEntity target = (ServerPlayerEntity) entity.getTarget();
-                if(target != null) {
-                    double xDistance = Math.abs(Math.abs(entity.getX()) - Math.abs(target.getX()));
-                    double zDistance = Math.abs(Math.abs(entity.getZ()) - Math.abs(target.getZ()));
-                    if(stationary) {
-                        if (xDistance >= 7 || zDistance >= 7 || canReturnUp) {
-//                            stationary = false;
-                            canReturnUp = false;
-                        }
-    //                        if(goon != null && goon.shouldAttack) {
-                            //doesn't matter if a player is beneath the salmon ship or not
-                        if(cooldown <= 0) {
-                            entity.setNoGravity(false);
-                            if (entity.getBoundingBox().intersects(target.getBoundingBox())) {
-                                entity.tryAttack(target);
-                            }
-                        }
-    //                            goon.setShouldAttack(false);
-                        } else {
-                            boolean beneath = xDistance <= 5.5 && zDistance <= 5.5;
-                            if(beneath) {
-                                Vec3d vec3d = new Vec3d(x, y, z);
-                                Vec3d vec3d1 = vec3d.multiply(speed * 0.05 / 3);
-                                entity.setVelocity(entity.getVelocity().add(vec3d1.getX(), vec3d.multiply(speed * 0.05 / 5).getY(), vec3d1.getZ()));
-                                if (goon != null) {
-    //                                    goon.setIsWarning(true);
-                                    cooldown = maxCooldown;
-                                    entity.setAttacking(true);
-                                }
-                            }
-                        }
-
-                        cooldown--;
-                        if(cooldown <= 0) {
-                            canReturnUp = true;
-                        }
+                entity.setNoGravity(false);
+                entity.setVelocity(0, -1.5, 0);
+                if (target != null) {
+                    if (entity.getBoundingBox().intersects(target.getBoundingBox())) {
+                        entity.tryAttack(target);
                     }
                 }
             }
         }
+    }
 
     public static class GoonGoal extends Goal {
         public final GoonCodEntity goon;

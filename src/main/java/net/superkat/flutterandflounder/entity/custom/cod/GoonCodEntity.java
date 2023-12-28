@@ -37,7 +37,7 @@ public class GoonCodEntity extends HostileEntity implements GeoEntity, Ownable {
     public ClownCodEntity owner = null;
     public GoonCodEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
-        this.moveControl = new FlyingGoals.GoonMoveControls(this, 5);
+        this.moveControl = new FlyingGoals.GoonMoveControls(this);
     }
 
     @Override

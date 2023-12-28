@@ -6,6 +6,8 @@ import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -61,7 +63,7 @@ public class ClownCodEntity extends CommonBossFish {
     protected void initGoals() {
 //        this.goalSelector.add(1, new MeleeAttackGoal(this, 1, true));
         this.goalSelector.add(1, new FleeFlounderFestGoal(this));
-        this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 8f));
+        this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 20f));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1));
         this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
     }
@@ -71,11 +73,12 @@ public class ClownCodEntity extends CommonBossFish {
         super.tickMovement();
         ticksUntilGoons--;
         if(ticksUntilGoons <= 0) {
-            ticksUntilGoons = 400;
+            ticksUntilGoons = 275;
             int goons = 7;
             for(int i = 0; i < goons; i++) {
                 summonGoon();
             }
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 140));
         }
     }
 

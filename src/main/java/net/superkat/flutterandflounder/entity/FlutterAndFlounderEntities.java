@@ -85,7 +85,7 @@ public class FlutterAndFlounderEntities {
             Registries.ENTITY_TYPE,
             new Identifier(MOD_ID, "goon"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, GoonCodEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.7f, 0.8f)).build()
+                    .dimensions(EntityDimensions.fixed(0.9f, 0.8f)).build()
     );
 
 }
