@@ -2,6 +2,7 @@ package net.superkat.flutterandflounder.mixin.flounderfest;
 
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.PersistentStateManager;
+import net.superkat.flutterandflounder.FlutterAndFlounderMain;
 import net.superkat.flutterandflounder.flounderfest.FlounderFestManager;
 import net.superkat.flutterandflounder.flounderfest.api.FlounderFestServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +25,7 @@ public abstract class ServerWorldMixin implements FlounderFestServerWorld {
         if(flutterAndFlounder$getFlounderFestManager() != null) {
             flutterAndFlounder$getFlounderFestManager().tick();
         } else {
-            flounderFestManager = this.getPersistentStateManager().getOrCreate(FlounderFestManager.getPersistentStateType((ServerWorld) (Object) this), "flounderfest");
+            flounderFestManager = this.getPersistentStateManager().getOrCreate(FlounderFestManager.getPersistentStateType((ServerWorld) (Object) this), FlutterAndFlounderMain.MOD_ID);
         }
     }
 

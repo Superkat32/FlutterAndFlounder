@@ -17,7 +17,7 @@ public abstract class CommonBossFish extends HostileEntity implements GeoEntity 
     }
 
     public void updateFlounderFestQuota(ServerWorld world, BlockPos pos) {
-        FlounderFest flounderFest = FlounderFestApi.getFlounderFestAt(world, pos, 2000);
+        FlounderFest flounderFest = FlounderFestApi.getFlounderFestAt(world, pos);
         if(flounderFest != null) {
             flounderFest.updateQuota(1);
         }

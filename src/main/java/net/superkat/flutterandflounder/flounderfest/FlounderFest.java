@@ -7,6 +7,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -40,7 +44,7 @@ public class FlounderFest {
     public int secondsRemaining = 100;
     public int maxQuota;
     public int quotaProgress = 0;
-    private final Set<LivingEntity> enemies = Sets.newHashSet();
+    private final Set<UUID> enemies = Sets.newHashSet();
     public int enemiesToBeSpawned;
     public int totalEnemyCount;
     public int maxEnemiesAtOnce = 30;
@@ -62,6 +66,80 @@ public class FlounderFest {
         this.maxQuota = quota;
         this.enemiesToBeSpawned = totalEntityCount; //setting to -1 = infinite
         this.totalEnemyCount = totalEntityCount;
+    }
+
+    public FlounderFest(ServerWorld world, NbtCompound nbt) {
+        this.world = world;
+        this.id = nbt.getInt("Id");
+        this.status = Status.fromName(nbt.getString("Status"));
+        this.wave = nbt.getInt("Wave");
+        this.maxWaves = nbt.getInt("MaxWaves");
+        this.quotaProgress = nbt.getInt("QuotaProgress");
+        this.maxQuota = nbt.getInt("MaxQuota");
+        this.ticksSinceStart = nbt.getInt("TicksSinceStart");
+        this.ticksSinceEnd = nbt.getInt("TicksSinceEnd");
+        this.ticksSinceWaveClear = nbt.getInt("TicksSinceWaveClear");
+        this.ticksUntilNextEnemySpawn = nbt.getInt("TicksUntilNextEnemySpawn");
+        this.ticksUntilNextBossSpawn = nbt.getInt("TicksUntilNextBossSpawn");
+        this.currentEnemies = nbt.getInt("CurrentEnemies");
+        this.currentBosses = nbt.getInt("CurrentBosses");
+        this.spawnedEnemies = nbt.getInt("SpawnedEnemies");
+        this.spawnedBosses = nbt.getInt("SpawnBosses");
+        this.enemiesToBeSpawned = nbt.getInt("EnemiesToBeSpawned");
+        this.totalEnemyCount = nbt.getInt("TotalEnemyCount");
+        int startX = nbt.getInt("StartX");
+        int startY = nbt.getInt("StartY");
+        int startZ = nbt.getInt("StartZ");
+        this.startingPos = new BlockPos(startX, startY, startZ);
+
+//        if(nbt.contains("InvolvedPlayers", NbtElement.LIST_TYPE)) {
+//            for (NbtElement nbtElement : nbt.getList("InvolvedPlayers", NbtElement.INT_ARRAY_TYPE)) {
+//                this.involvedPlayers.add(NbtHelper.toUuid(nbtElement));
+//            }
+//        }
+
+        if(nbt.contains("Enemies", NbtElement.LIST_TYPE)) {
+            for (NbtElement nbtElement : nbt.getList("Enemies", NbtElement.INT_ARRAY_TYPE)) {
+                this.enemies.add(NbtHelper.toUuid(nbtElement));
+            }
+        }
+    }
+
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        nbt.putInt("Id", this.id);
+        nbt.putString("Status", this.status.getName());
+        nbt.putInt("Wave", this.wave);
+        nbt.putInt("MaxWaves", this.maxWaves);
+        nbt.putInt("QuotaProgress", this.quotaProgress);
+        nbt.putInt("MaxQuota", this.maxQuota);
+        nbt.putInt("TicksSinceStart", this.ticksSinceStart);
+        nbt.putInt("TicksSinceEnd", this.ticksSinceEnd);
+        nbt.putInt("TicksSinceWaveClear", this.ticksSinceWaveClear);
+        nbt.putInt("TicksUntilNextEnemySpawn", this.ticksUntilNextEnemySpawn);
+        nbt.putInt("TicksUntilNextBossSpawn", this.ticksUntilNextBossSpawn);
+        nbt.putInt("CurrentEnemies", this.currentEnemies);
+        nbt.putInt("CurrentBosses", this.currentBosses);
+        nbt.putInt("SpawnedEnemies", this.spawnedEnemies);
+        nbt.putInt("SpawnBosses", this.spawnedBosses);
+        nbt.putInt("EnemiesToBeSpawned", this.enemiesToBeSpawned);
+        nbt.putInt("TotalEnemyCount", this.totalEnemyCount);
+        nbt.putInt("StartX", this.startingPos.getX());
+        nbt.putInt("StartY", this.startingPos.getY());
+        nbt.putInt("StartZ", this.startingPos.getZ());
+
+//        NbtList involvedPlayersNbtList = new NbtList();
+//        for (UUID uuid : this.involvedPlayers) {
+//            involvedPlayersNbtList.add(NbtHelper.fromUuid(uuid));
+//        }
+//        nbt.put("InvolvedPlayers", involvedPlayersNbtList);
+
+        NbtList enemiesNbtList = new NbtList();
+        for (UUID enemy : this.enemies) {
+            enemiesNbtList.add(NbtHelper.fromUuid(enemy));
+        }
+        nbt.put("Enemies", enemiesNbtList);
+
+        return nbt;
     }
 
     public boolean hasPlayers() {
@@ -266,14 +344,11 @@ public class FlounderFest {
                                 ticksSinceWaveClear = 0;
                                 involvedPlayers.forEach(playerUuid -> sendWaveClearPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
                             } else {
-                                this.status = Status.VICTORY;
-                                involvedPlayers.forEach(playerUuid -> sendVictoryPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
+                                winFlounderFest();
                             }
 
                         //counts as loss
                         } else {
-//                            this.status = Status.LOSS;
-//                            involvedPlayers.forEach(playerUuid -> sendDefeatPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
                             lossFlounderFest();
                         }
                     }
@@ -294,6 +369,11 @@ public class FlounderFest {
 
             }
         }
+    }
+
+    public void winFlounderFest() {
+        this.status = Status.VICTORY;
+        involvedPlayers.forEach(playerUuid -> sendVictoryPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
     }
 
     public void lossFlounderFest() {
@@ -318,11 +398,20 @@ public class FlounderFest {
         if(wave > 1) {
             maxQuota += wave - 1;
         }
-        enemies.forEach(entityFromSet -> (entityFromSet).remove(Entity.RemovalReason.DISCARDED));
+
+        enemies.forEach(enemyUuid -> {
+            Entity entity  = world.getEntity(enemyUuid);
+            if(entity != null) {
+                entity.remove(Entity.RemovalReason.DISCARDED);
+//                enemies.remove(enemyUuid);
+            }
+        });
 
         involvedPlayers.forEach(playerUuid -> sendQuotaPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
         involvedPlayers.forEach(playerUuid -> sendWavePacket((ServerPlayerEntity) world.getEntity(playerUuid)));
         involvedPlayers.forEach(playerUuid -> applyNextWaveRegen((LivingEntity) world.getEntity(playerUuid)));
+
+        updateNbt();
     }
 
     public void applyNextWaveRegen(LivingEntity player) {
@@ -338,6 +427,7 @@ public class FlounderFest {
             currentEnemies++;
             spawnedEnemies++;
             ticksUntilNextEnemySpawn = world.random.nextBetween(10, 80);
+            updateNbt();
         }
     }
 
@@ -350,36 +440,44 @@ public class FlounderFest {
             for (UUID playerUuid : involvedPlayers) {
                 sendBossAlertPacket((ServerPlayerEntity) this.world.getEntity(playerUuid));
             }
+            updateNbt();
         }
     }
 
-    public void addEntityToEnemyList(LivingEntity entity) {
-        List<LivingEntity> set = enemies.stream().toList();
-        LivingEntity livingEntity = null;
+    public void addEntityToEnemyList(UUID entityUuid) {
+        List<UUID> set = enemies.stream().toList();
+        UUID livingEntity = null;
 
-        for (LivingEntity entityFromSet : set) {
-            if(entityFromSet.getUuid().equals(entity.getUuid())) {
-                livingEntity = entityFromSet;
+        for (UUID entityFromSetUuid : set) {
+            if(entityFromSetUuid.equals(entityUuid)) {
+                livingEntity = entityFromSetUuid;
                 break;
             }
         }
 
         if(livingEntity != null) {
             enemies.remove(livingEntity);
-            enemies.add(entity);
+            enemies.add(entityUuid);
         }
 
-        enemies.add(entity);
+        enemies.add(entityUuid);
+        updateNbt();
     }
 
     public void updateQuota(int amount) {
-        if(!isFinished()) {
+        if(status == Status.ONGOING) {
             quotaProgress += amount;
             currentBosses -= amount;
             for (UUID playerUuid : involvedPlayers) {
                 sendQuotaPacket((ServerPlayerEntity) this.world.getEntity(playerUuid));
             }
+            updateNbt();
         }
+    }
+
+    public void updateNbt() {
+        FlounderFestManager flounderFestManager = FlounderFestApi.getFlounderFestManager(this.world);
+        flounderFestManager.markDirty();
     }
 
     public void updateEnemyCount(int amount) {
@@ -420,7 +518,15 @@ public class FlounderFest {
     public void invalidate() {
         this.status = Status.STOPPED;
 
-        enemies.forEach(entityFromSet -> (entityFromSet).remove(Entity.RemovalReason.DISCARDED));
+//        enemies.forEach(entityFromSet -> (entityFromSet).remove(Entity.RemovalReason.DISCARDED));
+
+        enemies.forEach(enemyUuid -> {
+            Entity entity  = world.getEntity(enemyUuid);
+            if(entity != null) {
+                entity.remove(Entity.RemovalReason.DISCARDED);
+            }
+        });
+
 
         involvedPlayers.forEach(playerUuid -> sendDeleteHudPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
     }

@@ -1,6 +1,8 @@
 package net.superkat.flutterandflounder.network;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.superkat.flutterandflounder.rendering.FlounderFestCenterRenderer;
@@ -95,6 +97,7 @@ public class FlutterAndFlounderPackets {
                 if(hud != null) {
                     hud.updateStatus(FlounderFestHud.Status.WAVE_CLEAR);
                 }
+                client.player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, 1f, 1f);
             });
         })));
 
@@ -104,6 +107,7 @@ public class FlutterAndFlounderPackets {
                 if(hud != null) { //confirms a FlounderFestHud is active
                     FlutterAndFlounderRendering.playBossAlertAnim();
                 }
+                client.player.playSound(SoundEvents.BLOCK_BELL_USE, SoundCategory.MASTER, 1f, 1f);
             });
         })));
 
@@ -114,6 +118,7 @@ public class FlutterAndFlounderPackets {
                 if(hud != null) {
                     hud.updateStatus(FlounderFestHud.Status.VICTORY);
                 }
+                client.player.playSound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 1f, 1f);
             });
         })));
 
@@ -123,6 +128,7 @@ public class FlutterAndFlounderPackets {
                 if(hud != null) {
                     hud.updateStatus(FlounderFestHud.Status.DEFEAT);
                 }
+                client.player.playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE, SoundCategory.MASTER, 1f, 0.5f);
             });
         })));
     }

@@ -128,7 +128,7 @@ public class FlounderFestApi {
                     fish.setTarget(targetPlayer);
                 }
                 world.spawnEntity(fish);
-                flounderFest.addEntityToEnemyList(fish);
+                flounderFest.addEntityToEnemyList(fish.getUuid());
                 return true;
             }
         }
@@ -158,7 +158,7 @@ public class FlounderFestApi {
                     fish.setTarget(targetPlayer);
                 }
                 world.spawnEntity(fish);
-                flounderFest.addEntityToEnemyList(fish);
+                flounderFest.addEntityToEnemyList(fish.getUuid());
                 return true;
             }
         }

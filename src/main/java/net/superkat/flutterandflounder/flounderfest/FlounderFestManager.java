@@ -2,8 +2,9 @@ package net.superkat.flutterandflounder.flounderfest;
 
 import com.google.common.collect.Maps;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.datafixer.DataFixTypes;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -29,12 +30,13 @@ public class FlounderFestManager extends PersistentState {
     //If you do end up doing that, make sure to remove the
     //ServerPlayConnectionEvents.DISCONNECT registry in FlutterAndFlounderMain
     public static PersistentState.Type<FlounderFestManager> getPersistentStateType(ServerWorld world) {
-        return new PersistentState.Type<>(() -> new FlounderFestManager(world), nbt -> fromNbt(world, nbt), DataFixTypes.SAVED_DATA_RAIDS);
+        return new PersistentState.Type<>(() -> new FlounderFestManager(world), nbt -> fromNbt(world, nbt), null);
     }
 
     public FlounderFestManager(ServerWorld world) {
         this.world = world;
         nextAvailableId = 0;
+        this.markDirty();
     }
 
     /**
@@ -46,6 +48,7 @@ public class FlounderFestManager extends PersistentState {
     public void createFlounderFest(FlounderFest flounderFest, ServerPlayerEntity player) {
         System.out.println("Creating new FlounderFest...");
         flounderFests.put(flounderFest.getId(), flounderFest);
+        this.markDirty();
     }
 
     /**
@@ -59,6 +62,7 @@ public class FlounderFestManager extends PersistentState {
             FlounderFest flounderFest = allFlounderFests.next();
             if(flounderFest.hasStopped()) {
                 allFlounderFests.remove();
+                this.markDirty();
             } else {
                 flounderFest.tick();
             }
@@ -144,13 +148,33 @@ public class FlounderFestManager extends PersistentState {
 
     public static FlounderFestManager fromNbt(ServerWorld world, NbtCompound nbt) {
         FlounderFestManager flounderFestManager = new FlounderFestManager(world);
+        flounderFestManager.nextAvailableId = nbt.getInt("NextAvailableID");
+
+        NbtList nbtList = nbt.getList("FlounderFests", NbtElement.COMPOUND_TYPE);
+
+        for (int i = 0; i < nbtList.size(); i++) {
+            NbtCompound nbtCompound = nbtList.getCompound(i);
+            FlounderFest flounderFest = new FlounderFest(world, nbtCompound);
+            flounderFestManager.flounderFests.put(flounderFest.getId(), flounderFest);
+        }
 
         return flounderFestManager;
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
-        return null;
+        nbt.putInt("NextAvailableID", this.nextAvailableId);
+
+        NbtList nbtList = new NbtList();
+
+        for (FlounderFest flounderFest : this.flounderFests.values()) {
+            NbtCompound nbtCompound = new NbtCompound();
+            flounderFest.writeNbt(nbtCompound);
+            nbtList.add(nbtCompound);
+        }
+
+        nbt.put("FlounderFests", nbtList);
+        return nbt;
     }
 
     /**
