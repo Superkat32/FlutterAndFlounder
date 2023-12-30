@@ -58,6 +58,9 @@ public class PrismarineDiamondItem extends Item {
                 }
             }
         } else if (status == ActivationStatus.BEGIN) {
+            if(ticksSinceBegin == 0) {
+                stack.decrement(1);
+            }
             ticksSinceBegin++;
             if(ticksSinceBegin % 5 == 0) {
                 if (world.isClient) {
@@ -68,7 +71,6 @@ public class PrismarineDiamondItem extends Item {
                 }
             }
             if(ticksSinceBegin >= 40) {
-                stack.decrement(1);
                 status = ActivationStatus.NONE;
             }
         }
