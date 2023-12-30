@@ -23,7 +23,11 @@ public class FlutterAndFlounderMain implements ModInitializer {
 	public static final String MOD_ID = "flutterandflounder";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final GameRules.Key<GameRules.BooleanRule> END_FLOUNDERFEST_UPON_ALL_PLAYERS_DEAD =
-			GameRuleRegistry.register("endFlounderFestWhenAllPlayersAreDead", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
+			GameRuleRegistry.register("endFlounderFestWhenAllPlayersAreDead", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
+	public static final GameRules.Key<GameRules.IntRule> FLOUNDERFEST_MAX_ENEMIES =
+			GameRuleRegistry.register("flounderFestMaxEnemies", GameRules.Category.MOBS, GameRuleFactory.createIntRule(30));
+	public static final GameRules.Key<GameRules.IntRule> FLOUNDERFEST_MAX_BOSSES =
+			GameRuleRegistry.register("flounderFestMaxBosses", GameRules.Category.MOBS, GameRuleFactory.createIntRule(15));
 
 	@Override
 	public void onInitialize() {
@@ -44,6 +48,7 @@ public class FlutterAndFlounderMain implements ModInitializer {
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.SALMON_SNIPER, SalmonSniperEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.CLOWN_COD, ClownCodEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.GOON, GoonCodEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.COFFEE_COD, CoffeeCodEntity.createAttributes());
 
 		//frogmobile
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.FROGMOBILE, FrogmobileEntity.createAttributes());

@@ -1,10 +1,14 @@
 package net.superkat.flutterandflounder.flounderfest.api;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentLevelEntry;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -19,6 +23,7 @@ import net.superkat.flutterandflounder.entity.custom.CommonBossFish;
 import net.superkat.flutterandflounder.entity.custom.CommonFlyingFish;
 import net.superkat.flutterandflounder.flounderfest.FlounderFest;
 import net.superkat.flutterandflounder.flounderfest.FlounderFestManager;
+import net.superkat.flutterandflounder.item.FlutterAndFlounderItems;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -201,16 +206,40 @@ public class FlounderFestApi {
         return null;
     }
 
+    /**
+     * Spawn in FlounderFest rewards at the FlounderFest's starting pos. The amount is determined by the total quota and if the players won or not.
+     * The rewards are predetermined in the API class.
+     *
+     * @param world The world to spawn the rewards in(should be the world of the FlounderFest)
+     * @param festCenterPos The FlounderFest's starting block pos
+     * @param totalQuota The total amount of earned quota from the FlounderFest across all waves, used to determine the amount of rewards
+     * @param didWin If the players won or lost the FlounderFest, used to determine the amount of rewards
+     */
     public static void spawnFlounderFestRewards(ServerWorld world, BlockPos festCenterPos, int totalQuota, boolean didWin) {
         //Quota already scales with the amount of players, naturally meaning more players = more rewards
         double quotaCalc = totalQuota / (didWin ? 3d : 9d);
         int totalRewards = (int) (didWin ? Math.ceil(quotaCalc) : Math.floor(quotaCalc));
+        if(totalRewards <= 0) {
+            totalRewards = 1;
+        }
+        //roughly 25% of the rewards will be prismarine pearls, rounded down to make them harder to get
+        int prismarinePearls = (int) Math.floor((double) totalRewards / 4);
 
-        for (int i = 0; i < totalRewards; i++) {
-            dropStack(world, festCenterPos, getRandomFlounderFestReward());
+        for (int i = 0; i < totalRewards - prismarinePearls; i++) {
+            dropStack(world, festCenterPos, getRandomFlounderFestReward(world));
+        }
+        for (int i = 0; i < prismarinePearls; i++) {
+            dropStack(world, festCenterPos, FlutterAndFlounderItems.PRISMARINE_PEARL.getDefaultStack());
         }
     }
 
+    /**
+     * Spawns in a glowing item in a world.
+     *
+     * @param world The world to spawn the item in
+     * @param dropPos The drop block pos of the item
+     * @param stack The item stack itself
+     */
     private static void dropStack(ServerWorld world, BlockPos dropPos, ItemStack stack) {
         if(stack.isEmpty()) {
             return;
@@ -222,13 +251,47 @@ public class FlounderFestApi {
         }
     }
 
-    public static ItemStack getRandomFlounderFestReward() {
+    /**
+     * Get a random reward from a pre-determined list
+     *
+     * @param world The world the items should spawn in, used to get its random for the enchanted books
+     * @return Returns a random item from the list of possible rewards
+     */
+    public static ItemStack getRandomFlounderFestReward(ServerWorld world) {
+        //FIXME - Ideally, this would be done using loot tables and data gen, but I didn't have time for that.
         ArrayList<ItemStack> rewards = new ArrayList<>();
 
-        rewards.add(Items.SPYGLASS.getDefaultStack());
         rewards.add(Items.GOLDEN_APPLE.getDefaultStack());
+        rewards.add(Items.ENCHANTED_GOLDEN_APPLE.getDefaultStack());
+        rewards.add(FlutterAndFlounderItems.FLOUNDERFEST_COFFEE.getDefaultStack());
+        rewards.add(Items.GOLDEN_CARROT.getDefaultStack());
+        rewards.add(Items.DIAMOND.getDefaultStack());
+        rewards.add(Items.NETHERITE_SCRAP.getDefaultStack());
+        rewards.add(getRandomEnchantedBookReward(world));
 
         return rewards.get(new Random().nextInt(rewards.size()));
+    }
+
+    /**
+     * Get an enchanted book with a random enchantment.
+     *
+     * @param world The world the items should spawn in, used to get its random
+     * @return Returns an item stack which is an enchanted book with a random enchantment using the same math as a villager trade
+     */
+    private static ItemStack getRandomEnchantedBookReward(ServerWorld world) {
+
+        ArrayList<Enchantment> possibleEnchantments = new ArrayList<>();
+        possibleEnchantments.add(Enchantments.EFFICIENCY);
+        possibleEnchantments.add(Enchantments.UNBREAKING);
+        possibleEnchantments.add(Enchantments.PROTECTION);
+        possibleEnchantments.add(Enchantments.SHARPNESS);
+        possibleEnchantments.add(Enchantments.SILK_TOUCH);
+        possibleEnchantments.add(Enchantments.MENDING);
+        possibleEnchantments.add(Enchantments.FORTUNE);
+
+        Enchantment enchantment = possibleEnchantments.get(world.random.nextInt(possibleEnchantments.size()));
+        int randomLevel = world.random.nextBetween(enchantment.getMinLevel(), enchantment.getMaxLevel());
+        return EnchantedBookItem.forEnchantment(new EnchantmentLevelEntry(enchantment, randomLevel));
     }
 
     /**
@@ -269,7 +332,8 @@ public class FlounderFestApi {
         WHACKERSALMON(FlutterAndFlounderEntities.WHACKER_SALMON),
         CHILLCOD(FlutterAndFlounderEntities.CHILL_COD),
         SALMONSNIPER(FlutterAndFlounderEntities.SALMON_SNIPER),
-        CLOWNCOD(FlutterAndFlounderEntities.CLOWN_COD);
+        CLOWNCOD(FlutterAndFlounderEntities.CLOWN_COD),
+        COFFEECOD(FlutterAndFlounderEntities.COFFEE_COD);
 
         final EntityType<? extends CommonBossFish> type;
         private static final List<BossFish> VALUES = List.of(values());

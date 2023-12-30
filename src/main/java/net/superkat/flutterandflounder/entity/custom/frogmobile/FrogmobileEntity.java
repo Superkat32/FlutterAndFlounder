@@ -19,6 +19,7 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
+import net.superkat.flutterandflounder.item.FlutterAndFlounderItems;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -210,50 +211,18 @@ public class FrogmobileEntity extends AbstractHorseEntity implements GeoEntity {
 
     @Override
     protected void jump(float strength, Vec3d movementInput) {
-//        super.jump(strength, movementInput);
-//        double d = this.getJumpStrength() * (double)strength * (double)this.getJumpVelocityMultiplier();
-//        double e = d + (double)this.getJumpBoostVelocityModifier();
-//        Vec3d vec3d = this.getVelocity();
-//        this.setVelocity(vec3d.x, e, vec3d.z);
-//        this.setInAir(true);
-//        this.velocityDirty = true;
-//        if (movementInput.z > 0.0) {
-//            float f = MathHelper.sin(this.getYaw() * (float) (Math.PI / 180.0));
-//            float g = MathHelper.cos(this.getYaw() * (float) (Math.PI / 180.0));
-//            this.setVelocity(this.getVelocity().add((double)(-0.4F * f * strength), 0.0, (double)(0.4F * g * strength)));
-//        }
-//        if(flyTicks <= 0 && isOnGround()) {
-//            flyTicks = (int) (30 * strength);
-//        }
         this.setNoGravity(!hasNoGravity());
     }
-
-//    protected void fly() {
-////        double d = this.getJumpStrength() * (double)strength * (double)this.getJumpVelocityMultiplier();
-////        double e = d + (double)this.getJumpBoostVelocityModifier();
-//        Vec3d vec3d = this.getVelocity();
-////        if(flyTicks >= maxFlyTicks * 0.1) {
-//            this.setVelocity(vec3d.x / 3, 0.3 + (double) flyTicks / 100, vec3d.z / 3);
-////        } else {
-////            this.setVelocity(vec3d.x, -0.2, vec3d.z);
-////        }
-////        this.setInAir(true);
-//        this.velocityDirty = true;
-//        flyTicks--;
-//        if(flyTicks <= 0) {
-//            hasFlown = true;
-//        }
-////        if (movementInput.z > 0.0) {
-////            float f = MathHelper.sin(this.getYaw() * (float) (Math.PI / 180.0));
-////            float g = MathHelper.cos(this.getYaw() * (float) (Math.PI / 180.0));
-////            this.setVelocity(this.getVelocity().add((double)(-0.4F * f), 0.0, (double)(0.4F * g)));
-////        }
-////        this.setVelocity();
-//    }
 
     @Override
     public void tick() {
         super.tick();
+    }
+
+    @Override
+    protected void dropInventory() {
+        super.dropInventory();
+        this.dropStack(FlutterAndFlounderItems.FROGMOBILE_SPAWN_EGG.getDefaultStack());
     }
 
     @Nullable

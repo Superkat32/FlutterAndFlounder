@@ -11,13 +11,6 @@ public class ChillCodRenderer extends GeoEntityRenderer<ChillCodEntity> {
         super(renderManager, new ChillCodModel());
     }
 
-//    @Override
-//    public void render(ChillCodEntity entity, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
-//        poseStack.scale(1.2f, 1.2f, 1.2f);
-//        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-//    }
-
-
     @Override
     public void scaleModelForRender(float widthScale, float heightScale, MatrixStack poseStack, ChillCodEntity animatable, BakedGeoModel model, boolean isReRender, float partialTick, int packedLight, int packedOverlay) {
         poseStack.scale(1.2f, 1.2f,1.2f);

@@ -89,8 +89,14 @@ public class FlutterAndFlounderEntities {
                     .dimensions(EntityDimensions.fixed(1f, 1f)).build()
     );
 
-    //frogmobile
+    public static final EntityType<CoffeeCodEntity> COFFEE_COD = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(MOD_ID, "coffeecod"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, CoffeeCodEntity::new)
+                    .dimensions(EntityDimensions.fixed(1.5f, 1.5f)).build()
+    );
 
+    //frogmobile
     public static final EntityType<FrogmobileEntity> FROGMOBILE = Registry.register(
             Registries.ENTITY_TYPE,
             new Identifier(MOD_ID, "frogmobile"),

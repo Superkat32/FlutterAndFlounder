@@ -27,6 +27,7 @@ public class FlutterAndFlounderClient implements ClientModInitializer {
         EntityRendererRegistry.register(FlutterAndFlounderEntities.SALMON_SNIPER, SalmonSniperRenderer::new);
         EntityRendererRegistry.register(FlutterAndFlounderEntities.CLOWN_COD, ClownCodRenderer::new);
         EntityRendererRegistry.register(FlutterAndFlounderEntities.GOON, GoonCodRenderer::new);
+        EntityRendererRegistry.register(FlutterAndFlounderEntities.COFFEE_COD, CoffeeCodRenderer::new);
 
         //frogmobile
         EntityRendererRegistry.register(FlutterAndFlounderEntities.FROGMOBILE, FrogmobileRenderer::new);

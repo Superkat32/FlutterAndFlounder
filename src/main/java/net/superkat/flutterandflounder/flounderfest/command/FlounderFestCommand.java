@@ -1,6 +1,7 @@
 package net.superkat.flutterandflounder.flounderfest.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -47,33 +48,12 @@ public class FlounderFestCommand {
                                 )
                                 .then(CommandManager.literal("delete").executes(context -> executeDeleteFakeHud(context.getSource())))
                         )
-//                        .then(CommandManager.literal("createFakeHud").executes(context -> executeFakeHud(context.getSource())))
-//                        .then(CommandManager.literal("deleteFakeHud").executes(context -> executeDeleteFakeHud(context.getSource())))
-//                        .then(CommandManager.literal("fakeVictory").executes(context -> executeFakeVictory(context.getSource())))
-//                        .then(CommandManager.literal("start")
-//                                .then(CommandManager.argument("quota", IntegerArgumentType.integer(1))
-//                                    .executes(context -> executeStart(context.getSource(), IntegerArgumentType.getInteger(context, "quota"), IntegerArgumentType.getInteger(context, "quota")))
-//                                    .then(CommandManager.argument("enemycount", IntegerArgumentType.integer(1)))
-//                                        .executes(context -> executeStart(context.getSource(), IntegerArgumentType.getInteger(context, "quota"), IntegerArgumentType.getInteger(context, "enemycount"))))
-//                        )
-//                        .then(CommandManager.literal("stop").executes(context -> executeStop(context.getSource())))
-//                        .then(CommandManager.literal("check").executes(context -> executeCheck(context.getSource())))
-//                        .then(
-//                                CommandManager.literal("sound")
-//                                        .then(
-//                                                CommandManager.argument("type", TextArgumentType.text())
-//                                                        .executes(context -> executeSound(context.getSource(), TextArgumentType.getTextArgument(context, "type")))
-//                                        )
-//                        )
-//                        .then(CommandManager.literal("spawnleader").executes(context -> executeSpawnLeader(context.getSource())))
-//                        .then(
-//                                CommandManager.literal("setomen")
-//                                        .then(
-//                                                CommandManager.argument("level", IntegerArgumentType.integer(0))
-//                                                        .executes(context -> executeSetOmen(context.getSource(), IntegerArgumentType.getInteger(context, "level")))
-//                                        )
-//                        )
-//                        .then(CommandManager.literal("glow").executes(context -> executeGlow(context.getSource())))
+                        .then(CommandManager.literal("reward")
+                                .executes(context -> executeFakeReward(context.getSource(), 30, true))
+                                .then(CommandManager.argument("totalQuotaEarned", IntegerArgumentType.integer())
+                                        .executes(context -> executeFakeReward(context.getSource(), IntegerArgumentType.getInteger(context, "totalQuotaEarned"), true))
+                                        .then(CommandManager.argument("didWin", BoolArgumentType.bool())
+                                                .executes(context -> executeFakeReward(context.getSource(), IntegerArgumentType.getInteger(context, "totalQuotaEarned"), BoolArgumentType.getBool(context, "didWin"))))))
         );
     }
     private static int executeStart(ServerCommandSource source) throws CommandSyntaxException {
@@ -174,6 +154,13 @@ public class FlounderFestCommand {
         PacketByteBuf buf = PacketByteBufs.create();
         ServerPlayNetworking.send(player, FLOUNDERFEST_BOSS_ALERT_ID, buf);
         source.sendFeedback(() -> Text.literal("Fake boss alert shown!"), false);
+        return 1;
+    }
+
+    private static int executeFakeReward(ServerCommandSource source, int totalQuota, boolean didWin) throws CommandSyntaxException {
+        ServerPlayerEntity player = source.getPlayerOrThrow();
+        FlounderFestApi.spawnFlounderFestRewards(player.getServerWorld(), player.getBlockPos(), totalQuota, didWin);
+        source.sendFeedback(() -> Text.literal("Fake reward given!"), false);
         return 1;
     }
 

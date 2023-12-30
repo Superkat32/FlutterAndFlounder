@@ -282,16 +282,25 @@ public class FlounderFest {
     }
 
     public void sendVictoryPacket(ServerPlayerEntity player) {
+        if(player == null) {
+            return;
+        }
         PacketByteBuf buf = PacketByteBufs.create();
         ServerPlayNetworking.send(player, FLOUNDERFEST_VICTORY_ID, buf);
     }
 
     public void sendDefeatPacket(ServerPlayerEntity player) {
+        if(player == null) {
+            return;
+        }
         PacketByteBuf buf = PacketByteBufs.create();
         ServerPlayNetworking.send(player, FLOUNDERFEST_DEFEAT_ID, buf);
     }
 
     public void sendWaveClearPacket(ServerPlayerEntity player) {
+        if(player == null) {
+            return;
+        }
         PacketByteBuf buf = PacketByteBufs.create();
         ServerPlayNetworking.send(player, FLOUNDERFEST_WAVE_CLEAR_ID, buf);
     }
@@ -311,22 +320,27 @@ public class FlounderFest {
 
         updateInvolvedPlayers();
 
-        if(this.world.getGameRules().getBoolean(FlutterAndFlounderMain.END_FLOUNDERFEST_UPON_ALL_PLAYERS_DEAD)) {
-            List<ServerPlayerEntity> players = this.world.getPlayers(this.isInFlounderFestDistance());
-            boolean anyPlayersAlive = false;
-            for (ServerPlayerEntity player : players) {
-                anyPlayersAlive = player.isAlive();
-                if(anyPlayersAlive) {
-                    break;
-                }
-            }
-            if(!anyPlayersAlive) {
-                lossFlounderFest();
-            }
-        }
+        this.maxEnemiesAtOnce = world.getGameRules().getInt(FlutterAndFlounderMain.FLOUNDERFEST_MAX_ENEMIES);
+        this.maxBossesAtOnce = world.getGameRules().getInt(FlutterAndFlounderMain.FLOUNDERFEST_MAX_BOSSES);
 
         if(!this.hasStopped() && !isGracePeriod()) {
             if(this.status == Status.ONGOING) {
+
+                //checks for all players being dead
+                if(this.world.getGameRules().getBoolean(FlutterAndFlounderMain.END_FLOUNDERFEST_UPON_ALL_PLAYERS_DEAD)) {
+                    List<ServerPlayerEntity> players = this.world.getPlayers(this.isInFlounderFestDistance());
+                    boolean anyPlayersAlive = false;
+                    for (ServerPlayerEntity player : players) {
+                        anyPlayersAlive = player.isAlive();
+                        if(anyPlayersAlive) {
+                            break;
+                        }
+                    }
+                    if(!anyPlayersAlive) {
+                        lossFlounderFest();
+                    }
+                }
+
                 //spawns in enemies every few seconds
                 if(currentEnemies < maxEnemiesAtOnce && (spawnedEnemies < totalEnemyCount || totalEnemyCount == -1)) {
                     if(ticksUntilNextEnemySpawn <= 0) {
