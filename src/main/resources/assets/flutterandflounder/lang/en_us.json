@@ -10,6 +10,21 @@
   "flutterandflounder.flounderfest.defeat": "That's a wrap!",
 
   "gamerule.endFlounderFestWhenAllPlayersAreDead": "End FlounderFest when all players are dead",
+  "gamerule.flounderFestMaxEnemies": "FlounderFest Max Enemies",
+  "gamerule.flounderFestMaxBosses": "FlounderFest Max Bosses",
+
+  "entity.flutterandflounder.flyingcod": "Flying Cod",
+  "entity.flutterandflounder.flyingsalmon": "Flying Salmon",
+  "entity.flutterandflounder.codautomobile": "Cod Automobile",
+  "entity.flutterandflounder.salmonship": "Salmon Ship",
+  "entity.flutterandflounder.hammercod": "Hammer Cod",
+  "entity.flutterandflounder.whacker": "Whacker",
+  "entity.flutterandflounder.chillcod": "Chill Cod",
+  "entity.flutterandflounder.salmonsniper": "Salmon Sniper",
+  "entity.flutterandflounder.clowncod": "Clown Cod",
+  "entity.flutterandflounder.goon": "Clown Cod's Goon",
+  "entity.flutterandflounder.coffeecod": "Coffee Cod",
+  "entity.flutterandflounder.frogmobile": "Frogmobile",
 
   "item.flutterandflounder.prismarine_diamond": "Prismarine Diamond",
   "item.flutterandflounder.prismarine_diamond.tooltip": "You might want to be careful when holding this...",
@@ -17,5 +32,19 @@
   "item.flutterandflounder.prismarine_diamond.shiftedtooltip": "Interact to start a FlounderFest, an event of total chaos",
   "item.flutterandflounder.prismarine_diamond.fail": "A FlounderFest is already happening nearby!",
 
-  "item.flutterandflounder.prismarine_pearl": "Prismarine Pearl"
+  "item.flutterandflounder.prismarine_pearl": "Prismarine Pearl",
+  "item.flutterandflounder.flounderfest_coffee": "FlounderFest Coffee",
+
+  "item.flutterandflounder.frogmobile_spawn_egg": "Frogmobile",
+  "item.flutterandflounder.flying_cod_spawn_egg": "Flying Cod Spawn Egg",
+  "item.flutterandflounder.flying_salmon_spawn_egg": "Flying Salmon Spawn Egg",
+  "item.flutterandflounder.chillcod_spawn_egg": "Chill Cod Spawn Egg",
+  "item.flutterandflounder.clowncod_spawn_egg": "Clown Cod Spawn Egg",
+  "item.flutterandflounder.codautomobile_spawn_egg": "Cod Automobile Spawn Egg",
+  "item.flutterandflounder.coffeecod_spawn_egg": "Coffee Cod Spawn Egg",
+  "item.flutterandflounder.gooncod_spawn_egg": "Goon Cod Spawn Egg",
+  "item.flutterandflounder.hammercod_spawn_egg": "Hammer Cod Spawn Egg",
+  "item.flutterandflounder.salmonship_spawn_egg": "Salmon Ship Spawn Egg",
+  "item.flutterandflounder.salmonsniper_spawn_egg": "Salmon Sniper Spawn Egg",
+  "item.flutterandflounder.whackersalmon_spawn_egg": "Whacker Salmon Spawn Egg"
 }

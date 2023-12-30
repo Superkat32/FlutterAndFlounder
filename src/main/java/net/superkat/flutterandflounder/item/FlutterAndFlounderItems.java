@@ -45,6 +45,61 @@ public class FlutterAndFlounderItems {
             "frogmobile_spawn_egg"
     );
 
+    public static final Item FLYING_COD_SPAWN_EGG = register(
+            new SpawnEggItem(FlutterAndFlounderEntities.FLYING_COD, 0x746550, 0x807668, new FabricItemSettings()),
+            "flying_cod_spawn_egg"
+    );
+
+    public static final Item FLYING_SALMON_SPAWN_EGG = register(
+            new SpawnEggItem(FlutterAndFlounderEntities.FLYING_SALMON, 0x822c2b, 0x56201e, new FabricItemSettings()),
+            "flying_salmon_spawn_egg"
+    );
+
+    public static final Item CHILL_COD_SPAWN_EGG = register(
+            new SpawnEggItem(FlutterAndFlounderEntities.CHILL_COD, 0x746550, 0x2a51e0, new FabricItemSettings()),
+            "chillcod_spawn_egg"
+    );
+
+    public static final Item CLOWN_COD_SPAWN_EGG = register(
+            new SpawnEggItem(FlutterAndFlounderEntities.CLOWN_COD, 0x746550, 0xffffff, new FabricItemSettings()),
+            "clowncod_spawn_egg"
+    );
+
+    public static final Item COD_AUTOMOBILE_SPAWN_EGG = register(
+            new SpawnEggItem(FlutterAndFlounderEntities.COD_AUTOMOBILE, 0x746550, 0xa9aeaf, new FabricItemSettings()),
+            "codautomobile_spawn_egg"
+    );
+
+    public static final Item COFFEE_COD_SPAWN_EGG = register(
+            new SpawnEggItem(FlutterAndFlounderEntities.COFFEE_COD, 0x746550, 0x974d2e, new FabricItemSettings()),
+            "coffeecod_spawn_egg"
+    );
+
+    public static final Item GOON_COD_SPAWN_EGG = register(
+            new SpawnEggItem(FlutterAndFlounderEntities.GOON, 0x746550, 0xb6966b, new FabricItemSettings()),
+            "gooncod_spawn_egg"
+    );
+
+    public static final Item HAMMER_COD_SPAWN_EGG = register(
+            new SpawnEggItem(FlutterAndFlounderEntities.HAMMER_COD, 0x746550, 0xf12424, new FabricItemSettings()),
+            "hammercod_spawn_egg"
+    );
+
+    public static final Item SALMON_SHIP_SPAWN_EGG = register(
+            new SpawnEggItem(FlutterAndFlounderEntities.SALMON_SHIP, 0x822c2b, 0xd3bb50, new FabricItemSettings()),
+            "salmonship_spawn_egg"
+    );
+
+    public static final Item SALMON_SNIPER_SPAWN_EGG = register(
+            new SpawnEggItem(FlutterAndFlounderEntities.SALMON_SNIPER, 0x822c2b, 0x56201e, new FabricItemSettings()),
+            "salmonsniper_spawn_egg"
+    );
+
+    public static final Item WHACKER_SALMON_SPAWN_EGG = register(
+            new SpawnEggItem(FlutterAndFlounderEntities.WHACKER_SALMON, 0x822c2b, 0xf32f2f, new FabricItemSettings()),
+            "whackersalmon_spawn_egg"
+    );
+
     public static <T extends Item> T register(T item, String ID) {
         Identifier itemId = new Identifier(MOD_ID, ID);
 
@@ -63,7 +118,20 @@ public class FlutterAndFlounderItems {
 
         ItemGroupEvents.modifyEntriesEvent(
                 ItemGroups.SPAWN_EGGS)
-                .register((itemGroup) -> itemGroup.add(FROGMOBILE_SPAWN_EGG));
+                .register((itemGroup) -> {
+                    itemGroup.add(FROGMOBILE_SPAWN_EGG);
+                    itemGroup.add(FLYING_COD_SPAWN_EGG);
+                    itemGroup.add(FLYING_SALMON_SPAWN_EGG);
+                    itemGroup.add(CHILL_COD_SPAWN_EGG);
+                    itemGroup.add(CLOWN_COD_SPAWN_EGG);
+                    itemGroup.add(COD_AUTOMOBILE_SPAWN_EGG);
+                    itemGroup.add(COFFEE_COD_SPAWN_EGG);
+                    itemGroup.add(GOON_COD_SPAWN_EGG);
+                    itemGroup.add(HAMMER_COD_SPAWN_EGG);
+                    itemGroup.add(SALMON_SHIP_SPAWN_EGG);
+                    itemGroup.add(SALMON_SNIPER_SPAWN_EGG);
+                    itemGroup.add(WHACKER_SALMON_SPAWN_EGG);
+                });
 
         ItemGroupEvents.modifyEntriesEvent(
                 ItemGroups.FOOD_AND_DRINK)
