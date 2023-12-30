@@ -8,6 +8,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.superkat.flutterandflounder.entity.custom.cod.*;
+import net.superkat.flutterandflounder.entity.custom.frogmobile.FrogmobileEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.FlyingSalmonEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.SalmonShipEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.SalmonSniperEntity;
@@ -85,6 +86,15 @@ public class FlutterAndFlounderEntities {
             Registries.ENTITY_TYPE,
             new Identifier(MOD_ID, "goon"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, GoonCodEntity::new)
+                    .dimensions(EntityDimensions.fixed(1f, 1f)).build()
+    );
+
+    //frogmobile
+
+    public static final EntityType<FrogmobileEntity> FROGMOBILE = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(MOD_ID, "frogmobile"),
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, FrogmobileEntity::new)
                     .dimensions(EntityDimensions.fixed(1f, 1f)).build()
     );
 

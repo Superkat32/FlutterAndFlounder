@@ -1,0 +1,152 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.frogmobile.idle": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"frogmobile": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, 2.5],
+							"easing": "easeInOutBounce",
+							"easingArgs": [1]
+						},
+						"1.0": {
+							"vector": [0, 0, 0],
+							"easing": "easeInOutBounce",
+							"easingArgs": [1]
+						},
+						"1.5": {
+							"vector": [0, 0, -2.5],
+							"easing": "easeInOutBounce",
+							"easingArgs": [1]
+						},
+						"2.0": {
+							"vector": [0, 0, 0],
+							"easing": "easeInOutBounce",
+							"easingArgs": [1]
+						}
+					}
+				},
+				"flames": {
+					"scale": {
+						"vector": [0.7, -0.2, 1]
+					}
+				}
+			}
+		},
+		"animation.frogmobile.move": {
+			"loop": true,
+			"animation_length": 0.5,
+			"bones": {
+				"topleft": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [180, 0, 0],
+							"easing": "linear"
+						},
+						"0.5": {
+							"vector": [360, 0, 0],
+							"easing": "linear"
+						}
+					}
+				},
+				"bottomleft": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [180, 0, 0],
+							"easing": "linear"
+						},
+						"0.5": {
+							"vector": [360, 0, 0],
+							"easing": "linear"
+						}
+					}
+				},
+				"topright": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [180, 0, 0],
+							"easing": "linear"
+						},
+						"0.5": {
+							"vector": [360, 0, 0],
+							"easing": "linear"
+						}
+					}
+				},
+				"bottomright": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [180, 0, 0],
+							"easing": "linear"
+						},
+						"0.5": {
+							"vector": [360, 0, 0],
+							"easing": "linear"
+						}
+					}
+				},
+				"flames": {
+					"scale": {
+						"vector": [0.7, -0.2, 1]
+					}
+				}
+			}
+		},
+		"animation.frogmobile.fly": {
+			"loop": true,
+			"animation_length": 7,
+			"bones": {
+				"flames": {
+					"scale": {
+						"0.0": {
+							"vector": [1, 1, 1]
+						},
+						"0.25": {
+							"vector": [1, 1.2, 1],
+							"easing": "easeInOutExpo"
+						},
+						"0.5": {
+							"vector": [1, 1.1, 1],
+							"easing": "easeInOutBack"
+						},
+						"2.5": {
+							"vector": [1, 1.2, 1],
+							"easing": "easeInOutElastic"
+						},
+						"3.0": {
+							"vector": [1, 1.1, 1],
+							"easing": "easeInOutBack"
+						},
+						"5.0": {
+							"vector": [1, 1.2, 1],
+							"easing": "easeInOutElastic"
+						},
+						"7.0": {
+							"vector": [1, 1, 1],
+							"easing": "easeInOutBack"
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

@@ -1,0 +1,224 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.frogmobile",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "frogmobile",
+					"pivot": [0, 1, -4]
+				},
+				{
+					"name": "head",
+					"parent": "frogmobile",
+					"pivot": [0, 5, -1],
+					"cubes": [
+						{"origin": [-3.5, 6, -8], "size": [7, 0, 9], "uv": [23, 13]},
+						{"origin": [-3.5, 4, -8], "size": [7, 3, 9], "uv": [0, 13]}
+					]
+				},
+				{
+					"name": "eyes",
+					"parent": "frogmobile",
+					"pivot": [-0.5, 5, 1],
+					"cubes": [
+						{"origin": [-3.5, 7, -7], "size": [3, 2, 3], "uv": [0, 0]},
+						{"origin": [0.5, 7, -7], "size": [3, 2, 3], "uv": [0, 5]}
+					]
+				},
+				{
+					"name": "tongue",
+					"parent": "frogmobile",
+					"pivot": [0, 4.1, 1],
+					"cubes": [
+						{"origin": [-2, 4.1, -6.1], "size": [4, 0, 7], "uv": [17, 13]}
+					]
+				},
+				{
+					"name": "body",
+					"parent": "frogmobile",
+					"pivot": [0, 3, 0],
+					"cubes": [
+						{"origin": [-3.5, 2, -8], "size": [7, 3, 9], "uv": [3, 1]},
+						{"origin": [-3.5, 4, -8], "size": [7, 0, 9], "uv": [23, 22]}
+					]
+				},
+				{
+					"name": "spoiler",
+					"parent": "body",
+					"pivot": [0, 3, 2]
+				},
+				{
+					"name": "bone",
+					"parent": "spoiler",
+					"pivot": [0, 3, 2],
+					"cubes": [
+						{"origin": [3, 6, -1], "size": [1, 3, 1], "pivot": [0, 3, 2], "rotation": [-30, 0, 0], "uv": [58, 48]},
+						{"origin": [-4, 6, -1], "size": [1, 3, 1], "pivot": [0, 3, 2], "rotation": [-30, 0, 0], "uv": [58, 48]}
+					]
+				},
+				{
+					"name": "bone2",
+					"parent": "bone",
+					"pivot": [0, 3, 4.25],
+					"rotation": [22.5, 0, 0],
+					"cubes": [
+						{"origin": [-5, 9, 0.25], "size": [10, 1, 3], "pivot": [0, 3, 4.25], "rotation": [-30, 0, 0], "uv": [20, 49]}
+					]
+				},
+				{
+					"name": "jetpack",
+					"parent": "body",
+					"pivot": [0, 3, 2],
+					"cubes": [
+						{"origin": [3, 3, -4], "size": [2, 6, 2], "uv": [0, 56]},
+						{"origin": [-5, 3, -4], "size": [2, 6, 2], "uv": [0, 56], "mirror": true}
+					]
+				},
+				{
+					"name": "flames",
+					"parent": "jetpack",
+					"pivot": [0, 3, 2],
+					"cubes": [
+						{"origin": [-3, -3, -4], "size": [0, 6, 2], "pivot": [-4, 3, -3], "rotation": [0, 0, -15], "uv": [21, 56], "mirror": true},
+						{"origin": [-5, -3, -2], "size": [2, 6, 0], "pivot": [-4, 3, -3], "rotation": [15, 0, 0], "uv": [20, 58], "mirror": true},
+						{"origin": [-5, -3, -4], "size": [2, 6, 0], "pivot": [-4, 3, -3], "rotation": [-15, 0, 0], "uv": [19, 58], "mirror": true},
+						{"origin": [-5, -3, -4], "size": [0, 6, 2], "pivot": [-4, 3, -3], "rotation": [0, 0, 15], "uv": [19, 56], "mirror": true},
+						{"origin": [5, -3, -4], "size": [0, 6, 2], "pivot": [4, 3, -3], "rotation": [0, 0, -15], "uv": [21, 56], "mirror": true},
+						{"origin": [3, -3, -2], "size": [2, 6, 0], "pivot": [4, 3, -3], "rotation": [15, 0, 0], "uv": [20, 58], "mirror": true},
+						{"origin": [3, -3, -4], "size": [2, 6, 0], "pivot": [4, 3, -3], "rotation": [-15, 0, 0], "uv": [19, 58], "mirror": true},
+						{"origin": [3, -3, -4], "size": [0, 6, 2], "pivot": [4, 3, -3], "rotation": [0, 0, 15], "uv": [19, 56], "mirror": true}
+					]
+				},
+				{
+					"name": "pipes",
+					"parent": "body",
+					"pivot": [0, 3, 0]
+				},
+				{
+					"name": "pipe1",
+					"parent": "pipes",
+					"pivot": [-0.3, 3, 0],
+					"cubes": [
+						{"origin": [2.7, 5, -1], "size": [1, 1, 1], "uv": [60, 0]},
+						{"origin": [3.7, 5, -2], "size": [1, 1, 2], "uv": [58, 2]}
+					]
+				},
+				{
+					"name": "pipe2",
+					"parent": "pipes",
+					"pivot": [0.2, 8, 0],
+					"rotation": [0, 0, -180],
+					"cubes": [
+						{"origin": [3.2, 10, -1], "size": [1, 1, 1], "uv": [60, 0]},
+						{"origin": [4.2, 10, -2], "size": [1, 1, 2], "uv": [58, 2]}
+					]
+				},
+				{
+					"name": "pipe3",
+					"parent": "pipes",
+					"pivot": [0.2, 8, 0],
+					"cubes": [
+						{"origin": [-4.05, 5, -7], "size": [1, 1, 1], "uv": [60, 0]}
+					]
+				},
+				{
+					"name": "pipe4",
+					"parent": "pipes",
+					"pivot": [7.2, 8, 0],
+					"cubes": [
+						{"origin": [2.95, 5, -7], "size": [1, 1, 1], "uv": [60, 0]}
+					]
+				},
+				{
+					"name": "croaking_body",
+					"parent": "frogmobile",
+					"pivot": [0, 4, -5],
+					"cubes": [
+						{"origin": [-3.5, 2.1, -7.9], "size": [7, 2, 3], "inflate": -0.1, "uv": [26, 5]}
+					]
+				},
+				{
+					"name": "wheels",
+					"parent": "frogmobile",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "topleft",
+					"parent": "wheels",
+					"pivot": [3.75, 1, -6],
+					"cubes": [
+						{"origin": [3.25, 0, -7], "size": [1, 2, 2], "uv": [58, 60]}
+					]
+				},
+				{
+					"name": "bottomleft",
+					"parent": "wheels",
+					"pivot": [4.75, 1, 0],
+					"cubes": [
+						{"origin": [4.25, 0, -1], "size": [1, 2, 2], "uv": [58, 56]}
+					]
+				},
+				{
+					"name": "topright",
+					"parent": "wheels",
+					"pivot": [-3.75, 1, -6],
+					"cubes": [
+						{"origin": [-4.25, 0, -7], "size": [1, 2, 2], "uv": [58, 60]}
+					]
+				},
+				{
+					"name": "bottomright",
+					"parent": "wheels",
+					"pivot": [4.75, 1, 0],
+					"cubes": [
+						{"origin": [-5.25, 0, -1], "size": [1, 2, 2], "uv": [58, 56]}
+					]
+				},
+				{
+					"name": "left_arm",
+					"parent": "frogmobile",
+					"pivot": [4, 4, -6.5],
+					"cubes": [
+						{"origin": [3, 1, -7.5], "size": [2, 3, 3], "uv": [0, 32]},
+						{"origin": [0, 0.99, -11.5], "size": [8, 0, 8], "uv": [18, 40]}
+					]
+				},
+				{
+					"name": "right_arm",
+					"parent": "frogmobile",
+					"pivot": [-4, 4, -6.5],
+					"cubes": [
+						{"origin": [-5, 1, -7.5], "size": [2, 3, 3], "uv": [0, 38]},
+						{"origin": [-8, 0.99, -11.5], "size": [8, 0, 8], "uv": [2, 40]}
+					]
+				},
+				{
+					"name": "left_leg",
+					"parent": "frogmobile",
+					"pivot": [3.5, 4, 0],
+					"cubes": [
+						{"origin": [2.5, 1, -2], "size": [3, 3, 4], "uv": [14, 25]},
+						{"origin": [1.5, 0.99, -4], "size": [8, 0, 8], "uv": [2, 32]}
+					]
+				},
+				{
+					"name": "right_leg",
+					"parent": "frogmobile",
+					"pivot": [-3.5, 4, 0],
+					"cubes": [
+						{"origin": [-5.5, 1, -2], "size": [3, 3, 4], "uv": [0, 25]},
+						{"origin": [-9.5, 0.99, -4], "size": [8, 0, 8], "uv": [18, 32]}
+					]
+				}
+			]
+		}
+	]
+}

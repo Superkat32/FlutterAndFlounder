@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.superkat.flutterandflounder.entity.FlutterAndFlounderEntities;
 import net.superkat.flutterandflounder.entity.client.cod.*;
+import net.superkat.flutterandflounder.entity.client.frogmobile.FrogmobileRenderer;
 import net.superkat.flutterandflounder.entity.client.salmon.FlyingSalmonRenderer;
 import net.superkat.flutterandflounder.entity.client.salmon.SalmonShipRenderer;
 import net.superkat.flutterandflounder.entity.client.salmon.SalmonSniperRenderer;
@@ -26,6 +27,9 @@ public class FlutterAndFlounderClient implements ClientModInitializer {
         EntityRendererRegistry.register(FlutterAndFlounderEntities.SALMON_SNIPER, SalmonSniperRenderer::new);
         EntityRendererRegistry.register(FlutterAndFlounderEntities.CLOWN_COD, ClownCodRenderer::new);
         EntityRendererRegistry.register(FlutterAndFlounderEntities.GOON, GoonCodRenderer::new);
+
+        //frogmobile
+        EntityRendererRegistry.register(FlutterAndFlounderEntities.FROGMOBILE, FrogmobileRenderer::new);
 
         FlutterAndFlounderPackets.registerPackets();
 

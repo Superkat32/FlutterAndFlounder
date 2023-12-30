@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.minecraft.world.GameRules;
 import net.superkat.flutterandflounder.entity.FlutterAndFlounderEntities;
 import net.superkat.flutterandflounder.entity.custom.cod.*;
+import net.superkat.flutterandflounder.entity.custom.frogmobile.FrogmobileEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.FlyingSalmonEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.SalmonShipEntity;
 import net.superkat.flutterandflounder.entity.custom.salmon.SalmonSniperEntity;
@@ -43,6 +44,9 @@ public class FlutterAndFlounderMain implements ModInitializer {
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.SALMON_SNIPER, SalmonSniperEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.CLOWN_COD, ClownCodEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.GOON, GoonCodEntity.createAttributes());
+
+		//frogmobile
+		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.FROGMOBILE, FrogmobileEntity.createAttributes());
 
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> FlounderFestCommand.register(dispatcher)));
