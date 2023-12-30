@@ -74,7 +74,7 @@ public class HammerCodEntity extends CommonBossFish {
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 25)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.30)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 10)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12)
                 .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 10)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 2)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48);

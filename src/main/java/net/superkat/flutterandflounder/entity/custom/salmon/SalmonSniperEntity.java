@@ -61,7 +61,7 @@ public class SalmonSniperEntity extends CommonBossFish implements RangedAttackMo
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 20)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.1)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 10)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15)
                 .add(EntityAttributes.GENERIC_ATTACK_SPEED, 0.3)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48);
     }

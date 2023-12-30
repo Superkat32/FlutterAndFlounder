@@ -3,13 +3,12 @@
 	"id": "flutterandflounder",
 	"version": "${version}",
 	"name": "Flutter & Flounder",
-	"description": "Defeat a wave of fluttering and floundering fish! Made for Modfest 1.20!",
+	"description": "Fight for your life against waves of powerful fish, all in an attempt to meet your quota for some sweet, sweet rewards. Made for Modfest 1.20!",
 	"authors": [
 		"Superkat32"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/Superkat32/FlutterAndFlounder"
 	},
 	"license": "MIT",
 	"icon": "assets/flutterandflounder/icon.png",

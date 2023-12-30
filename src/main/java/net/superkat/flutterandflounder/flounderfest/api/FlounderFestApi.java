@@ -106,7 +106,7 @@ public class FlounderFestApi {
      * @return A random quota increased by the amount of nearby players.
      */
     public static int determineQuota(ServerWorld world, BlockPos festCenterPos) {
-        int quota = world.getRandom().nextBetween(2, 6);
+        int quota = world.getRandom().nextBetween(3, 7);
         for (ServerPlayerEntity player : world.getPlayers(player -> player.squaredDistanceTo(festCenterPos.getX(), festCenterPos.getY(), festCenterPos.getZ()) <= 70)) {
             quota += (quota / 3); //changes quota based on the amount of players present at the beginning
         }

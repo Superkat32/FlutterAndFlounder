@@ -65,7 +65,7 @@ public class CoffeeCodEntity extends CommonBossFish implements RangedAttackMob {
 
     public static DefaultAttributeContainer.Builder createAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 15)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 35)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.45)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48);
     }

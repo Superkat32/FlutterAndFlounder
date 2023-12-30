@@ -54,7 +54,7 @@ public class CodAutomobileEntity extends CommonBossFish {
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 20)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 5)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 10)
                 .add(EntityAttributes.GENERIC_ATTACK_SPEED, 0.2)
                 .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 2)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 2)
