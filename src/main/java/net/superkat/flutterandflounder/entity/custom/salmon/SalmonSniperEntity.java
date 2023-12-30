@@ -8,12 +8,14 @@ import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -84,6 +86,21 @@ public class SalmonSniperEntity extends CommonBossFish implements RangedAttackMo
         projectile.setVelocity(x * 0.2f, y * 0.2f, z * 0.2f, 1.6f, (float) (14 / this.getWorld().getDifficulty().getId() * 8));
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1f, 0.4f);
         this.getWorld().spawnEntity(projectile);
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.ENTITY_SALMON_AMBIENT;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ENTITY_SALMON_DEATH;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return SoundEvents.ENTITY_SALMON_HURT;
     }
 
     public static class SalmonSniperProjectile extends ArrowEntity {
