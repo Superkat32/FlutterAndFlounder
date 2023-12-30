@@ -44,6 +44,7 @@ public class FlounderFest {
     public int secondsRemaining = 100;
     public int maxQuota;
     public int quotaProgress = 0;
+    public int totalQuotaAcrossAllWaves = 0;
     private final Set<UUID> enemies = Sets.newHashSet();
     public int enemiesToBeSpawned;
     public int totalEnemyCount;
@@ -76,6 +77,7 @@ public class FlounderFest {
         this.maxWaves = nbt.getInt("MaxWaves");
         this.quotaProgress = nbt.getInt("QuotaProgress");
         this.maxQuota = nbt.getInt("MaxQuota");
+        this.totalQuotaAcrossAllWaves = nbt.getInt("TotalQuotaAcrossAllWaves");
         this.ticksSinceStart = nbt.getInt("TicksSinceStart");
         this.ticksSinceEnd = nbt.getInt("TicksSinceEnd");
         this.ticksSinceWaveClear = nbt.getInt("TicksSinceWaveClear");
@@ -112,6 +114,7 @@ public class FlounderFest {
         nbt.putInt("MaxWaves", this.maxWaves);
         nbt.putInt("QuotaProgress", this.quotaProgress);
         nbt.putInt("MaxQuota", this.maxQuota);
+        nbt.putInt("TotalQuotaAcrossAllWaves", this.totalQuotaAcrossAllWaves);
         nbt.putInt("TicksSinceStart", this.ticksSinceStart);
         nbt.putInt("TicksSinceEnd", this.ticksSinceEnd);
         nbt.putInt("TicksSinceWaveClear", this.ticksSinceWaveClear);
@@ -342,6 +345,7 @@ public class FlounderFest {
                             if(wave < maxWaves) {
                                 this.status = Status.WAVE_CLEAR;
                                 ticksSinceWaveClear = 0;
+                                totalQuotaAcrossAllWaves += quotaProgress;
                                 involvedPlayers.forEach(playerUuid -> sendWaveClearPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
                             } else {
                                 winFlounderFest();
@@ -374,11 +378,15 @@ public class FlounderFest {
     public void winFlounderFest() {
         this.status = Status.VICTORY;
         involvedPlayers.forEach(playerUuid -> sendVictoryPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
+        totalQuotaAcrossAllWaves += quotaProgress;
+        rewardPlayers();
     }
 
     public void lossFlounderFest() {
         this.status = Status.LOSS;
         involvedPlayers.forEach(playerUuid -> sendDefeatPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
+        totalQuotaAcrossAllWaves += quotaProgress;
+        rewardPlayers();
     }
 
     public boolean shouldMobsFlee() {
@@ -475,6 +483,10 @@ public class FlounderFest {
         }
     }
 
+    public void rewardPlayers() {
+        FlounderFestApi.spawnFlounderFestRewards(this.world, this.startingPos, this.totalQuotaAcrossAllWaves, this.hasWon());
+    }
+
     public void updateNbt() {
         FlounderFestManager flounderFestManager = FlounderFestApi.getFlounderFestManager(this.world);
         flounderFestManager.markDirty();
@@ -518,15 +530,12 @@ public class FlounderFest {
     public void invalidate() {
         this.status = Status.STOPPED;
 
-//        enemies.forEach(entityFromSet -> (entityFromSet).remove(Entity.RemovalReason.DISCARDED));
-
         enemies.forEach(enemyUuid -> {
             Entity entity  = world.getEntity(enemyUuid);
             if(entity != null) {
                 entity.remove(Entity.RemovalReason.DISCARDED);
             }
         });
-
 
         involvedPlayers.forEach(playerUuid -> sendDeleteHudPacket((ServerPlayerEntity) world.getEntity(playerUuid)));
     }

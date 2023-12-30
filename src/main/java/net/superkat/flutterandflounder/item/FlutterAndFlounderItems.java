@@ -18,6 +18,11 @@ public class FlutterAndFlounderItems {
             new PrismarineDiamondItem(new FabricItemSettings()),
             "prismarine_diamond");
 
+    public static final Item PRISMARINE_PEARL = register(
+            new Item(new FabricItemSettings()),
+            "prismarine_pearl"
+    );
+
     public static final Item FROGMOBILE_SPAWN_EGG = register(
             new SpawnEggItem(FlutterAndFlounderEntities.FROGMOBILE, 0xffffff, 0xffffff, new FabricItemSettings()),
             "frogmobile_spawn_egg"
@@ -34,7 +39,10 @@ public class FlutterAndFlounderItems {
     public static void init() {
         ItemGroupEvents.modifyEntriesEvent(
                 ItemGroups.INGREDIENTS)
-                .register((itemGroup) -> itemGroup.add(PRISMARINE_DIAMOND));
+                .register((itemGroup) -> {
+                    itemGroup.add(PRISMARINE_DIAMOND);
+                    itemGroup.add(PRISMARINE_PEARL);
+                });
 
         ItemGroupEvents.modifyEntriesEvent(
                 ItemGroups.SPAWN_EGGS)

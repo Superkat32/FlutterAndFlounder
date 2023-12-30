@@ -78,7 +78,7 @@ public class SalmonSniperEntity extends CommonBossFish implements RangedAttackMo
         ItemStack salmonItem = new ItemStack(Items.SALMON);
         SalmonSniperProjectile projectile = new SalmonSniperProjectile(this.getWorld(), this, salmonItem);
         double x = target.getX() - this.getX();
-        double y = target.getBodyY(0.333) - this.getY();
+        double y = target.getEyeY() - this.getEyeY();
         double z = target.getZ() - this.getZ();
         double pos = Math.sqrt(x * x + z * z);
         projectile.setVelocity(x * 0.2f, y * 0.2f, z * 0.2f, 1.6f, (float) (14 / this.getWorld().getDifficulty().getId() * 8));

@@ -2,8 +2,11 @@ package net.superkat.flutterandflounder.flounderfest.api;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -18,6 +21,7 @@ import net.superkat.flutterandflounder.flounderfest.FlounderFest;
 import net.superkat.flutterandflounder.flounderfest.FlounderFestManager;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -195,6 +199,36 @@ public class FlounderFestApi {
         }
 
         return null;
+    }
+
+    public static void spawnFlounderFestRewards(ServerWorld world, BlockPos festCenterPos, int totalQuota, boolean didWin) {
+        //Quota already scales with the amount of players, naturally meaning more players = more rewards
+        double quotaCalc = totalQuota / (didWin ? 3d : 9d);
+        int totalRewards = (int) (didWin ? Math.ceil(quotaCalc) : Math.floor(quotaCalc));
+
+        for (int i = 0; i < totalRewards; i++) {
+            dropStack(world, festCenterPos, getRandomFlounderFestReward());
+        }
+    }
+
+    private static void dropStack(ServerWorld world, BlockPos dropPos, ItemStack stack) {
+        if(stack.isEmpty()) {
+            return;
+        } else {
+            ItemEntity itemEntity = new ItemEntity(world, dropPos.getX(), dropPos.getY(), dropPos.getZ(), stack);
+            itemEntity.setToDefaultPickupDelay();
+            world.spawnEntity(itemEntity);
+            itemEntity.setGlowing(true);
+        }
+    }
+
+    public static ItemStack getRandomFlounderFestReward() {
+        ArrayList<ItemStack> rewards = new ArrayList<>();
+
+        rewards.add(Items.SPYGLASS.getDefaultStack());
+        rewards.add(Items.GOLDEN_APPLE.getDefaultStack());
+
+        return rewards.get(new Random().nextInt(rewards.size()));
     }
 
     /**

@@ -289,7 +289,7 @@ public class BossGoals {
             }
 
             this.mob.getLookControl().lookAt(this.target, 30.0F, 30.0F);
-            if(shootUpdateTicks >= 50) {
+            if(shootUpdateTicks >= 50) { //terrible i know but I'm on a time limit
                 ticksPerShot = 30;
                 if(shootUpdateTicks >= 80) {
                     ticksPerShot = 20;
@@ -313,20 +313,6 @@ public class BossGoals {
                 float g = MathHelper.clamp(f, 0.1F, 1.0F);
                 this.owner.shootAt(this.target, g);
             }
-//            if (--this.updateCountdownTicks == 0) {
-//                if (!bl) {
-//                    return;
-//                }
-//
-//                float f = (float)Math.sqrt(d) / this.maxShootRange;
-//                float g = MathHelper.clamp(f, 0.1F, 1.0F);
-//                this.owner.shootAt(this.target, g);
-//                this.updateCountdownTicks = MathHelper.floor(f * (float)(this.maxIntervalTicks - this.minIntervalTicks) + (float)this.minIntervalTicks);
-//            } else if (this.updateCountdownTicks < 0) {
-//                this.updateCountdownTicks = MathHelper.floor(
-//                        MathHelper.lerp(Math.sqrt(d) / (double)this.maxShootRange, (double)this.minIntervalTicks, (double)this.maxIntervalTicks)
-//                );
-//            }
         }
     }
 
