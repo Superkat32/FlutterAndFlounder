@@ -1,7 +1,6 @@
 # Flutter & Flounder
 ## Fight for your life against waves of powerful fish!
-Defeat a FlounderFest, a multi-wave event containing multiple powerful fish, and earn just as powerful rewards, including the exclusive Frogmobile!  
-[<img src="https://raw.githubusercontent.com/ModFest/art/3bf66556e674d670e30f647d6a48c4e1798c21d4/badge/128h/ModFest%201.20%20Badge%20Cozy.png" width="256" alt="ModFest 1.20">](https://modfest.net/1.20)
+Defeat a FlounderFest, a multi-wave event containing multiple powerful fish, and earn just as powerful rewards, including the exclusive Frogmobile!
 
 ## Showcase
 
@@ -25,20 +24,21 @@ The Frogmobile moves very fast, and even has a jetpack! You can enable the jetpa
 Beyond the Frogmobile, there are other rewards which aren't nearly as strict. They are the following.
 <details>
   <summary>Other Rewards</summary>
-        - FlounderFest Coffee (2 min of speed and haste)
-        - Golden Apple
-        - Enchanted Golden Apple
-        - Golden Carrot
-        - Diamond
-        - Netherite Scrap
-        - Enchanted Books of any tier
-            - Mending
-            - Sharpness
-            - Unbreaking
-            - Protection
-            - Silk Touch
-            - Fortune
-            - Efficiency
+
+- FlounderFest Coffee (2 min of speed and haste)
+- Golden Apple
+- Enchanted Golden Apple
+- Golden Carrot
+- Diamond
+- Netherite Scrap
+- Enchanted Books of any tier
+- * Mending
+- * Sharpness
+- * Unbreaking
+- * Protection
+- * Silk Touch
+- * Fortune
+- * Efficiency
 </details>
 
 ### Recipes
@@ -51,11 +51,21 @@ RECIPE IMAGES HERE
 There are many bosses in a FlounderFest. However, if you want the best experience, it is highly recommended that you play a FlounderFest before looking at all the bosses!
 <details>
   <summary>[SPOILER!] All Bosses</summary>
+
+- Cod Automobile, a cod who is in a car and doesn't take knockback.
+- Clown Cod, a cod who summons in goons, who will target random players and deal insane amounts of damage.
+- Hammer Cod, a cod who has a giant hammer and will deal lots of damage.
+- Coffee Cod, a cod who will give all nearby boss fish a speed boost.
+- Chill Cod, a cod who will freeze nearby players.
+- Salmon Ship, a salmon on a ship who will wait for a player to run beneath its ship before dropping, dealing lots of damage.
+- Salmon Sniper, a salmon who holds a salmon who shoots a LOT of arrows.
+- Whacker Salmon, a salmon with a punching glove who will deal a good chunk of damage and a lot of knockback.
 </details>
 
 ## Additional Info
-This mod was made for ModFest 1.20! The theme was "Sky And Sea"
-[<img src="https://raw.githubusercontent.com/ModFest/art/3bf66556e674d670e30f647d6a48c4e1798c21d4/badge/128h/ModFest%201.20%20Badge%20Compact.png" width="256" alt="ModFest 1.20">](https://modfest.net/1.20)
+This mod was made for ModFest 1.20! The theme was "Sky And Sea"  
+[<img src="https://raw.githubusercontent.com/ModFest/art/3bf66556e674d670e30f647d6a48c4e1798c21d4/badge/128h/ModFest%201.20%20Badge%20Cozy.png" width="256" alt="ModFest 1.20">](https://modfest.net/1.20)
+
 
 ## Fun Facts
 This mod pulls a lot of inspiration from various sources. I figured I would provide credit to them so you can check them out as well!  
