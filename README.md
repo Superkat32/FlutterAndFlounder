@@ -16,7 +16,8 @@ Once the timer is up, should you and fellow players have met quota, the next wav
 ### Frogmobile
 The Frogmobile is the ultimate reward. It is crafted using Prismarine Pearls, which are gathered by playing FlounderFests. Obtaining Prismarine Pearls is very strict, requiring you to do very well in a FlounderFest. For the best chances of getting some, making it to wave 3 is pretty much required.
 
-FROGMOBILE IMAGE HERE
+![frogmobile](https://github.com/Superkat32/FlutterAndFlounder/assets/89557012/5b47a7f3-cdb4-470d-b86f-499288f8dc59)
+
 
 The Frogmobile moves very fast, and even has a jetpack! You can enable the jetpack by jumping like you would on a horse. The strength of the jump doesn't do anything.
 
@@ -45,7 +46,8 @@ Beyond the Frogmobile, there are other rewards which aren't nearly as strict. Th
 
 There are a couple recipes found in Flutter & Flounder that you will want to know.
 
-RECIPE IMAGES HERE
+![prismarine_diamond](https://github.com/Superkat32/FlutterAndFlounder/assets/89557012/099daa8e-29c9-4ff9-a31d-b659d7b45e90)
+![frogmobile_recipe](https://github.com/Superkat32/FlutterAndFlounder/assets/89557012/5b0cf30b-fce5-497c-8341-28b3d5ae0607)
 
 ### Bosses
 There are many bosses in a FlounderFest. However, if you want the best experience, it is highly recommended that you play a FlounderFest before looking at all the bosses!
