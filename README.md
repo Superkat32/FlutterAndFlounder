@@ -18,7 +18,6 @@ The Frogmobile is the ultimate reward. It is crafted using Prismarine Pearls, wh
 
 ![frogmobile](https://github.com/Superkat32/FlutterAndFlounder/assets/89557012/5b47a7f3-cdb4-470d-b86f-499288f8dc59)
 
-
 The Frogmobile moves very fast, and even has a jetpack! You can enable the jetpack by jumping like you would on a horse. The strength of the jump doesn't do anything.
 
 ### Other Rewards
@@ -67,7 +66,6 @@ There are many bosses in a FlounderFest. However, if you want the best experienc
 ## Additional Info
 This mod was made for ModFest 1.20! The theme was "Sky And Sea"  
 [<img src="https://raw.githubusercontent.com/ModFest/art/3bf66556e674d670e30f647d6a48c4e1798c21d4/badge/128h/ModFest%201.20%20Badge%20Cozy.png" width="256" alt="ModFest 1.20">](https://modfest.net/1.20)
-
 
 ## Fun Facts
 This mod pulls a lot of inspiration from various sources. I figured I would provide credit to them so you can check them out as well!  

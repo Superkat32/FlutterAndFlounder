@@ -33,6 +33,7 @@ public class HammerCodEntity extends CommonBossFish {
     protected static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("animation.hammercod.idle");
     protected static final RawAnimation ATTACK_ANIM = RawAnimation.begin().thenLoop("animation.hammercod.attack");
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
+
     public HammerCodEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -58,10 +59,8 @@ public class HammerCodEntity extends CommonBossFish {
     protected<E extends HammerCodEntity> PlayState animController(final AnimationState<E> event) {
         if(this.isAttacking()) {
             return event.setAndContinue(ATTACK_ANIM);
-        } else if (!event.isMoving()) {
-            return event.setAndContinue(IDLE_ANIM);
         } else {
-            return PlayState.STOP;
+            return event.setAndContinue(IDLE_ANIM);
         }
     }
 
@@ -100,6 +99,7 @@ public class HammerCodEntity extends CommonBossFish {
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_COD_HURT;
+        return SoundEvents.ENTITY_COD_DEATH;
     }
+
 }

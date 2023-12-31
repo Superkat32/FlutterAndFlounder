@@ -51,7 +51,7 @@ public class FlutterAndFlounderEntities {
             Registries.ENTITY_TYPE,
             new Identifier(MOD_ID, "hammercod"),
             FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, HammerCodEntity::new)
-                    .dimensions(EntityDimensions.fixed(2f, 3.2f)).build()
+                    .dimensions(EntityDimensions.fixed(1.9f, 2.95f)).build()
     );
 
     public static final EntityType<WhackerSalmonEntity> WHACKER_SALMON = Registry.register(

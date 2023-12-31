@@ -217,8 +217,8 @@ public class FlounderFestApi {
      */
     public static void spawnFlounderFestRewards(ServerWorld world, BlockPos festCenterPos, int totalQuota, boolean didWin) {
         //Quota already scales with the amount of players, naturally meaning more players = more rewards
-        double quotaCalc = totalQuota / (didWin ? 3d : 9d);
-        int totalRewards = (int) (didWin ? Math.ceil(quotaCalc) : Math.floor(quotaCalc));
+        double quotaCalc = totalQuota / (didWin ? 3d : 7d);
+        int totalRewards = (int) Math.ceil(quotaCalc);
         if(totalRewards <= 0) {
             totalRewards = 1;
         }
