@@ -1,6 +1,7 @@
 package net.superkat.flutterandflounder.rendering;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.falseresync.libhudcompat.LibHudCompat;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -293,6 +294,24 @@ public class FlutterAndFlounderRendering {
         int bossWidth = MinecraftClient.getInstance().textRenderer.getWidth(boss);
         bossAnimX = -bossWidth;
         ticksSinceBossAnim = 0;
+    }
+
+    public static void occupyHudRegion() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        int windowWidth = client.getWindow().getScaledWidth();
+        Text title = Text.translatable("flutterandflounder.flounderfest.title");
+        int titleTextWidth = client.textRenderer.getWidth(title);
+        Text quotaTitle = Text.translatable("flutterandflounder.flounderfest.quota");
+
+        int x = windowWidth / 2 - titleTextWidth / 2 - titleTextWidth / 4;
+        int y = 3;
+        int xLimit = windowWidth / 2 + titleTextWidth / 4 + client.textRenderer.getWidth(quotaTitle);
+        int yLimit = client.textRenderer.getWrappedLinesHeight(title, 114) * 4;
+        LibHudCompat.forceOccupyRegion(Identifier.tryParse(MOD_ID), x, y, xLimit, yLimit);
+    }
+
+    public static void freeHudRegion() {
+        LibHudCompat.freeRegion(Identifier.tryParse(MOD_ID));
     }
 
     public void setFlounderFestHud(@Nullable FlounderFestHud flounderFestHud) {

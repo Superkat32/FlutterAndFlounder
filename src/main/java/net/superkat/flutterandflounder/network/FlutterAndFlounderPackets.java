@@ -35,6 +35,7 @@ public class FlutterAndFlounderPackets {
                 int quotaProgress = buf.readInt();
                 int maxQuota = buf.readInt();
                 BlockPos startingPos = buf.readBlockPos();
+                FlutterAndFlounderRendering.occupyHudRegion();
                 FlutterAndFlounderRendering.flounderFestHud = new FlounderFestHud(waveNum, maxWaves, secondsLeft, quotaProgress, maxQuota);
                 FlutterAndFlounderRendering.flounderFestCenterRenderer = new FlounderFestCenterRenderer(startingPos);
             });
@@ -85,6 +86,7 @@ public class FlutterAndFlounderPackets {
 
         ClientPlayNetworking.registerGlobalReceiver(FLOUNDERFEST_REMOVE_HUD_ID, (((client, handler, buf, responseSender) -> {
             client.execute(() -> {
+                FlutterAndFlounderRendering.freeHudRegion();
                 FlutterAndFlounderRendering.flounderFestHud = null;
                 FlutterAndFlounderRendering.flounderFestCenterRenderer = null;
                 LOGGER.info("Removing FlounderFest hud!");

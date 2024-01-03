@@ -53,9 +53,6 @@ public class FlutterAndFlounderMain implements ModInitializer {
 		//frogmobile
 		FabricDefaultAttributeRegistry.register(FlutterAndFlounderEntities.FROGMOBILE, FrogmobileEntity.createAttributes());
 
-
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> FlounderFestCommand.register(dispatcher)));
-
-		LOGGER.info("Hello Fabric world!");
 	}
 }

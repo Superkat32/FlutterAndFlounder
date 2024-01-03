@@ -25,6 +25,12 @@ repositories {
 		name = 'GeckoLib'
 		url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
 	}
+	maven {
+		url "https://jitpack.io"
+		content {
+			includeGroup "com.github.falseresync"
+		}
+	}
 }
 
 dependencies {
@@ -47,6 +53,8 @@ dependencies {
 	modApi "com.terraformersmc:modmenu:${modmenu_version}"
 
 	modImplementation "software.bernie.geckolib:${geckolib_version}"
+
+	modImplementation include("com.github.falseresync:libhudcompat:${libhudcompat_version}")
 }
 
 processResources {
