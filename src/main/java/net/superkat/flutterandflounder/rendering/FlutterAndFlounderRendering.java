@@ -305,9 +305,9 @@ public class FlutterAndFlounderRendering {
 
         int x = windowWidth / 2 - titleTextWidth / 2 - titleTextWidth / 4;
         int y = 3;
-        int xLimit = windowWidth / 2 + titleTextWidth / 4 + client.textRenderer.getWidth(quotaTitle);
-        int yLimit = client.textRenderer.getWrappedLinesHeight(title, 114) * 4;
-        LibHudCompat.forceOccupyRegion(Identifier.tryParse(MOD_ID), x, y, xLimit, yLimit);
+        int width = titleTextWidth / 4 + client.textRenderer.getWidth(quotaTitle);
+        int height = client.textRenderer.getWrappedLinesHeight(title, 114) * 4;
+        LibHudCompat.forceOccupyRegion(Identifier.tryParse(MOD_ID), x, y, width, height);
     }
 
     public static void freeHudRegion() {
