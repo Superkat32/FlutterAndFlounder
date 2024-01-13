@@ -11,6 +11,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -108,7 +109,6 @@ public class FrogmobileEntity extends AbstractHorseEntity implements GeoEntity {
                     y  = controllingPlayer.getPitch() / -15;
                 }
             }
-
             return new Vec3d(f,  y, g);
         }
     }
@@ -126,6 +126,7 @@ public class FrogmobileEntity extends AbstractHorseEntity implements GeoEntity {
                 this.jumpStrength = 0.0F;
             }
         }
+        velocityDirty = true;
     }
 
     @Nullable
@@ -154,23 +155,24 @@ public class FrogmobileEntity extends AbstractHorseEntity implements GeoEntity {
             this.playSound(SoundEvents.ENTITY_HORSE_LAND, 0.4F, 1.0F);
         }
 
-        int i = this.computeFallDamage(fallDistance, damageMultiplier);
+        int i = computeFallDamage(fallDistance, damageMultiplier);
         if (i <= 0) {
             return false;
         } else {
-            if(!this.hasNoGravity()) {
-                this.damage(damageSource, (float)i);
-                if (this.hasPassengers()) {
-                    for(Entity entity : this.getPassengersDeep()) {
-                        if(entity instanceof LivingEntity livingEntity) {
-                            if(i >= livingEntity.getHealth()) {
-                                i = (int) (livingEntity.getHealth() - 1); //Give the player a little scare for their mistake:)
-                            }
-                        }
-                        entity.damage(damageSource, (float)i);
-                    }
-                }
-            }
+            //FIXME - Make it so that the "hasNoGravity()" boolean actually syncs between server and client
+//            if(!hasNoGravity()) {
+////                this.damage(damageSource, (float)i);
+//                if (this.hasPassengers()) {
+//                    for(Entity entity : this.getPassengersDeep()) {
+//                        if(entity instanceof LivingEntity livingEntity) {
+//                            if(i >= livingEntity.getHealth()) {
+//                                i = (int) (livingEntity.getHealth() - 1);
+//                            }
+//                        }
+////                        entity.damage(damageSource, (float)i);
+//                    }
+//                }
+//            }
 
             this.playBlockFallSound();
             return true;
@@ -223,6 +225,32 @@ public class FrogmobileEntity extends AbstractHorseEntity implements GeoEntity {
     protected void dropInventory() {
         super.dropInventory();
         this.dropStack(FlutterAndFlounderItems.FROGMOBILE_SPAWN_EGG.getDefaultStack());
+    }
+
+    @Override
+    public void openInventory(PlayerEntity player) {
+        //FIXME - Open player inventory instead
+        super.openInventory(player);
+    }
+
+    @Override
+    public ActionResult interactHorse(PlayerEntity player, ItemStack stack) {
+        return ActionResult.PASS;
+    }
+
+    @Override
+    protected boolean receiveFood(PlayerEntity player, ItemStack item) {
+        return false;
+    }
+
+    @Override
+    public boolean isBreedingItem(ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public void setAir(int air) {
+        super.setAir(20); //always has air so it can't drown
     }
 
     @Nullable
