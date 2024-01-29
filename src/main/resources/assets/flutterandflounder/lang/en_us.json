@@ -10,8 +10,10 @@
   "flutterandflounder.flounderfest.defeat": "That's a wrap!",
 
   "gamerule.endFlounderFestWhenAllPlayersAreDead": "End FlounderFest when all players are dead",
-  "gamerule.flounderFestMaxEnemies": "FlounderFest Max Enemies",
-  "gamerule.flounderFestMaxBosses": "FlounderFest Max Bosses",
+  "gamerule.flounderFestMaxEnemies": "FlounderFest max enemies",
+  "gamerule.flounderFestMaxBosses": "FlounderFest max bosses",
+  "gamerule.flounderFestMobSpawnRadius": "FlounderFest mob spawn radius(from FlounderFest starting block)",
+  "gamerule.flounderFestSpawnMobProximity": "FlounderFest mob spawn proximity(random extra blocks from radius)",
 
   "entity.flutterandflounder.flyingcod": "Flying Cod",
   "entity.flutterandflounder.flyingsalmon": "Flying Salmon",

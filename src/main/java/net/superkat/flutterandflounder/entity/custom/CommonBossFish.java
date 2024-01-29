@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.superkat.flutterandflounder.FlutterAndFlounderMain;
 import net.superkat.flutterandflounder.flounderfest.FlounderFest;
 import net.superkat.flutterandflounder.flounderfest.api.FlounderFestApi;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -17,7 +18,10 @@ public abstract class CommonBossFish extends HostileEntity implements GeoEntity 
     }
 
     public void updateFlounderFestQuota(ServerWorld world, BlockPos pos) {
-        FlounderFest flounderFest = FlounderFestApi.getFlounderFestAt(world, pos);
+        int searchDistance = world.getGameRules().getInt(FlutterAndFlounderMain.FLOUNDERFEST_MOB_SPAWN_RADIUS)
+                + world.getGameRules().getInt(FlutterAndFlounderMain.FLOUNDERFEST_MOB_SPAWN_PROXIMITY)
+                + 10; //some grace on the distance here
+        FlounderFest flounderFest = FlounderFestApi.getFlounderFestAt(world, pos, searchDistance);
         if(flounderFest != null) {
             flounderFest.updateQuota(1);
         }

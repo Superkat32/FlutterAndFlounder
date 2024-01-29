@@ -5,6 +5,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
+import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -68,6 +69,7 @@ public class SalmonSniperEntity extends CommonBossFish implements RangedAttackMo
 
     @Override
     protected void initGoals() {
+        this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new FleeFlounderFestGoal(this));
         this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 8f));
         this.goalSelector.add(2, new WanderAroundFarGoal(this, 1));

@@ -160,7 +160,7 @@ public class FlounderFest {
 
     private Predicate<ServerPlayerEntity> isInFlounderFestDistance() {
         return player -> {
-            return FlounderFestApi.getFlounderFestManager(world).getFlounderFestAt(player.getBlockPos()) == this;
+            return FlounderFestApi.getFlounderFestManager(world).getFlounderFestAt(player.getBlockPos(), world.getGameRules().getInt(FlutterAndFlounderMain.FLOUNDERFEST_INVOLVE_PLAYER_RADIUS)) == this;
         };
     }
 
@@ -170,7 +170,7 @@ public class FlounderFest {
         List<ServerPlayerEntity> players = this.world.getPlayers(this.isInFlounderFestDistance());
 
         for (ServerPlayerEntity player : allPlayers) {
-            if(!players.contains(player)) {
+            if(!players.contains(player) && involvedPlayers.contains(player.getUuid())) {
                 removePlayerFromFlounderFest(player);
             }
         }
@@ -178,6 +178,7 @@ public class FlounderFest {
         for (ServerPlayerEntity player : players) {
             if(!involvedPlayers.contains(player.getUuid())) {
                 addPlayerToFlounderFest(player);
+                sendTimerPacket(player);
             }
             if(isGracePeriod()) {
                 if(gracePeriod % 20 == 0) {
@@ -185,9 +186,6 @@ public class FlounderFest {
                 }
             } else {
                 if((maxTimeInTicks - ticksSinceStart) % 20 == 0) {
-                    if(!isFinished() && this.status != Status.WAVE_CLEAR) {
-                        secondsRemaining = (maxTimeInTicks - ticksSinceStart) / 20;
-                    }
                     sendTimerPacket(player);
                 }
                 if(secondsRemaining == 100) { //needs one extra second to send the last grace period second update
@@ -316,6 +314,11 @@ public class FlounderFest {
             ticksSinceStart++;
             ticksUntilNextEnemySpawn--;
             ticksUntilNextBossSpawn--;
+            if((maxTimeInTicks - ticksSinceStart) % 20 == 0) {
+                if(!isFinished() && this.status != Status.WAVE_CLEAR) {
+                    secondsRemaining = (maxTimeInTicks - ticksSinceStart) / 20;
+                }
+            }
         }
 
         updateInvolvedPlayers();
@@ -412,6 +415,7 @@ public class FlounderFest {
         this.status = Status.ONGOING;
         gracePeriod = getGracePeriod();
         ticksSinceStart = 0;
+        secondsRemaining = 100;
         ticksUntilNextEnemySpawn = 0;
         ticksUntilNextBossSpawn = 45;
         currentEnemies = 0;

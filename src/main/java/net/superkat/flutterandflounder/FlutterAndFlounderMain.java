@@ -28,6 +28,12 @@ public class FlutterAndFlounderMain implements ModInitializer {
 			GameRuleRegistry.register("flounderFestMaxEnemies", GameRules.Category.MOBS, GameRuleFactory.createIntRule(30));
 	public static final GameRules.Key<GameRules.IntRule> FLOUNDERFEST_MAX_BOSSES =
 			GameRuleRegistry.register("flounderFestMaxBosses", GameRules.Category.MOBS, GameRuleFactory.createIntRule(15));
+	public static final GameRules.Key<GameRules.IntRule> FLOUNDERFEST_INVOLVE_PLAYER_RADIUS =
+			GameRuleRegistry.register("flounderFestInvolvePlayerRadius", GameRules.Category.MOBS, GameRuleFactory.createIntRule(96));
+	public static final GameRules.Key<GameRules.IntRule> FLOUNDERFEST_MOB_SPAWN_RADIUS =
+			GameRuleRegistry.register("flounderFestMobSpawnRadius", GameRules.Category.MOBS, GameRuleFactory.createIntRule(48));
+	public static final GameRules.Key<GameRules.IntRule> FLOUNDERFEST_MOB_SPAWN_PROXIMITY =
+			GameRuleRegistry.register("flounderFestSpawnMobProximity", GameRules.Category.MOBS, GameRuleFactory.createIntRule(5));
 
 	@Override
 	public void onInitialize() {

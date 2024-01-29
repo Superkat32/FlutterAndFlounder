@@ -74,7 +74,7 @@ public class FlounderFestApi {
     }
 
     /**
-     * Find a FlounderFest at a specific block pos with 96 blocks of search range.
+     * Find a FlounderFest at a specific block pos. The search radius is based on the world's FlounderFest Involved Player Radius gamerule. Default is 96 blocks.
      *
      * @param world The world of the searched FlounderFest. Often the Overworld
      * @param pos The center pos of the search.
@@ -82,7 +82,7 @@ public class FlounderFestApi {
      */
     @Nullable
     public static FlounderFest getFlounderFestAt(ServerWorld world, BlockPos pos) {
-        return getFlounderFestAt(world, pos, 9216);
+        return getFlounderFestAt(world, pos, world.getGameRules().getInt(FlutterAndFlounderMain.FLOUNDERFEST_INVOLVE_PLAYER_RADIUS));
     }
 
     /**
@@ -90,7 +90,7 @@ public class FlounderFestApi {
      *
      * @param world The world of the searched FlounderFest. Often the Overworld
      * @param pos The center pos of the search.
-     * @param searchDistance The search distance. 9216 = 96 blocks.
+     * @param searchDistance The search distance.
      * @return Returns the closest FlounderFest if one is found, or null if none are found.
      */
     @Nullable
@@ -107,7 +107,9 @@ public class FlounderFestApi {
      */
     public static int determineQuota(ServerWorld world, BlockPos festCenterPos) {
         int quota = world.getRandom().nextBetween(3, 7);
-        for (ServerPlayerEntity player : world.getPlayers(player -> player.squaredDistanceTo(festCenterPos.getX(), festCenterPos.getY(), festCenterPos.getZ()) <= 70)) {
+        int distance = world.getGameRules().getInt(FlutterAndFlounderMain.FLOUNDERFEST_INVOLVE_PLAYER_RADIUS);
+        for (ServerPlayerEntity player : world.getPlayers(player -> player.squaredDistanceTo(festCenterPos.getX(), festCenterPos.getY(), festCenterPos.getZ()) <= distance * distance)) {
+            FlutterAndFlounderMain.LOGGER.info("Accounting for " + player.getName().getString() + " in latest FlounderFest quota determination!");
             quota += (quota / 3); //changes quota based on the amount of players present at the beginning
         }
 
@@ -177,7 +179,7 @@ public class FlounderFestApi {
     /**
      * @param world The world of the fish.
      * @param festCenterPos The center of the FlounderFest. Used to determine spawn location.
-     * @param proximity The distance the fish can spawn in. Used to determine how far from the center it should spawn.
+     * @param proximity Proximity used to determine if the spawn pos is loaded???
      * @param tries The amount of attempts that should be made at spawning the fish before giving up.
      * @return Returns the blockpos a fish can spawn at.
      */
@@ -187,8 +189,11 @@ public class FlounderFestApi {
 
         for(int tryCount = 0; tryCount < tries; tryCount++) {
             float f = world.random.nextFloat() * (float) (Math.PI * 2);
-            int x = festCenterPos.getX() + MathHelper.floor(MathHelper.cos(f) * 32f * (float) i) + world.random.nextInt(5);
-            int z = festCenterPos.getZ() + MathHelper.floor(MathHelper.sin(f) * 32f * (float) i) + world.random.nextInt(5);
+            int spawnRadius = world.getGameRules().getInt(FlutterAndFlounderMain.FLOUNDERFEST_MOB_SPAWN_RADIUS);
+            //additional blocks to add a small amount of randomness to the spawn location
+            int spawnProximity = world.getGameRules().getInt(FlutterAndFlounderMain.FLOUNDERFEST_MOB_SPAWN_PROXIMITY);
+            int x = festCenterPos.getX() + MathHelper.floor(MathHelper.cos(f) * spawnRadius) + world.random.nextInt(spawnProximity);
+            int z = festCenterPos.getZ() + MathHelper.floor(MathHelper.sin(f) * spawnRadius) + world.random.nextInt(spawnProximity);
             int y = world.getTopY(Heightmap.Type.WORLD_SURFACE, x, z);
             mutable.set(x, y, z);
             if(!world.isNearOccupiedPointOfInterest(mutable) || proximity >= 2) {

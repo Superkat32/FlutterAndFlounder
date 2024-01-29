@@ -23,12 +23,6 @@ public class FlounderFestManager extends PersistentState {
     private final ServerWorld world;
     private int nextAvailableId;
 
-    //NOTE:
-    //While this class does extend the PersistentState, it does NOT have any ability to save its data upon closing Minecraft.
-    //I tried to get things figured out, but decided my time would be better spent elsewhere.
-    //If, by some random chance, you are a random person looking to PR to this, here's a free idea lol
-    //If you do end up doing that, make sure to remove the
-    //ServerPlayConnectionEvents.DISCONNECT registry in FlutterAndFlounderMain
     public static PersistentState.Type<FlounderFestManager> getPersistentStateType(ServerWorld world) {
         return new PersistentState.Type<>(() -> new FlounderFestManager(world), nbt -> fromNbt(world, nbt), null);
     }
@@ -110,18 +104,18 @@ public class FlounderFestManager extends PersistentState {
      */
     @Nullable
     public FlounderFest getFlounderFestAt(BlockPos pos) {
-        return getFlounderFestAt(pos, 9216);
+        return getFlounderFestAt(pos, 96);
     }
 
     /**
      * @param pos The center BlockPos of the searching.
-     * @param searchDistance The distance of the searching. 9216 = 96 blocks.
+     * @param searchDistance The distance of the searching.
      * @return Returns the closest FlounderFest within the search distance, or null if none were found.
      */
     @Nullable
     public FlounderFest getFlounderFestAt(BlockPos pos, int searchDistance) {
         FlounderFest flounderFest = null;
-        double distance = (double) searchDistance;
+        double distance = (double) searchDistance * searchDistance; //get searchDistance squared
 
         for(FlounderFest searchedFlounderFest : flounderFests.values()) {
             double squaredDistance = searchedFlounderFest.getStartingPos().getSquaredDistance(pos);

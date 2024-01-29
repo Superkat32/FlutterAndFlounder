@@ -3,6 +3,7 @@ package net.superkat.flutterandflounder.entity.custom.cod;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
+import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -65,6 +66,7 @@ public class ClownCodEntity extends CommonBossFish {
     @Override
     protected void initGoals() {
 //        this.goalSelector.add(1, new MeleeAttackGoal(this, 1, true));
+        this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new FleeFlounderFestGoal(this));
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 20f));
         this.goalSelector.add(3, new WanderAroundFarGoal(this, 1));
