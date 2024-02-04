@@ -1,17 +1,19 @@
 package net.superkat.flutterandflounder.entity.custom.frogmobile;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AmbientStandGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -19,6 +21,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EntityView;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.superkat.flutterandflounder.item.FlutterAndFlounderItems;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +43,12 @@ public class FrogmobileEntity extends AbstractHorseEntity implements GeoEntity {
     public int flyTicks = 0;
     public int maxFlyTicks = 100;
     public boolean hasFlown = false;
+
+//    public boolean canFly = true;
+//    public boolean dropSpawnItem = true;
+
+    private static final TrackedData<Boolean> CAN_FLY = DataTracker.registerData(FrogmobileEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> DROP_SPAWN_ITEM = DataTracker.registerData(FrogmobileEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public FrogmobileEntity(EntityType<? extends AbstractHorseEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -70,6 +80,29 @@ public class FrogmobileEntity extends AbstractHorseEntity implements GeoEntity {
     }
 
     @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.getDataTracker().startTracking(CAN_FLY, true);
+        this.getDataTracker().startTracking(DROP_SPAWN_ITEM, true);
+    }
+
+    public boolean canFly() {
+        return this.getDataTracker().get(CAN_FLY);
+    }
+
+    public boolean canDropSpawnItem() {
+        return this.getDataTracker().get(DROP_SPAWN_ITEM);
+    }
+
+    public void setCanFly(boolean canFly) {
+        this.getDataTracker().set(CAN_FLY, canFly);
+    }
+
+    public void setCanDropSpawnItem(boolean canDropSpawnItem) {
+        this.getDataTracker().set(DROP_SPAWN_ITEM, canDropSpawnItem);
+    }
+
+    @Override
     protected void initGoals() {
         this.goalSelector.add(1, new AmbientStandGoal(this));
     }
@@ -93,6 +126,7 @@ public class FrogmobileEntity extends AbstractHorseEntity implements GeoEntity {
 
     @Override
     protected Vec3d getControlledMovementInput(PlayerEntity controllingPlayer, Vec3d movementInput) {
+        System.out.println(canFly());
         if (this.isOnGround() && this.jumpStrength == 0.0F && this.isAngry() && !this.jumping) {
             return Vec3d.ZERO;
         } else {
@@ -121,7 +155,7 @@ public class FrogmobileEntity extends AbstractHorseEntity implements GeoEntity {
             this.prevYaw = this.bodyYaw = this.headYaw = this.getYaw();
         }
         if (this.isLogicalSideForUpdatingMovement()) {
-            if (this.jumpStrength > 0.0F) {
+            if (this.jumpStrength > 0.0F && canFly()) {
                 this.jump(this.jumpStrength, movementInput);
                 this.jumpStrength = 0.0F;
             }
@@ -179,6 +213,26 @@ public class FrogmobileEntity extends AbstractHorseEntity implements GeoEntity {
         }
     }
 
+    @Nullable
+    @Override
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putBoolean("CanFly", this.canFly());
+        nbt.putBoolean("DropSpawnItem", this.canDropSpawnItem());
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.setCanFly(nbt.getBoolean("CanFly"));
+        this.setCanDropSpawnItem(nbt.getBoolean("DropSpawnItem"));
+    }
+
     @Override
     public boolean canJump() {
         return true;
@@ -224,7 +278,9 @@ public class FrogmobileEntity extends AbstractHorseEntity implements GeoEntity {
     @Override
     protected void dropInventory() {
         super.dropInventory();
-        this.dropStack(FlutterAndFlounderItems.FROGMOBILE_SPAWN_EGG.getDefaultStack());
+        if(canDropSpawnItem()) {
+            this.dropStack(FlutterAndFlounderItems.FROGMOBILE_SPAWN_EGG.getDefaultStack());
+        }
     }
 
     @Override
