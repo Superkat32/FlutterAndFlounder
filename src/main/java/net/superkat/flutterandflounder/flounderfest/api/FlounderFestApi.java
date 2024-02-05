@@ -192,8 +192,14 @@ public class FlounderFestApi {
             int spawnRadius = world.getGameRules().getInt(FlutterAndFlounderMain.FLOUNDERFEST_MOB_SPAWN_RADIUS);
             //additional blocks to add a small amount of randomness to the spawn location
             int spawnProximity = world.getGameRules().getInt(FlutterAndFlounderMain.FLOUNDERFEST_MOB_SPAWN_PROXIMITY);
-            int x = festCenterPos.getX() + MathHelper.floor(MathHelper.cos(f) * spawnRadius) + world.random.nextInt(spawnProximity);
-            int z = festCenterPos.getZ() + MathHelper.floor(MathHelper.sin(f) * spawnRadius) + world.random.nextInt(spawnProximity);
+            int extraX = 0;
+            int extraZ = 0;
+            if(spawnProximity > 0) {
+                extraX = world.random.nextInt(spawnProximity);
+                extraZ = world.random.nextInt(spawnProximity);
+            }
+            int x = festCenterPos.getX() + MathHelper.floor(MathHelper.cos(f) * spawnRadius) + extraX;
+            int z = festCenterPos.getZ() + MathHelper.floor(MathHelper.sin(f) * spawnRadius) + extraZ;
             int y = world.getTopY(Heightmap.Type.WORLD_SURFACE, x, z);
             mutable.set(x, y, z);
             if(!world.isNearOccupiedPointOfInterest(mutable) || proximity >= 2) {
