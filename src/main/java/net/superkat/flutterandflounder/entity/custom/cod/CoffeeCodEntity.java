@@ -92,6 +92,9 @@ public class CoffeeCodEntity extends CommonBossFish implements RangedAttackMob {
         if(target != null && target.getVelocity() != null) {
             Box coffeeBox = this.getBoundingBox().expand(7);
             List<CommonBossFish> nearbyBossFish = this.getWorld().getEntitiesByClass(CommonBossFish.class, coffeeBox, EntityPredicates.VALID_ENTITY);
+            
+            if (nearbyBossFish.size() < 1) return;
+
             Vec3d vec3d = target.getVelocity();
             CommonBossFish randomNearbyBossFish = nearbyBossFish.get(this.random.nextInt(nearbyBossFish.size()));
             double d = randomNearbyBossFish.getX() + vec3d.x - this.getX();
