@@ -3,11 +3,12 @@
 	"id": "flutterandflounder",
 	"version": "${version}",
 	"name": "Flutter & Flounder",
-	"description": "Fight for your life against waves of powerful fish, all in an attempt to meet your quota for some sweet, sweet rewards. Made for Modfest 1.20!",
+	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
 		"Superkat32"
 	],
 	"contact": {
+		"homepage": "https://modrinth.com/mod/flutterandflounder",
 		"sources": "https://github.com/Superkat32/FlutterAndFlounder"
 	},
 	"license": "MIT",
@@ -15,24 +16,22 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.superkat.flutterandflounder.FlutterAndFlounderMain"
+          "net.superkat.flutterandflounder.FlutterAndFlounder"
 		],
-		"client": [
-			"net.superkat.flutterandflounder.FlutterAndFlounderClient"
+        "client": [
+          "net.superkat.flutterandflounder.FlutterAndFlounderClient"
+        ],
+		"fabric-datagen": [
+          "net.superkat.flutterandflounder.FlutterAndFlounderDataGenerator"
 		]
 	},
 	"mixins": [
 		"flutterandflounder.mixins.json"
 	],
-	"accessWidener": "flutterandflounder.accesswidener",
 	"depends": {
-		"fabricloader": ">=0.15.2",
-		"minecraft": "~1.20.4",
-		"java": ">=17",
-		"fabric-api": "*",
-		"geckolib": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
+		"fabricloader": ">=0.18.3",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
 	}
 }

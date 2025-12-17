@@ -1,15 +1,14 @@
 {
-  "required": true,
-  "package": "net.superkat.flutterandflounder.mixin",
-  "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "flounderfest.GameRendererMixin",
-    "flounderfest.ServerWorldMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "client": [
-    "flounderfest.ClientWorldMixin"
-  ]
+	"required": true,
+	"package": "net.superkat.flutterandflounder.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"ExampleMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
 }
