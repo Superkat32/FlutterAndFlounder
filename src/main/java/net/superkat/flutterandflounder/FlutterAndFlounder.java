@@ -1,23 +1,29 @@
 package net.superkat.flutterandflounder;
 
 import net.fabricmc.api.ModInitializer;
+import net.superkat.flounderlib.api.minigame.v1.FlounderApi;
+import net.superkat.flounderlib.api.minigame.v1.registry.FlounderGameType;
+import net.superkat.flutterandflounder.command.autofill.FlounderFestGameAutofill;
+import net.superkat.flutterandflounder.game.FlounderFestGame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FlutterAndFlounder implements ModInitializer {
 	public static final String MOD_ID = "flutterandflounder";
-
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+    public static final FlounderGameType<FlounderFestGame> FLOUNDER_FEST_GAME_TYPE = FlounderApi.register(
+            FlounderGameType.create(FlounderFestGame.ID, FlounderFestGame.CODEC)
+                    .synced(FlounderFestGame.STATE_SYNCER)
+                    .overlap(false)
+                    .distance(64)
+                    .padding(32) // TODO - in Flounderlib, account for semicircle during overlap check
+    );
 
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
-
 		LOGGER.info("Hello Fabric world!");
+
+        FlounderFestGameAutofill.init();
 	}
 }
