@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.superkat.flounderlib.api.minigame.v1.FlounderApi;
 import net.superkat.flounderlib.api.minigame.v1.registry.FlounderGameType;
 import net.superkat.flutterandflounder.command.autofill.FlounderFestGameAutofill;
+import net.superkat.flutterandflounder.entity.FlutterAndFlounderEntityTypes;
 import net.superkat.flutterandflounder.game.FlounderFestGame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ public class FlutterAndFlounder implements ModInitializer {
 	public void onInitialize() {
 		LOGGER.info("Hello Fabric world!");
 
+        FlutterAndFlounderEntityTypes.init();
         FlounderFestGameAutofill.init();
 	}
 }

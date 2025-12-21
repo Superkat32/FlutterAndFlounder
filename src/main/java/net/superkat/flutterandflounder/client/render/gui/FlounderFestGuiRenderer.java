@@ -1,4 +1,4 @@
-package net.superkat.flutterandflounder.client.gui;
+package net.superkat.flutterandflounder.client.render.gui;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
