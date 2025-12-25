@@ -11,9 +11,23 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.superkat.flutterandflounder.FlutterAndFlounder;
 import net.superkat.flutterandflounder.entity.boss.HammerCod;
+import net.superkat.flutterandflounder.entity.collectables.PearlescentEgg;
 
 public class FlutterAndFlounderEntityTypes {
 
+    // region Collectables
+    public static final EntityType<PearlescentEgg> PEARLESCENT_EGG = register(
+            "pearlescent_egg",
+            EntityType.Builder
+                    .of(PearlescentEgg::new, MobCategory.MISC)
+                    .sized(0.65f, 0.65f)
+                    .clientTrackingRange(6)
+                    .updateInterval(20)
+    );
+
+    // endregion
+
+    // region Bosses
     public static final EntityType<HammerCod> HAMMER_COD = register(
             "hammercod",
             EntityType.Builder
@@ -22,8 +36,11 @@ public class FlutterAndFlounderEntityTypes {
                     .clientTrackingRange(4)
     );
 
+    // endregion
+
     public static void init() {
         FabricDefaultAttributeRegistry.register(HAMMER_COD, HammerCod.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(PEARLESCENT_EGG, PearlescentEgg.createMobAttributes());
     }
 
     // Stolen from Abysm - https://github.com/SpiritGameStudios/Abysm/blob/main/src/main/java/dev/spiritstudios/abysm/world/entity/AbysmEntityTypes.java#L156

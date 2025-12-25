@@ -15,7 +15,7 @@ public class HammerCod extends PathfinderMob implements GeoEntity {
     public static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("animation.hammercod.idle");
     public static final RawAnimation ATTACK_ANIM = RawAnimation.begin().thenLoop("animation.hammercod.attack");
 
-    private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
+    protected final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
 
     public HammerCod(EntityType<? extends @NotNull PathfinderMob> entityType, Level level) {
         super(entityType, level);
