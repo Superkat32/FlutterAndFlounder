@@ -6,7 +6,7 @@
 				"identifier": "geometry.hammercod",
 				"texture_width": 128,
 				"texture_height": 128,
-				"visible_bounds_width": 4,
+				"visible_bounds_width": 5,
 				"visible_bounds_height": 5.5,
 				"visible_bounds_offset": [0, 2.25, 0]
 			},
@@ -42,11 +42,11 @@
 				{
 					"name": "head",
 					"parent": "fish",
-					"pivot": [0, 6, 0],
+					"pivot": [0, 6, 1],
 					"rotation": [75, 0, 0],
 					"cubes": [
-						{"origin": [-0.9992, 5.0008, -3], "size": [2, 3, 1], "uv": [84, 25]},
-						{"origin": [-1, 4, -2], "size": [2, 4, 3], "inflate": 0.01, "uv": [84, 84]}
+						{"origin": [-0.9992, 5.96673, -2.25882], "size": [2, 3, 1], "uv": [84, 25]},
+						{"origin": [-1, 4.96593, -1.25882], "size": [2, 4, 3], "inflate": 0.01, "uv": [84, 84]}
 					]
 				},
 				{

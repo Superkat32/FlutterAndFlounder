@@ -24,9 +24,9 @@
 					},
 					"scale": {
 						"vector": [
-							"1.25 + math.sin(query.anim_time * 45) * 0.2 + math.clamp(query.distance_from_camera / 16, 0, 5)",
-							"1.25 + math.sin(query.anim_time * 45) * 0.2 + math.clamp(query.distance_from_camera / 16, 0, 5)",
-							"1.25 + math.sin(query.anim_time * 45) * 0.2 + math.clamp(query.distance_from_camera / 16, 0, 5)"
+							"1.25 + math.sin(query.anim_time * 45) * 0.2 + math.clamp(query.distance_from_camera / 32, 0, 2)",
+							"1.25 + math.sin(query.anim_time * 45) * 0.2 + math.clamp(query.distance_from_camera / 32, 0, 2)",
+							"1.25 + math.sin(query.anim_time * 45) * 0.2 + math.clamp(query.distance_from_camera / 32, 0, 2)"
 						]
 					}
 				},

@@ -39,7 +39,7 @@ public class FlutterAndFlounderEntityTypes {
     // endregion
 
     public static void init() {
-        FabricDefaultAttributeRegistry.register(HAMMER_COD, HammerCod.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(HAMMER_COD, HammerCod.createAttributes());
         FabricDefaultAttributeRegistry.register(PEARLESCENT_EGG, PearlescentEgg.createMobAttributes());
     }
 

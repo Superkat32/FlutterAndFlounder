@@ -1,15 +1,20 @@
 package net.superkat.flutterandflounder.mixin;
 
-import net.minecraft.server.MinecraftServer;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.blaze3d.vertex.PoseStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import software.bernie.geckolib.cache.model.GeoBone;
+import software.bernie.geckolib.util.RenderUtil;
 
-@Mixin(MinecraftServer.class)
+@Mixin(RenderUtil.class)
 public class ExampleMixin {
-	@Inject(at = @At("HEAD"), method = "loadLevel")
-	private void init(CallbackInfo info) {
-
-	}
+	@WrapOperation(method = "prepMatrixForBone", at = @At(value = "INVOKE", target = "Lsoftware/bernie/geckolib/util/RenderUtil;translateAndRotateMatrixForBone(Lcom/mojang/blaze3d/vertex/PoseStack;Lsoftware/bernie/geckolib/cache/model/GeoBone;)V"))
+    private static void flutterandflounder$tempGeckolibFix(PoseStack poseStack, GeoBone bone, Operation<Void> original) {
+        original.call(poseStack, bone);
+        if(bone.frameSnapshot != null) {
+            bone.frameSnapshot.scale(poseStack);
+        }
+    }
 }
