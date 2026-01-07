@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.base.GeoRenderState;
-import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
+import software.bernie.geckolib.renderer.layer.builtin.AutoGlowingGeoLayer;
 
 public class PearlescentEggRenderer<R extends LivingEntityRenderState & GeoRenderState> extends GeoEntityRenderer<PearlescentEgg, R> {
 

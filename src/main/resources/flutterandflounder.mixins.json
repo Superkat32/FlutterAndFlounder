@@ -3,7 +3,6 @@
   "package": "net.superkat.flutterandflounder.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "ANimationProcessorMixin",
     "ExampleMixin"
   ],
   "injectors": {
