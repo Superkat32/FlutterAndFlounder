@@ -46,7 +46,7 @@ public class HammerCod extends Monster implements GeoEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(
-                new AnimationController<>("idle", 5, animationTest -> animationTest.setAndContinue(ATTACK_ANIM))
+                new AnimationController<>("test", 5, animationTest -> animationTest.setAndContinue(ATTACK_ANIM))
         );
     }
 
